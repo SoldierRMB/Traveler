@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.soldiersoft.traveler.mapper.ViewpointMapper">
+
+    <resultMap id="BaseResultMap" type="com.soldiersoft.traveler.entity.Viewpoint">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="viewpointName" column="viewpoint_name" jdbcType="VARCHAR"/>
+        <result property="description" column="description" jdbcType="VARCHAR"/>
+        <result property="score" column="score" jdbcType="DOUBLE"/>
+        <result property="provinceCode" column="province_code" jdbcType="BIGINT"/>
+        <result property="cityCode" column="city_code" jdbcType="BIGINT"/>
+        <result property="areaCode" column="area_code" jdbcType="BIGINT"/>
+        <result property="streetCode" column="street_code" jdbcType="BIGINT"/>
+    </resultMap>
+</mapper>
