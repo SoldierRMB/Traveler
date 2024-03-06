@@ -10,11 +10,17 @@ public enum StatusCodeEnum {
 
     FAIL(210, "操作失败"),
 
-    NO_LOGIN(401, "用户未登录"),
+    BAD_REQUEST(400, "请求参数错误"),
 
-    AUTHORIZED(403, "没有操作权限"),
+    UNAUTHORIZED(401, "授权失败"),
 
-    SYSTEM_ERROR(500, "系统异常");
+    FORBIDDEN(403, "禁止访问"),
+
+    NOT_FOUND(404, "资源未找到"),
+
+    METHOD_NOT_ALLOWED(405, "请求方法不支持"),
+
+    INTERNAL_SERVER_ERROR(500, "系统异常");
 
     private final Integer code;
 

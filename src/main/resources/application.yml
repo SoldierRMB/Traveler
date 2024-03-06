@@ -22,6 +22,9 @@ spring:
           max-active: 10
           max-idle: 10
           min-idle: 1
+  web:
+    resources:
+      add-mappings: false
 
 springdoc:
   swagger-ui:

@@ -13,6 +13,7 @@ import com.soldiersoft.traveler.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
@@ -33,6 +34,9 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.soldiersoft.traveler.enums.StatusCodeEnum.FORBIDDEN;
+import static com.soldiersoft.traveler.enums.StatusCodeEnum.UNAUTHORIZED;
 
 @Configuration
 @EnableMethodSecurity
@@ -59,11 +63,11 @@ public class WebSecurityConfig {
                 .exceptionHandling(conf -> conf
                         .authenticationEntryPoint((request, response, authException) -> {
                             response.setContentType("application/json;charset=utf-8");
-                            response.getWriter().println(JSONUtil.toJsonStr(ResultVO.fail(HttpStatus.UNAUTHORIZED.value(), "授权失败")));
+                            response.getWriter().println(JSONUtil.toJsonStr(ResultVO.fail(UNAUTHORIZED)));
                         })
                         .accessDeniedHandler((request, response, accessDeniedException) -> {
                             response.setContentType("application/json;charset=utf-8");
-                            response.getWriter().println(JSONUtil.toJsonStr(ResultVO.fail(HttpStatus.FORBIDDEN.value(), "禁止访问")));
+                            response.getWriter().println(JSONUtil.toJsonStr(ResultVO.fail(FORBIDDEN)));
                         })
                 )
                 .logout(conf -> conf
@@ -88,7 +92,9 @@ public class WebSecurityConfig {
             "/v3/api-docs/**",
             "/v3/api-docs.yaml",
             "/swagger-ui/**",
-            "/swagger-ui.html"
+            "/swagger-ui.html",
+            "/login",
+            "/register"
     };
 
     @Bean
