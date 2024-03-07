@@ -13,5 +13,6 @@
         <result property="cityCode" column="city_code" jdbcType="BIGINT"/>
         <result property="areaCode" column="area_code" jdbcType="BIGINT"/>
         <result property="streetCode" column="street_code" jdbcType="BIGINT"/>
+        <result property="reviewed" column="reviewed" jdbcType="TINYINT"/>
     </resultMap>
 </mapper>

@@ -59,4 +59,8 @@ public class Viewpoint implements Serializable {
      * 乡级编号
      */
     private Long streetCode;
+    /**
+     * 0.审核中 1.审核通过 2.审核不通过
+     */
+    private Integer reviewed;
 }
