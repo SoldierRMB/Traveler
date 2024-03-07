@@ -2,6 +2,7 @@ package com.soldiersoft.traveler.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.soldiersoft.traveler.entity.Viewpoint;
+import com.soldiersoft.traveler.model.vo.ViewpointVO;
 
 /**
  * @author Soldier_RMB
@@ -10,4 +11,13 @@ import com.soldiersoft.traveler.entity.Viewpoint;
  */
 public interface ViewpointService extends IService<Viewpoint> {
 
+    ViewpointVO getViewpointById(Long id);
+
+    Boolean getViewpointIsPresent(String viewpointName);
+
+    String postViewpoint(ViewpointVO viewpointVO);
+
+    String updateViewpoint(ViewpointVO viewpointVO);
+
+    String deleteViewpoint(Long id);
 }
