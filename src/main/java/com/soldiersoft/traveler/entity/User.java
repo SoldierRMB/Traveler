@@ -49,10 +49,6 @@ public class User implements Serializable {
      */
     private String nickname;
     /**
-     * 登录方式 1.用户名 2.邮箱 3.QQ
-     */
-    private Integer loginType;
-    /**
      * 是否禁用 0.否 1.是
      */
     private Integer isDisable;

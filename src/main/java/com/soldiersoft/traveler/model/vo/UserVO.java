@@ -19,4 +19,7 @@ public class UserVO {
     @NotNull
     @Email
     private String email;
+    @NotNull
+    // 2.Staff 3.Tourist
+    private Integer userType;
 }

@@ -2,7 +2,6 @@ package com.soldiersoft.traveler.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.soldiersoft.traveler.entity.User;
-import com.soldiersoft.traveler.model.dto.UserDTO;
 import com.soldiersoft.traveler.model.vo.UserVO;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
@@ -13,5 +12,5 @@ import org.springframework.security.core.userdetails.UserDetailsService;
  */
 public interface UserService extends IService<User>, UserDetailsService {
 
-    UserDTO register(UserVO userVO);
+    String register(UserVO userVO);
 }

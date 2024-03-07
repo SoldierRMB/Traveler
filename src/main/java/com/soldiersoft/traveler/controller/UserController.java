@@ -1,6 +1,5 @@
 package com.soldiersoft.traveler.controller;
 
-import com.soldiersoft.traveler.model.dto.UserDTO;
 import com.soldiersoft.traveler.model.vo.ResultVO;
 import com.soldiersoft.traveler.model.vo.UserDetailsVO;
 import com.soldiersoft.traveler.model.vo.UserVO;
@@ -8,7 +7,6 @@ import com.soldiersoft.traveler.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -42,7 +40,7 @@ public class UserController {
 
     @Operation(description = "注册用户")
     @PostMapping("/register")
-    public ResultVO<UserDTO> register(@RequestBody UserVO userVO) {
+    public ResultVO<String> register(@RequestBody UserVO userVO) {
         return ResultVO.ok(userService.register(userVO));
     }
 
@@ -50,11 +48,5 @@ public class UserController {
     @GetMapping("/queryUserAuthentication")
     public ResultVO<Authentication> queryUserAuthentication(Authentication authentication) {
         return ResultVO.ok(authentication);
-    }
-
-    @GetMapping("/test")
-    @PreAuthorize("hasRole('ROLE_USER')")
-    public String test() {
-        return "test";
     }
 }
