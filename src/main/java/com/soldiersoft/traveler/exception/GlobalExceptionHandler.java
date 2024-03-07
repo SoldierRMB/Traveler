@@ -1,6 +1,7 @@
 package com.soldiersoft.traveler.exception;
 
 import com.soldiersoft.traveler.model.vo.ResultVO;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
@@ -10,8 +11,13 @@ import static com.soldiersoft.traveler.enums.StatusCodeEnum.*;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(BizException.class)
-    public ResultVO<Exception> handleBizException() {
-        return ResultVO.fail(FAIL);
+    public ResultVO<Exception> handleBizException(BizException e) {
+        return ResultVO.fail(FAIL.getCode(), e.getMessage());
+    }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResultVO<Exception> handleUsernameNotFoundException(UsernameNotFoundException e) {
+        return ResultVO.fail(FAIL.getCode(), e.getMessage());
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
