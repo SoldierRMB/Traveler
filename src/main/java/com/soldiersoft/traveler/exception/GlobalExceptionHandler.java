@@ -9,6 +9,11 @@ import static com.soldiersoft.traveler.enums.StatusCodeEnum.*;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+    @ExceptionHandler(BizException.class)
+    public ResultVO<Exception> handleBizException() {
+        return ResultVO.fail(FAIL);
+    }
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResultVO<Exception> handleIllegalArgumentException() {
         return ResultVO.fail(BAD_REQUEST);
