@@ -6,6 +6,13 @@ spring:
     active: dev
   application:
     name: traveler
+  mail:
+    protocol: smtp
+    host: smtp.163.com
+#    port: 465
+    username: soldierrmb0510@163.com
+    password: TWFCFLFWOXHEZNHU
+    default-encoding: UTF-8
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://${host}:3306/traveler?serverTimezone=Asia/Shanghai

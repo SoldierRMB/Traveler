@@ -1,6 +1,7 @@
 package com.soldiersoft.traveler;
 
-import com.soldiersoft.traveler.service.UserRoleService;
+import com.soldiersoft.traveler.model.dto.MailDTO;
+import com.soldiersoft.traveler.service.MailService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -8,10 +9,17 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class TravelerApplicationTests {
     @Autowired
-    private UserRoleService userRoleService;
+    private MailService mailService;
 
     @Test
-    void queryUserRoleByUserId() {
-        System.out.println(userRoleService.queryUserRoleByUserId(1L));
+    void testSendEmail() {
+        String code = mailService.generateCode();
+        MailDTO mailDTO = MailDTO.builder()
+                .to("soldierrmb0510@foxmail.com")
+                .from("行者")
+                .subject("【行者】登录验证码")
+                .text("您的验证码是：" + code)
+                .build();
+        mailService.sendEmail(mailDTO);
     }
 }

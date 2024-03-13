@@ -10,12 +10,13 @@ import com.soldiersoft.traveler.entity.User;
 import com.soldiersoft.traveler.entity.UserRole;
 import com.soldiersoft.traveler.exception.BizException;
 import com.soldiersoft.traveler.mapper.UserMapper;
+import com.soldiersoft.traveler.model.dto.UserDTO;
 import com.soldiersoft.traveler.model.vo.LoginVO;
 import com.soldiersoft.traveler.model.vo.UserDetailsVO;
 import com.soldiersoft.traveler.model.vo.UserVO;
+import com.soldiersoft.traveler.service.MailService;
 import com.soldiersoft.traveler.service.UserRoleService;
 import com.soldiersoft.traveler.service.UserService;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -41,25 +42,27 @@ import java.util.stream.IntStream;
  * @createDate 2024-02-04 16:13:12
  */
 @Service
-@Slf4j
 public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         implements UserService {
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
     private final UserRoleService userRoleService;
+    private final MailService mailService;
 
     @Lazy
     @Autowired
-    public UserServiceImpl(AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder, UserRoleService userRoleService) {
+    public UserServiceImpl(AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder, UserRoleService userRoleService, MailService mailService) {
         this.authenticationManager = authenticationManager;
         this.passwordEncoder = passwordEncoder;
         this.userRoleService = userRoleService;
+        this.mailService = mailService;
     }
 
     @Override
     public String login(LoginVO loginVO) {
         Authentication authentication;
         try {
+            // 调用UserDetailsService的loadUserByUsername方法获取用户信息
             UsernamePasswordAuthenticationToken authenticationToken = UsernamePasswordAuthenticationToken.unauthenticated(loginVO.getUsername(), loginVO.getPassword());
             authentication = authenticationManager.authenticate(authenticationToken);
             SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -96,21 +99,43 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     }
 
     @Override
-    public Boolean getUserIsPresent(String email) {
-        User user = lambdaQuery().eq(User::getEmail, email).one();
+    public Boolean getUserIsPresent(String username) {
+        User user = lambdaQuery().eq(User::getUsername, username).one();
         return Optional.ofNullable(user).isPresent();
+    }
+
+    @Override
+    public String sendCode(UserVO userVO) {
+        return mailService.sendCode(userVO.getEmail()) ? "邮箱验证码发送成功" : "邮箱验证码发送失败";
     }
 
     @Override
     @Transactional
     public String register(UserVO userVO) {
-        if (getUserIsPresent(userVO.getEmail()))
-            throw new BizException("邮箱已被注册");
-        Integer userType = userVO.getUserType();
+        String email = userVO.getEmail();
+        if (mailService.verifyCode(email, userVO.getCode())) {
+            UserDTO userDTO = UserDTO.builder()
+                    .username(userVO.getUsername())
+                    .email(email)
+                    .password(userVO.getPassword())
+                    .userType(userVO.getUserType())
+                    .build();
+            return saveUser(userDTO);
+        } else
+            return "验证码错误";
+    }
+
+    @Override
+    @Transactional
+    public String saveUser(UserDTO userDTO) {
+        String username = userDTO.getUsername();
+        String email = userDTO.getEmail();
+        String password = "{bcrypt}" + passwordEncoder.encode(userDTO.getPassword());
+        Integer userType = userDTO.getUserType();
         User newUser = User.builder()
-                .username(userVO.getUsername())
-                .password("{bcrypt}" + passwordEncoder.encode(userVO.getPassword()))
-                .email(userVO.getEmail())
+                .username(username)
+                .password(password)
+                .email(email)
                 .build();
         save(newUser);
         IntStream.rangeClosed(1, 3)

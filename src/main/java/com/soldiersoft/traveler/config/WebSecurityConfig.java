@@ -41,6 +41,7 @@ public class WebSecurityConfig {
         return http
                 .authorizeHttpRequests(registry -> registry
                         .requestMatchers(WHITE_LIST).permitAll()
+                        .requestMatchers("/user/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/staff/**").hasRole("STAFF")
                         .requestMatchers("/tourist/**").hasRole("TOURIST")
@@ -77,9 +78,7 @@ public class WebSecurityConfig {
             "/v3/api-docs/**",
             "/v3/api-docs.yaml",
             "/swagger-ui/**",
-            "/swagger-ui.html",
-            "/login",
-            "/register"
+            "/swagger-ui.html"
     };
 
     @Bean
