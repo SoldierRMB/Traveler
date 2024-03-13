@@ -11,8 +11,11 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
+
+import static com.soldiersoft.traveler.constant.RedisKeyConstants.EMAIL_CODE_KEY;
 
 @Service
 public class MailServiceImpl implements MailService {
@@ -54,7 +57,7 @@ public class MailServiceImpl implements MailService {
     @Override
     public Boolean sendCode(String to) {
         String code = generateCode();
-        RedisUtil.setString("registerCode:email:" + to, code, 5L, TimeUnit.MINUTES);
+        RedisUtil.setString(EMAIL_CODE_KEY + to, code, 5L, TimeUnit.MINUTES);
         MailDTO mailDTO = MailDTO.builder()
                 .to(to)
                 .from("行者")
@@ -66,8 +69,12 @@ public class MailServiceImpl implements MailService {
 
     @Override
     public Boolean verifyCode(String to, String code) {
-        String mailCode = RedisUtil.getString("registerCode:email:" + to);
-        RedisUtil.delete("registerCode:email:" + to);
-        return mailCode.equals(code);
+        return Optional.ofNullable(RedisUtil.getString(EMAIL_CODE_KEY + to))
+                .map(mailCode -> {
+                    RedisUtil.delete(EMAIL_CODE_KEY + to);
+                    return mailCode;
+                })
+                .map(mailCode -> mailCode.equals(code))
+                .orElse(false);
     }
 }
