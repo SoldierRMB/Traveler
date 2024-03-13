@@ -56,7 +56,7 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole>
                     });
             return "注册成功";
         } catch (BizException e) {
-            throw new BizException("保存用户角色失败", e);
+            throw new BizException("保存用户角色失败");
         }
     }
 }

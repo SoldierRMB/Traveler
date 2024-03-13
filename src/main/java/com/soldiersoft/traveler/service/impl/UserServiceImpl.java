@@ -140,7 +140,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
             userDTO.setId(newUser.getId());
             return userRoleService.saveUserRoleFromUser(userDTO);
         } catch (Exception e) {
-            throw new BizException("注册失败，请联系管理员", e);
+            throw new BizException("注册失败，请联系管理员");
         }
     }
 }

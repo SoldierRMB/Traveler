@@ -40,7 +40,7 @@ public class MailServiceImpl implements MailService {
             javaMailSender.send(message);
             return true;
         } catch (Exception e) {
-            throw new BizException("发送邮件失败", e);
+            throw new BizException("发送邮件失败");
         }
     }
 
@@ -71,10 +71,12 @@ public class MailServiceImpl implements MailService {
     public Boolean verifyCode(String to, String code) {
         return Optional.ofNullable(RedisUtil.getString(EMAIL_CODE_KEY + to))
                 .map(mailCode -> {
-                    RedisUtil.delete(EMAIL_CODE_KEY + to);
-                    return mailCode;
+                    if (mailCode.equals(code)) {
+                        RedisUtil.delete(EMAIL_CODE_KEY + to);
+                        return true;
+                    }
+                    return false;
                 })
-                .map(mailCode -> mailCode.equals(code))
-                .orElse(false);
+                .orElseThrow(() -> new BizException("验证码已过期", to));
     }
 }
