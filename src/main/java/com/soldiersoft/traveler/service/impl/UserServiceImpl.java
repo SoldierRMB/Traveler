@@ -138,10 +138,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
                     .build();
             save(newUser);
             userDTO.setId(newUser.getId());
-            userRoleService.saveUserRoleFromUser(userDTO);
-            return "注册成功";
-        } catch (BizException e) {
-            throw new BizException("注册失败", e);
+            return userRoleService.saveUserRoleFromUser(userDTO);
+        } catch (Exception e) {
+            throw new BizException("注册失败，请联系管理员", e);
         }
     }
 }

@@ -43,7 +43,7 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole>
     }
 
     @Override
-    public Boolean saveUserRoleFromUser(UserDTO userDTO) {
+    public String saveUserRoleFromUser(UserDTO userDTO) {
         try {
             IntStream.rangeClosed(1, 3)
                     .filter(userDTO.getUserType()::equals)
@@ -54,7 +54,7 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole>
                                 .build();
                         save(userRole);
                     });
-            return true;
+            return "注册成功";
         } catch (BizException e) {
             throw new BizException("保存用户角色失败", e);
         }
