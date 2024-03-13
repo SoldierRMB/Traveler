@@ -1,6 +1,7 @@
 package com.soldiersoft.traveler.model.vo;
 
 import com.soldiersoft.traveler.entity.Menu;
+import com.soldiersoft.traveler.model.dto.RoleMenuDTO;
 import com.soldiersoft.traveler.model.dto.UserRoleDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,12 +20,12 @@ import java.util.List;
 @AllArgsConstructor
 public class UserDetailsVO implements UserDetails {
     private UserRoleDTO userRoleDTO;
+    private List<RoleMenuDTO> roleMenuDTOList;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<SimpleGrantedAuthority> authorities = new java.util.ArrayList<>(userRoleDTO
-                .getMenuList()
-                .stream()
+        List<SimpleGrantedAuthority> authorities = new java.util.ArrayList<>(roleMenuDTOList.stream()
+                .flatMap(roleMenuDTO -> roleMenuDTO.getMenuList().stream())
                 .map(Menu::getAuthority)
                 .map(SimpleGrantedAuthority::new)
                 .toList());

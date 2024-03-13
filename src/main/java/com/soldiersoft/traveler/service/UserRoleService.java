@@ -2,6 +2,7 @@ package com.soldiersoft.traveler.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.soldiersoft.traveler.entity.UserRole;
+import com.soldiersoft.traveler.model.dto.UserDTO;
 import com.soldiersoft.traveler.model.dto.UserRoleDTO;
 
 /**
@@ -10,5 +11,7 @@ import com.soldiersoft.traveler.model.dto.UserRoleDTO;
  * @createDate 2024-02-04 16:13:12
  */
 public interface UserRoleService extends IService<UserRole> {
-    UserRoleDTO queryUserRoleByUserId(Long userId);
+    UserRoleDTO getUserRoleByUserId(Long userId);
+
+    Boolean saveUserRoleFromUser(UserDTO userDTO);
 }

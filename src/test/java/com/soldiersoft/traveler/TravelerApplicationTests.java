@@ -2,6 +2,7 @@ package com.soldiersoft.traveler;
 
 import com.soldiersoft.traveler.model.dto.MailDTO;
 import com.soldiersoft.traveler.service.MailService;
+import com.soldiersoft.traveler.service.RoleMenuService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,6 +11,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 class TravelerApplicationTests {
     @Autowired
     private MailService mailService;
+    @Autowired
+    private RoleMenuService roleMenuService;
 
     @Test
     void testSendEmail() {
@@ -21,5 +24,10 @@ class TravelerApplicationTests {
                 .text("您的验证码是：" + code)
                 .build();
         mailService.sendEmail(mailDTO);
+    }
+
+    @Test
+    void getRoleMenuByRoleId() {
+        System.out.println(roleMenuService.getRoleMenuByRoleId(1));
     }
 }

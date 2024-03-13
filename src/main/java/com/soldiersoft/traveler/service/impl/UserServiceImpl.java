@@ -7,7 +7,6 @@ import cn.hutool.jwt.signers.JWTSigner;
 import cn.hutool.jwt.signers.JWTSignerUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.soldiersoft.traveler.entity.User;
-import com.soldiersoft.traveler.entity.UserRole;
 import com.soldiersoft.traveler.exception.BizException;
 import com.soldiersoft.traveler.mapper.UserMapper;
 import com.soldiersoft.traveler.model.dto.UserDTO;
@@ -25,6 +24,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,7 +34,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.IntStream;
 
 /**
  * @author Soldier_RMB
@@ -67,7 +66,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
             authentication = authenticationManager.authenticate(authenticationToken);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         } catch (AuthenticationException e) {
-            throw new BizException("登录失败，用户名或密码错误");
+            throw new UsernameNotFoundException("用户名或密码错误");
         }
         UserDetailsVO userDetailsVO = (UserDetailsVO) authentication.getPrincipal();
         return createToken(userDetailsVO);
@@ -128,26 +127,22 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     @Override
     @Transactional
     public String saveUser(UserDTO userDTO) {
-        String username = userDTO.getUsername();
-        String email = userDTO.getEmail();
-        String password = "{bcrypt}" + passwordEncoder.encode(userDTO.getPassword());
-        Integer userType = userDTO.getUserType();
-        User newUser = User.builder()
-                .username(username)
-                .password(password)
-                .email(email)
-                .build();
-        save(newUser);
-        IntStream.rangeClosed(1, 3)
-                .filter(userType::equals)
-                .forEach(roleId -> {
-                    UserRole userRole = UserRole.builder()
-                            .userId(newUser.getId())
-                            .roleId(roleId)
-                            .build();
-                    userRoleService.save(userRole);
-                });
-        return "注册成功";
+        try {
+            String username = userDTO.getUsername();
+            String email = userDTO.getEmail();
+            String password = "{bcrypt}" + passwordEncoder.encode(userDTO.getPassword());
+            User newUser = User.builder()
+                    .username(username)
+                    .password(password)
+                    .email(email)
+                    .build();
+            save(newUser);
+            userDTO.setId(newUser.getId());
+            userRoleService.saveUserRoleFromUser(userDTO);
+            return "注册成功";
+        } catch (BizException e) {
+            throw new BizException("注册失败", e);
+        }
     }
 }
 

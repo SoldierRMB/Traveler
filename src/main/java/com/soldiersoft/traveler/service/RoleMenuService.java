@@ -2,6 +2,9 @@ package com.soldiersoft.traveler.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.soldiersoft.traveler.entity.RoleMenu;
+import com.soldiersoft.traveler.model.dto.RoleMenuDTO;
+
+import java.util.List;
 
 /**
  * @author Soldier_RMB
@@ -9,5 +12,5 @@ import com.soldiersoft.traveler.entity.RoleMenu;
  * @createDate 2024-02-04 16:13:12
  */
 public interface RoleMenuService extends IService<RoleMenu> {
-
+    List<RoleMenuDTO> getRoleMenuByRoleId(Integer roleId);
 }
