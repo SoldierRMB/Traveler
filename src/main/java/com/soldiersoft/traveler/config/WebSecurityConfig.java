@@ -58,6 +58,7 @@ public class WebSecurityConfig {
                         })
                 )
                 .logout(conf -> conf
+                        .logoutUrl("/user/logout")
                         .logoutSuccessHandler((request, response, authentication) -> {
                             response.setContentType("application/json;charset=utf-8");
                             response.getWriter().println(JSONUtil.toJsonStr(ResultVO.ok("注销成功")));
