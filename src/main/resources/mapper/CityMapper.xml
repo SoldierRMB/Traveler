@@ -5,8 +5,8 @@
 <mapper namespace="com.soldiersoft.traveler.mapper.CityMapper">
 
     <resultMap id="BaseResultMap" type="com.soldiersoft.traveler.entity.City">
-        <result property="code" column="code" jdbcType="BIGINT"/>
-        <result property="name" column="name" jdbcType="VARCHAR"/>
-        <result property="provinceCode" column="province_code" jdbcType="BIGINT"/>
+            <id property="code" column="code" jdbcType="BIGINT"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+            <result property="provinceCode" column="province_code" jdbcType="BIGINT"/>
     </resultMap>
 </mapper>
