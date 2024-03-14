@@ -1,6 +1,6 @@
 package com.soldiersoft.traveler.mapper;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.github.yulichang.base.MPJBaseMapper;
 import com.soldiersoft.traveler.entity.Topic;
 
 /**
@@ -9,7 +9,7 @@ import com.soldiersoft.traveler.entity.Topic;
  * @createDate 2024-03-04 15:12:12
  * @Entity com.soldiersoft.traveler.entity.Topic
  */
-public interface TopicMapper extends BaseMapper<Topic> {
+public interface TopicMapper extends MPJBaseMapper<Topic> {
 
 }
 

@@ -1,6 +1,6 @@
 package com.soldiersoft.traveler.mapper;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.github.yulichang.base.MPJBaseMapper;
 import com.soldiersoft.traveler.entity.Viewpoint;
 
 /**
@@ -9,7 +9,7 @@ import com.soldiersoft.traveler.entity.Viewpoint;
  * @createDate 2024-03-04 15:12:12
  * @Entity com.soldiersoft.traveler.entity.Viewpoint
  */
-public interface ViewpointMapper extends BaseMapper<Viewpoint> {
+public interface ViewpointMapper extends MPJBaseMapper<Viewpoint> {
 
 }
 

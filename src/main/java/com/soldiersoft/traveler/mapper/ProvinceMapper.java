@@ -1,6 +1,6 @@
 package com.soldiersoft.traveler.mapper;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.github.yulichang.base.MPJBaseMapper;
 import com.soldiersoft.traveler.entity.Province;
 
 /**
@@ -9,7 +9,7 @@ import com.soldiersoft.traveler.entity.Province;
  * @createDate 2024-03-01 17:03:19
  * @Entity com.soldiersoft.traveler.entity.Province
  */
-public interface ProvinceMapper extends BaseMapper<Province> {
+public interface ProvinceMapper extends MPJBaseMapper<Province> {
 
 }
 
