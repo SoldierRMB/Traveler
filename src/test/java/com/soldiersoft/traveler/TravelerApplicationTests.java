@@ -2,7 +2,7 @@ package com.soldiersoft.traveler;
 
 import com.soldiersoft.traveler.model.dto.MailDTO;
 import com.soldiersoft.traveler.service.MailService;
-import com.soldiersoft.traveler.service.RoleMenuService;
+import com.soldiersoft.traveler.service.StreetService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,7 +12,7 @@ class TravelerApplicationTests {
     @Autowired
     private MailService mailService;
     @Autowired
-    private RoleMenuService roleMenuService;
+    private StreetService streetService;
 
     @Test
     void testSendEmail() {
@@ -27,7 +27,7 @@ class TravelerApplicationTests {
     }
 
     @Test
-    void getRoleMenuByRoleId() {
-        System.out.println(roleMenuService.getRoleMenuByRoleId(1));
+    void test() {
+        System.out.println(streetService.getPositionByStreetCode(110101002L));
     }
 }

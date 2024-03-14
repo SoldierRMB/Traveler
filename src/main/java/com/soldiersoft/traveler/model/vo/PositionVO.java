@@ -1,8 +1,9 @@
-package com.soldiersoft.traveler.model.dto;
+package com.soldiersoft.traveler.model.vo;
 
 import com.soldiersoft.traveler.entity.Area;
 import com.soldiersoft.traveler.entity.City;
 import com.soldiersoft.traveler.entity.Province;
+import com.soldiersoft.traveler.entity.Street;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,10 +13,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class StreetDTO {
-    private Long code;
-    private String name;
+public class PositionVO {
     private Province province;
     private City city;
     private Area area;
+    private Street street;
 }

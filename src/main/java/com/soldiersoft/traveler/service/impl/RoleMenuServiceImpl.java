@@ -30,8 +30,8 @@ public class RoleMenuServiceImpl extends ServiceImpl<RoleMenuMapper, RoleMenu>
 
     @Override
     public List<RoleMenuDTO> getRoleMenuByRoleId(Integer roleId) {
-        MPJLambdaWrapper<RoleMenu> wrapper = new MPJLambdaWrapper<>(RoleMenu.class)
-                .selectAll()
+        MPJLambdaWrapper<RoleMenu> wrapper = new MPJLambdaWrapper<RoleMenu>()
+                .selectAll(RoleMenu.class)
                 .selectAssociation(Role.class, RoleMenuDTO::getRole)
                 .selectCollection(Menu.class, RoleMenuDTO::getMenuList)
                 .leftJoin(Role.class, Role::getId, RoleMenu::getRoleId)

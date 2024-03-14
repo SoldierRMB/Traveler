@@ -2,6 +2,7 @@ package com.soldiersoft.traveler.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.soldiersoft.traveler.entity.Street;
+import com.soldiersoft.traveler.model.vo.PositionVO;
 
 /**
  * @author Soldier_RMB
@@ -9,5 +10,5 @@ import com.soldiersoft.traveler.entity.Street;
  * @createDate 2024-03-01 17:03:19
  */
 public interface StreetService extends IService<Street> {
-
+    PositionVO getPositionByStreetCode(Long streetCode);
 }
