@@ -13,38 +13,26 @@ import java.io.Serial;
 import java.io.Serializable;
 
 /**
- * 乡级表
+ * 省级表
  *
- * @TableName t_streets
+ * @TableName t_provinces
  */
-@TableName(value = "t_streets")
+@TableName(value = "t_provinces")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Streets implements Serializable {
+public class Province implements Serializable {
     @Serial
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
     /**
-     * 乡级编号
+     * 省级编号
      */
     @TableId(type = IdType.INPUT)
     private String code;
     /**
-     * 乡级名称
+     * 省级名称
      */
     private String name;
-    /**
-     * 省级编号
-     */
-    private String provinceCode;
-    /**
-     * 地级编号
-     */
-    private String cityCode;
-    /**
-     * 县级编号
-     */
-    private String areaCode;
 }

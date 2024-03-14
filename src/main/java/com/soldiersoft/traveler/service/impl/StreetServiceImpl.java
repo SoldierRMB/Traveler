@@ -1,9 +1,9 @@
 package com.soldiersoft.traveler.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.soldiersoft.traveler.entity.Streets;
-import com.soldiersoft.traveler.mapper.StreetsMapper;
-import com.soldiersoft.traveler.service.StreetsService;
+import com.soldiersoft.traveler.entity.Street;
+import com.soldiersoft.traveler.mapper.StreetMapper;
+import com.soldiersoft.traveler.service.StreetService;
 import org.springframework.stereotype.Service;
 
 /**
@@ -12,8 +12,8 @@ import org.springframework.stereotype.Service;
  * @createDate 2024-03-01 17:03:19
  */
 @Service
-public class StreetsServiceImpl extends ServiceImpl<StreetsMapper, Streets>
-        implements StreetsService {
+public class StreetServiceImpl extends ServiceImpl<StreetMapper, Street>
+        implements StreetService {
 
 }
 

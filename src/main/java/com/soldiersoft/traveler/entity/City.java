@@ -22,7 +22,7 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Cities implements Serializable {
+public class City implements Serializable {
     @Serial
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

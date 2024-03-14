@@ -14,7 +14,7 @@
         <result property="areaCode" column="area_code" jdbcType="BIGINT"/>
         <result property="streetCode" column="street_code" jdbcType="BIGINT"/>
         <result property="reviewed" column="reviewed" jdbcType="TINYINT"/>
-        <result property="isDeleted" column="isDeleted" jdbcType="TINYINT"/>
+        <result property="isDeleted" column="is_deleted" jdbcType="TINYINT"/>
         <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
         <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
     </resultMap>

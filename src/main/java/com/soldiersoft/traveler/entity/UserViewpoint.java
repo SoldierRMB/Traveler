@@ -4,35 +4,33 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.io.Serial;
 import java.io.Serializable;
 
 /**
- * 省级表
+ * 用户景点表
  *
- * @TableName t_provinces
+ * @TableName t_user_viewpoint
  */
-@TableName(value = "t_provinces")
+@TableName(value = "t_user_viewpoint")
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class Provinces implements Serializable {
+public class UserViewpoint implements Serializable {
     @Serial
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
     /**
-     * 省级编号
+     * 编号
      */
-    @TableId(type = IdType.INPUT)
-    private String code;
+    @TableId(type = IdType.AUTO)
+    private Long id;
     /**
-     * 省级名称
+     * 用户编号
      */
-    private String name;
+    private Long userId;
+    /**
+     * 景点编号
+     */
+    private Long viewpointId;
 }
