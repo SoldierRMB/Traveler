@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name = "用户控制器")
+@Tag(name = "UserController", description = "用户接口")
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -22,10 +22,16 @@ public class UserController {
         this.userService = userService;
     }
 
-    @Operation(description = "用户登录接口")
+    @Operation(description = "用户登录")
     @PostMapping("/login")
     public ResultVO<String> login(@Valid @RequestBody LoginVO loginVO) {
         return ResultVO.ok(userService.login(loginVO));
+    }
+
+    @Operation(description = "用户注销")
+    @GetMapping("/logout")
+    public ResultVO<?> logout() {
+        return ResultVO.ok();
     }
 
     @Operation(description = "获取用户是否存在")
@@ -47,8 +53,8 @@ public class UserController {
     }
 
     @Operation(description = "获取用户权限")
-    @GetMapping("/queryUserAuthentication")
-    public ResultVO<Authentication> queryUserAuthentication(Authentication authentication) {
+    @GetMapping("/getUserAuthentication")
+    public ResultVO<Authentication> getUserAuthentication(Authentication authentication) {
         return ResultVO.ok(authentication);
     }
 }
