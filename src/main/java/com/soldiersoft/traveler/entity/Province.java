@@ -30,7 +30,7 @@ public class Province implements Serializable {
      * 省级编号
      */
     @TableId(type = IdType.INPUT)
-    private String code;
+    private Long code;
     /**
      * 省级名称
      */

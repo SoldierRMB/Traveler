@@ -30,7 +30,7 @@ public class Street implements Serializable {
      * 乡级编号
      */
     @TableId(type = IdType.INPUT)
-    private String code;
+    private Long code;
     /**
      * 乡级名称
      */
@@ -38,13 +38,13 @@ public class Street implements Serializable {
     /**
      * 省级编号
      */
-    private String provinceCode;
+    private Long provinceCode;
     /**
      * 地级编号
      */
-    private String cityCode;
+    private Long cityCode;
     /**
      * 县级编号
      */
-    private String areaCode;
+    private Long areaCode;
 }

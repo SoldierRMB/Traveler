@@ -30,7 +30,7 @@ public class City implements Serializable {
      * 地级编号
      */
     @TableId(type = IdType.INPUT)
-    private String code;
+    private Long code;
     /**
      * 地级名称
      */
@@ -38,5 +38,5 @@ public class City implements Serializable {
     /**
      * 省级编号
      */
-    private String provinceCode;
+    private Long provinceCode;
 }

@@ -30,7 +30,7 @@ public class Area implements Serializable {
      * 县级编号
      */
     @TableId(type = IdType.INPUT)
-    private String code;
+    private Long code;
     /**
      * 县级名称
      */
@@ -38,9 +38,9 @@ public class Area implements Serializable {
     /**
      * 省级编号
      */
-    private String provinceCode;
+    private Long provinceCode;
     /**
      * 地级编号
      */
-    private String cityCode;
+    private Long cityCode;
 }
