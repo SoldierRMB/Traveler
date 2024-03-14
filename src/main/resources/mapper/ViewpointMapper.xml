@@ -8,6 +8,7 @@
         <id property="id" column="id" jdbcType="BIGINT"/>
         <result property="viewpointName" column="viewpoint_name" jdbcType="VARCHAR"/>
         <result property="description" column="description" jdbcType="VARCHAR"/>
+        <result property="address" column="address" jdbcType="VARCHAR"/>
         <result property="score" column="score" jdbcType="DOUBLE"/>
         <result property="provinceCode" column="province_code" jdbcType="BIGINT"/>
         <result property="cityCode" column="city_code" jdbcType="BIGINT"/>
