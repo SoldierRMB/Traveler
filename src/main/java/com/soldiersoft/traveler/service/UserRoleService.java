@@ -13,5 +13,5 @@ import com.soldiersoft.traveler.model.dto.UserRoleDTO;
 public interface UserRoleService extends IService<UserRole> {
     UserRoleDTO getUserRoleByUserId(Long userId);
 
-    String saveUserRoleFromUser(UserDTO userDTO);
+    Boolean saveUserRoleFromUser(UserDTO userDTO);
 }

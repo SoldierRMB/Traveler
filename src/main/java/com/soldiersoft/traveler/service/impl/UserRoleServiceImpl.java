@@ -5,7 +5,6 @@ import com.github.yulichang.wrapper.MPJLambdaWrapper;
 import com.soldiersoft.traveler.entity.Role;
 import com.soldiersoft.traveler.entity.User;
 import com.soldiersoft.traveler.entity.UserRole;
-import com.soldiersoft.traveler.exception.BizException;
 import com.soldiersoft.traveler.mapper.UserRoleMapper;
 import com.soldiersoft.traveler.model.dto.UserDTO;
 import com.soldiersoft.traveler.model.dto.UserRoleDTO;
@@ -43,20 +42,13 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole>
     }
 
     @Override
-    public String saveUserRoleFromUser(UserDTO userDTO) {
-        try {
-            IntStream.rangeClosed(1, 3)
-                    .filter(userDTO.getUserType()::equals)
-                    .forEach(roleId -> {
-                        UserRole userRole = UserRole.builder()
-                                .userId(userDTO.getId())
-                                .roleId(roleId)
-                                .build();
-                        save(userRole);
-                    });
-            return "注册成功";
-        } catch (BizException e) {
-            throw new BizException("保存用户角色失败");
-        }
+    public Boolean saveUserRoleFromUser(UserDTO userDTO) {
+        return IntStream.of(userDTO.getUserType())
+                .filter(roleId -> roleId == 1 || roleId == 2 || roleId == 3)
+                .mapToObj(roleId -> UserRole.builder()
+                        .userId(userDTO.getId())
+                        .roleId(roleId)
+                        .build())
+                .allMatch(this::save);
     }
 }

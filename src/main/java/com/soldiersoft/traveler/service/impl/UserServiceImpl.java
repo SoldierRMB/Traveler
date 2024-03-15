@@ -131,14 +131,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
             String username = userDTO.getUsername();
             String email = userDTO.getEmail();
             String password = "{bcrypt}" + passwordEncoder.encode(userDTO.getPassword());
-            User newUser = User.builder()
+            User user = User.builder()
                     .username(username)
                     .password(password)
                     .email(email)
                     .build();
-            save(newUser);
-            userDTO.setId(newUser.getId());
-            return userRoleService.saveUserRoleFromUser(userDTO);
+            save(user);
+            userDTO.setId(user.getId());
+            if (userRoleService.saveUserRoleFromUser(userDTO))
+                return "注册成功";
+            else
+                return null;
         } catch (Exception e) {
             throw new BizException("注册失败，请联系管理员");
         }
