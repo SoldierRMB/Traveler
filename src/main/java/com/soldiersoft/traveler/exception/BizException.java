@@ -21,6 +21,10 @@ public class BizException extends RuntimeException {
         this.msg = msg;
     }
 
+    public BizException(Object... args) {
+        this.args = args;
+    }
+
     public BizException(String msg, Object... args) {
         this.msg = msg;
         this.args = args;
