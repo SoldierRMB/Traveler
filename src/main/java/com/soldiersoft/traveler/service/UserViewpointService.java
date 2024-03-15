@@ -1,7 +1,8 @@
 package com.soldiersoft.traveler.service;
 
-import com.soldiersoft.traveler.entity.UserViewpoint;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.soldiersoft.traveler.entity.UserViewpoint;
+import com.soldiersoft.traveler.model.dto.UserViewpointDTO;
 
 /**
 * @author Soldier_RMB
@@ -9,5 +10,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
 * @createDate 2024-03-13 15:04:11
 */
 public interface UserViewpointService extends IService<UserViewpoint> {
-
+    Boolean saveUserViewpointFromViewpoint(UserViewpointDTO userViewpointDTO);
 }

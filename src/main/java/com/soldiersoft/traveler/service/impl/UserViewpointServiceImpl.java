@@ -2,7 +2,9 @@ package com.soldiersoft.traveler.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.soldiersoft.traveler.entity.UserViewpoint;
+import com.soldiersoft.traveler.exception.BizException;
 import com.soldiersoft.traveler.mapper.UserViewpointMapper;
+import com.soldiersoft.traveler.model.dto.UserViewpointDTO;
 import com.soldiersoft.traveler.service.UserViewpointService;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,19 @@ import org.springframework.stereotype.Service;
 public class UserViewpointServiceImpl extends ServiceImpl<UserViewpointMapper, UserViewpoint>
         implements UserViewpointService {
 
+    @Override
+    public Boolean saveUserViewpointFromViewpoint(UserViewpointDTO userViewpointDTO) {
+        try {
+            UserViewpoint userViewpoint = UserViewpoint.builder()
+                    .userId(userViewpointDTO.getUser().getId())
+                    .viewpointId(userViewpointDTO.getViewpoint().getId())
+                    .build();
+            save(userViewpoint);
+            return true;
+        } catch (Exception e) {
+            throw new BizException(userViewpointDTO);
+        }
+    }
 }
 
 

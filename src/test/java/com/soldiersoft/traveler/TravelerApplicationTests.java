@@ -1,11 +1,15 @@
 package com.soldiersoft.traveler;
 
+import com.soldiersoft.traveler.entity.Viewpoint;
 import com.soldiersoft.traveler.model.dto.MailDTO;
 import com.soldiersoft.traveler.service.MailService;
 import com.soldiersoft.traveler.service.StreetService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.util.List;
+import java.util.Objects;
 
 @SpringBootTest
 class TravelerApplicationTests {
@@ -27,7 +31,17 @@ class TravelerApplicationTests {
     }
 
     @Test
-    void test() {
+    void testGetPositionByStreetCode() {
         System.out.println(streetService.getPositionByStreetCode(110101002L));
+    }
+
+    @Test
+    void idsToBeanIds() {
+        List<Long> viewpointIds = List.of(1L, 2L, 3L);
+        List<Viewpoint> viewpoints = viewpointIds.stream()
+                .map(id -> Viewpoint.builder().id(id).build())
+                .filter(Objects::nonNull)
+                .toList();
+        System.out.println(viewpoints);
     }
 }
