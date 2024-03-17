@@ -39,7 +39,10 @@ public class JWTAuthenticationTokenFilter extends OncePerRequestFilter {
                 // 从Token中获取用户名等信息
                 jwt.getHeader(JWTHeader.TYPE);
                 Object username = jwt.getPayload("username");
-                List<SimpleGrantedAuthority> authorities = convertToListOfString((List<?>) jwt.getPayload("authorities")).stream().map(SimpleGrantedAuthority::new).toList();
+                List<SimpleGrantedAuthority> authorities = convertToListOfString(
+                        (List<?>) jwt.getPayload("authorities")).stream()
+                        .map(SimpleGrantedAuthority::new)
+                        .toList();
 
                 // 验证是否有效
                 boolean validate = jwt.validate(0);
