@@ -4,6 +4,7 @@ import com.soldiersoft.traveler.model.vo.ResultVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.RedisConnectionFailureException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -31,10 +32,10 @@ public class GlobalExceptionHandler {
         return ResultVO.fail(BAD_REQUEST);
     }
 
-    /*@ExceptionHandler(DataIntegrityViolationException.class)
-    public ResultVO<Exception> handleDataIntegrityViolationException() {
-        return ResultVO.fail(BAD_REQUEST);
-    }*/
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResultVO<Exception> handleAccessDeniedException() {
+        return ResultVO.fail(FORBIDDEN);
+    }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResultVO<Exception> handleHttpMessageNotReadableException() {
