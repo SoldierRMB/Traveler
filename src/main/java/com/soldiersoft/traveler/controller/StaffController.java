@@ -7,6 +7,7 @@ import com.soldiersoft.traveler.service.ViewpointService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,10 +22,11 @@ public class StaffController {
         this.viewpointService = viewpointService;
     }
 
-    @Operation(description = "通过景点编号获取景点信息")
-    @GetMapping("/getViewpointById")
-    public ResultVO<ViewpointVO> getViewpointById(@RequestParam Long id) {
-        return ResultVO.ok(viewpointService.getViewpointById(id));
+    @Operation(description = "景点管理员通过景点编号获取景点信息")
+    @GetMapping("/staffGetViewpointById")
+    @PreAuthorize("authentication.principal.equals(#username)")
+    public ResultVO<ViewpointVO> staffGetViewpointById(@RequestParam Long viewpointId, String username) {
+        return ResultVO.ok(viewpointService.staffGetViewpointById(viewpointId, username));
     }
 
     @Operation(description = "发布景点信息")
