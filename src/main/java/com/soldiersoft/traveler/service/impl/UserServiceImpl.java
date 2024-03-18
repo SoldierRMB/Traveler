@@ -16,6 +16,7 @@ import com.soldiersoft.traveler.model.vo.UserVO;
 import com.soldiersoft.traveler.service.MailService;
 import com.soldiersoft.traveler.service.UserRoleService;
 import com.soldiersoft.traveler.service.UserService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -145,6 +146,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         } catch (Exception e) {
             throw new BizException("注册失败，请联系管理员");
         }
+    }
+
+    @Override
+    public UserDTO getUserByUsername(String username) {
+        return Optional.ofNullable(lambdaQuery().eq(User::getUsername, username).one())
+                .map(user -> {
+                    UserDTO userDTO = new UserDTO();
+                    BeanUtils.copyProperties(user, userDTO);
+                    return userDTO;
+                }).orElse(null);
     }
 }
 

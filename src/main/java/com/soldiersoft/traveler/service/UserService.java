@@ -24,4 +24,6 @@ public interface UserService extends IService<User> {
     String register(UserVO userVO);
 
     String saveUser(UserDTO userDTO);
+
+    UserDTO getUserByUsername(String username);
 }
