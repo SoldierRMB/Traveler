@@ -5,6 +5,8 @@ import com.soldiersoft.traveler.entity.Viewpoint;
 import com.soldiersoft.traveler.model.vo.UserViewpointVO;
 import com.soldiersoft.traveler.model.vo.ViewpointVO;
 
+import java.util.List;
+
 /**
  * @author Soldier_RMB
  * @description 针对表【t_viewpoint(景点表)】的数据库操作Service
@@ -12,7 +14,7 @@ import com.soldiersoft.traveler.model.vo.ViewpointVO;
  */
 public interface ViewpointService extends IService<Viewpoint> {
 
-    ViewpointVO getViewpointById(Long id);
+    ViewpointVO staffGetViewpointById(Long viewpointId, String username);
 
     Boolean getViewpointIsPresent(Long viewpointId);
 
@@ -23,4 +25,8 @@ public interface ViewpointService extends IService<Viewpoint> {
     String deleteViewpoint(Long viewpointId);
 
     String reviewViewpoints(Long[] viewpointIds);
+
+    ViewpointVO getViewpointById(Long viewpointId);
+
+    List<ViewpointVO> getViewpointsByCityCode(Long cityCode);
 }

@@ -1,15 +1,18 @@
 package com.soldiersoft.traveler.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.soldiersoft.traveler.entity.User;
 import com.soldiersoft.traveler.entity.Viewpoint;
 import com.soldiersoft.traveler.exception.BizException;
 import com.soldiersoft.traveler.mapper.ViewpointMapper;
+import com.soldiersoft.traveler.model.dto.UserDTO;
 import com.soldiersoft.traveler.model.dto.UserViewpointDTO;
 import com.soldiersoft.traveler.model.vo.UserVO;
 import com.soldiersoft.traveler.model.vo.UserViewpointVO;
 import com.soldiersoft.traveler.model.vo.ViewpointVO;
+import com.soldiersoft.traveler.service.UserService;
 import com.soldiersoft.traveler.service.UserViewpointService;
 import com.soldiersoft.traveler.service.ViewpointService;
 import org.springframework.beans.BeanUtils;
@@ -17,8 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author Soldier_RMB
@@ -28,23 +31,30 @@ import java.util.Optional;
 @Service
 public class ViewpointServiceImpl extends ServiceImpl<ViewpointMapper, Viewpoint>
         implements ViewpointService {
-    private final ViewpointMapper viewpointMapper;
+    private final UserService userService;
     private final UserViewpointService userViewpointService;
+    private final ViewpointMapper viewpointMapper;
 
     @Autowired
-    public ViewpointServiceImpl(ViewpointMapper viewpointMapper, UserViewpointService userViewpointService) {
-        this.viewpointMapper = viewpointMapper;
+    public ViewpointServiceImpl(UserService userService, UserViewpointService userViewpointService, ViewpointMapper viewpointMapper) {
+        this.userService = userService;
         this.userViewpointService = userViewpointService;
+        this.viewpointMapper = viewpointMapper;
     }
 
     @Override
-    public ViewpointVO getViewpointById(Long id) {
-        return Optional.ofNullable(lambdaQuery().eq(Viewpoint::getId, id).one())
-                .map(viewpoint -> {
-                    ViewpointVO vo = new ViewpointVO();
-                    BeanUtils.copyProperties(viewpoint, vo);
-                    return vo;
-                })
+    public ViewpointVO staffGetViewpointById(Long viewpointId, String username) {
+        UserDTO userDTO = userService.getUserByUsername(username);
+        return Optional.ofNullable(userDTO)
+                .flatMap(user -> lambdaQuery().eq(Viewpoint::getId, viewpointId).oneOpt())
+                .flatMap(vp -> userViewpointService.getUserViewpointByUserId(userDTO.getId()).stream()
+                        .filter(userViewpointDTO -> userViewpointDTO.getViewpoint().equals(vp))
+                        .findFirst()
+                        .map(userViewpointDTO -> {
+                            ViewpointVO vo = new ViewpointVO();
+                            BeanUtils.copyProperties(vp, vo);
+                            return vo;
+                        }))
                 .orElse(null);
     }
 
@@ -144,6 +154,37 @@ public class ViewpointServiceImpl extends ServiceImpl<ViewpointMapper, Viewpoint
         } catch (BizException e) {
             throw new BizException("景点审核失败");
         }
+    }
+
+    @Override
+    public ViewpointVO getViewpointById(Long viewpointId) {
+        Map<SFunction<Viewpoint, ?>, Object> map = new HashMap<>();
+        map.put(Viewpoint::getId, viewpointId);
+        map.put(Viewpoint::getReviewed, 1);
+        return Optional.ofNullable(lambdaQuery().allEq(map).one())
+                .map(viewpoint -> {
+                    ViewpointVO vo = new ViewpointVO();
+                    BeanUtils.copyProperties(viewpoint, vo);
+                    return vo;
+                })
+                .orElse(null);
+    }
+
+    @Override
+    public List<ViewpointVO> getViewpointsByCityCode(Long cityCode) {
+        Map<SFunction<Viewpoint, ?>, Object> map = new HashMap<>();
+        map.put(Viewpoint::getCityCode, cityCode);
+        map.put(Viewpoint::getReviewed, 1);
+        return Optional.ofNullable(lambdaQuery().allEq(map).list())
+                .map(viewpoints -> viewpoints.stream()
+                        .map(viewpoint -> {
+                            ViewpointVO vo = new ViewpointVO();
+                            BeanUtils.copyProperties(viewpoint, vo);
+                            return vo;
+                        })
+                        .collect(Collectors.toList())
+                )
+                .orElse(null);
     }
 }
 
