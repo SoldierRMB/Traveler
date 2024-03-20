@@ -33,7 +33,7 @@ public class Comment implements Serializable {
     @TableId(type = IdType.AUTO)
     private Long id;
     /**
-     * 评论类型 1.主题评论 2.景点评论
+     * 评论类型 1.动态评论 2.景点评论
      */
     private Integer commentType;
     /**
@@ -45,7 +45,7 @@ public class Comment implements Serializable {
      */
     private Long fromUserId;
     /**
-     * 主题编号 0.非主题评论
+     * 动态编号 0.非动态评论
      */
     private Long topicId;
     /**
