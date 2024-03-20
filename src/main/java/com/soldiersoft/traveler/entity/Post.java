@@ -14,30 +14,30 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * 主题表
+ * 动态表
  *
- * @TableName t_topic
+ * @TableName t_post
  */
-@TableName(value = "t_topic")
+@TableName(value = "t_post")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Topic implements Serializable {
+public class Post implements Serializable {
     @Serial
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
     /**
-     * 主题编号
+     * 动态编号
      */
     @TableId(type = IdType.AUTO)
     private Long id;
     /**
-     * 主题标题
+     * 动态标题
      */
     private String title;
     /**
-     * 主题内容
+     * 动态内容
      */
     private String content;
     /**
