@@ -2,6 +2,9 @@ package com.soldiersoft.traveler.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.soldiersoft.traveler.entity.Area;
+import com.soldiersoft.traveler.model.vo.AreaVO;
+
+import java.util.List;
 
 /**
  * @author Soldier_RMB
@@ -10,4 +13,5 @@ import com.soldiersoft.traveler.entity.Area;
  */
 public interface AreaService extends IService<Area> {
 
+    List<AreaVO> getAreasByCityCode(Long cityCode);
 }
