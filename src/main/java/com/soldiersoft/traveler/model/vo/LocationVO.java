@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PositionVO {
+public class LocationVO {
     private Province province;
     private City city;
     private Area area;

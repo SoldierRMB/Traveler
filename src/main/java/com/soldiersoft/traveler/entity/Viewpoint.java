@@ -43,7 +43,7 @@ public class Viewpoint implements Serializable {
     /**
      * 详细地址
      */
-    private String address;
+    private String location;
     /**
      * 景点评分
      */

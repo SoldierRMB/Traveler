@@ -20,7 +20,7 @@ public class ViewpointVO {
     @NotBlank
     private String description;
     @NotBlank
-    private String address;
+    private String location;
     @Digits(integer = 5, fraction = 2)
     private Double score;
     @NotBlank
