@@ -2,6 +2,9 @@ package com.soldiersoft.traveler.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.soldiersoft.traveler.entity.City;
+import com.soldiersoft.traveler.model.vo.CityVO;
+
+import java.util.List;
 
 /**
  * @author Soldier_RMB
@@ -10,4 +13,5 @@ import com.soldiersoft.traveler.entity.City;
  */
 public interface CityService extends IService<City> {
 
+    List<CityVO> getCitiesByProvinceCode(Long provinceCode);
 }
