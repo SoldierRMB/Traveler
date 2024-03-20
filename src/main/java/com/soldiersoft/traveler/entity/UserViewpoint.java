@@ -27,7 +27,7 @@ public class UserViewpoint implements Serializable {
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
     /**
-     * 编号
+     * 用户景点编号
      */
     @TableId(type = IdType.AUTO)
     private Long id;
