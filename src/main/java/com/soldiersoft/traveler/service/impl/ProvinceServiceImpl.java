@@ -3,8 +3,13 @@ package com.soldiersoft.traveler.service.impl;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.soldiersoft.traveler.entity.Province;
 import com.soldiersoft.traveler.mapper.ProvinceMapper;
+import com.soldiersoft.traveler.model.vo.ProvinceVO;
 import com.soldiersoft.traveler.service.ProvinceService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Soldier_RMB
@@ -15,6 +20,16 @@ import org.springframework.stereotype.Service;
 public class ProvinceServiceImpl extends ServiceImpl<ProvinceMapper, Province>
         implements ProvinceService {
 
+    @Override
+    public List<ProvinceVO> getAllProvinces() {
+        return Optional.ofNullable(lambdaQuery().list())
+                .map(list -> list.stream().map(province ->{
+                    ProvinceVO provinceVO = new ProvinceVO();
+                    BeanUtils.copyProperties(province, provinceVO);
+                    return provinceVO;
+                }).toList())
+                .orElse(null);
+    }
 }
 
 

@@ -2,6 +2,9 @@ package com.soldiersoft.traveler.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.soldiersoft.traveler.entity.Province;
+import com.soldiersoft.traveler.model.vo.ProvinceVO;
+
+import java.util.List;
 
 /**
  * @author Soldier_RMB
@@ -10,4 +13,5 @@ import com.soldiersoft.traveler.entity.Province;
  */
 public interface ProvinceService extends IService<Province> {
 
+    List<ProvinceVO> getAllProvinces();
 }
