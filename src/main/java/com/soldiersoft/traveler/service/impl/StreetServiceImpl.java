@@ -8,10 +8,15 @@ import com.soldiersoft.traveler.entity.Province;
 import com.soldiersoft.traveler.entity.Street;
 import com.soldiersoft.traveler.mapper.StreetMapper;
 import com.soldiersoft.traveler.model.dto.StreetDTO;
-import com.soldiersoft.traveler.model.vo.PositionVO;
+import com.soldiersoft.traveler.model.vo.LocationVO;
+import com.soldiersoft.traveler.model.vo.StreetVO;
 import com.soldiersoft.traveler.service.StreetService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Soldier_RMB
@@ -29,8 +34,19 @@ public class StreetServiceImpl extends ServiceImpl<StreetMapper, Street>
     }
 
     @Override
-    public PositionVO getPositionByStreetCode(Long streetCode) {
-        MPJLambdaWrapper<Street> wrapper = new MPJLambdaWrapper<Street>()
+    public List<StreetVO> getStreetsByAreaCode(Long areaCode) {
+        return Optional.ofNullable(lambdaQuery().eq(Street::getAreaCode, areaCode).list())
+                .map(list -> list.stream().map(street -> {
+                    StreetVO streetVO = new StreetVO();
+                    BeanUtils.copyProperties(street, streetVO);
+                    return streetVO;
+                }).toList())
+                .orElse(null);
+    }
+
+    @Override
+    public LocationVO getPositionByStreetCode(Long streetCode) {
+        MPJLambdaWrapper<Street> wrapper = new MPJLambdaWrapper<>(Street.class)
                 .selectAll(Street.class)
                 .selectAssociation(Province.class, StreetDTO::getProvince)
                 .selectAssociation(City.class, StreetDTO::getCity)
@@ -47,7 +63,7 @@ public class StreetServiceImpl extends ServiceImpl<StreetMapper, Street>
                 .cityCode(streetDTO.getCity().getCode())
                 .areaCode(streetDTO.getArea().getCode())
                 .build();
-        return PositionVO.builder()
+        return LocationVO.builder()
                 .province(streetDTO.getProvince())
                 .city(streetDTO.getCity())
                 .area(streetDTO.getArea())
