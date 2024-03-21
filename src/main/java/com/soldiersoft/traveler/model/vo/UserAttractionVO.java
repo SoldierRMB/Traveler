@@ -11,11 +11,11 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserViewpointVO {
+public class UserAttractionVO {
     @Valid
     @NotNull
     private UserVO userVO;
     @Valid
     @NotNull
-    private ViewpointVO viewpointVO;
+    private AttractionVO attractionVO;
 }

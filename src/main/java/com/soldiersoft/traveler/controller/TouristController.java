@@ -1,8 +1,8 @@
 package com.soldiersoft.traveler.controller;
 
+import com.soldiersoft.traveler.model.vo.AttractionVO;
 import com.soldiersoft.traveler.model.vo.ResultVO;
-import com.soldiersoft.traveler.model.vo.ViewpointVO;
-import com.soldiersoft.traveler.service.ViewpointService;
+import com.soldiersoft.traveler.service.AttractionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,22 +17,22 @@ import java.util.List;
 @RestController
 @RequestMapping("/tourist")
 public class TouristController {
-    private final ViewpointService viewpointService;
+    private final AttractionService attractionService;
 
     @Autowired
-    public TouristController(ViewpointService viewpointService) {
-        this.viewpointService = viewpointService;
+    public TouristController(AttractionService attractionService) {
+        this.attractionService = attractionService;
     }
 
     @Operation(description = "通过景点编号获取审核通过景点信息")
-    @GetMapping("/getViewpointById")
-    public ResultVO<ViewpointVO> getViewpointById(@RequestParam Long viewpointId) {
-        return ResultVO.ok(viewpointService.getViewpointById(viewpointId));
+    @GetMapping("/getAttractionById")
+    public ResultVO<AttractionVO> getAttractionById(@RequestParam Long attractionId) {
+        return ResultVO.ok(attractionService.getAttractionById(attractionId));
     }
 
     @Operation(description = "通过城市编号获取所有审核通过景点信息")
-    @GetMapping("/getViewpointsByCityCode")
-    public ResultVO<List<ViewpointVO>> getViewpointsByCityCode(@RequestParam Long cityCode) {
-        return ResultVO.ok(viewpointService.getViewpointsByCityCode(cityCode));
+    @GetMapping("/getAttractionsByCityCode")
+    public ResultVO<List<AttractionVO>> getAttractionsByCityCode(@RequestParam Long cityCode) {
+        return ResultVO.ok(attractionService.getAttractionsByCityCode(cityCode));
     }
 }

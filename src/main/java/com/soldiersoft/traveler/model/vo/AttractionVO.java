@@ -13,10 +13,10 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ViewpointVO {
+public class AttractionVO {
     private Long id;
     @NotBlank
-    private String viewpointName;
+    private String attractionName;
     @NotBlank
     private String description;
     @NotBlank

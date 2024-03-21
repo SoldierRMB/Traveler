@@ -16,14 +16,14 @@ import java.time.LocalDateTime;
 /**
  * 景点表
  *
- * @TableName t_viewpoint
+ * @TableName t_attraction
  */
-@TableName(value = "t_viewpoint")
+@TableName(value = "t_attraction")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Viewpoint implements Serializable {
+public class Attraction implements Serializable {
     @Serial
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
@@ -35,7 +35,7 @@ public class Viewpoint implements Serializable {
     /**
      * 景点名称
      */
-    private String viewpointName;
+    private String attractionName;
     /**
      * 景点描述
      */

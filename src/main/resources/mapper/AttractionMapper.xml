@@ -2,11 +2,11 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.soldiersoft.traveler.mapper.ViewpointMapper">
+<mapper namespace="com.soldiersoft.traveler.mapper.AttractionMapper">
 
-    <resultMap id="BaseResultMap" type="com.soldiersoft.traveler.entity.Viewpoint">
+    <resultMap id="BaseResultMap" type="com.soldiersoft.traveler.entity.Attraction">
         <id property="id" column="id" jdbcType="BIGINT"/>
-        <result property="viewpointName" column="viewpoint_name" jdbcType="VARCHAR"/>
+        <result property="attractionName" column="attraction_name" jdbcType="VARCHAR"/>
         <result property="description" column="description" jdbcType="VARCHAR"/>
         <result property="location" column="location" jdbcType="VARCHAR"/>
         <result property="score" column="score" jdbcType="DOUBLE"/>

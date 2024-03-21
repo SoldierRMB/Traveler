@@ -47,6 +47,34 @@ LOCK TABLES `t_comment` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `t_user_attraction`
+--
+
+DROP TABLE IF EXISTS `t_user_attraction`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `t_user_attraction` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '用户景点编号',
+  `user_id` bigint NOT NULL COMMENT '用户编号',
+  `attraction_id` bigint NOT NULL COMMENT '景点编号',
+  PRIMARY KEY (`id`),
+  KEY `t_user_attraction_t_attraction_id_fk` (`attraction_id`),
+  CONSTRAINT `t_user_attraction_t_attraction_id_fk` FOREIGN KEY (`attraction_id`) REFERENCES `t_attraction` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户景点表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `t_user_attraction`
+--
+
+LOCK TABLES `t_user_attraction` WRITE;
+/*!40000 ALTER TABLE `t_user_attraction` DISABLE KEYS */;
+INSERT INTO `t_user_attraction` VALUES (1,2,1);
+INSERT INTO `t_user_attraction` VALUES (2,2,2);
+/*!40000 ALTER TABLE `t_user_attraction` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `t_menu`
 --
 
@@ -68,69 +96,6 @@ CREATE TABLE `t_menu` (
 LOCK TABLES `t_menu` WRITE;
 /*!40000 ALTER TABLE `t_menu` DISABLE KEYS */;
 /*!40000 ALTER TABLE `t_menu` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `t_post`
---
-
-DROP TABLE IF EXISTS `t_post`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `t_post` (
-  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '动态编号',
-  `title` varchar(255) NOT NULL COMMENT '动态标题',
-  `content` text NOT NULL COMMENT '动态内容',
-  `user_id` bigint NOT NULL COMMENT '用户编号',
-  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  PRIMARY KEY (`id`),
-  KEY `t_topic_t_user_id_fk` (`user_id`),
-  CONSTRAINT `t_post_t_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `t_user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='动态表';
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `t_post`
---
-
-LOCK TABLES `t_post` WRITE;
-/*!40000 ALTER TABLE `t_post` DISABLE KEYS */;
-/*!40000 ALTER TABLE `t_post` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `t_reply`
---
-
-DROP TABLE IF EXISTS `t_reply`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `t_reply` (
-  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '回复编号',
-  `comment_id` bigint NOT NULL COMMENT '评论编号',
-  `content` text NOT NULL COMMENT '回复内容',
-  `from_user_id` bigint NOT NULL COMMENT '回复用户编号',
-  `to_user_id` bigint NOT NULL COMMENT '目标用户编号',
-  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  PRIMARY KEY (`id`),
-  KEY `t_replay_t_comment_id_fk` (`comment_id`),
-  KEY `t_replay_t_user_id_fk` (`from_user_id`),
-  KEY `t_replay_t_user_id_fk_2` (`to_user_id`),
-  CONSTRAINT `t_replay_t_comment_id_fk` FOREIGN KEY (`comment_id`) REFERENCES `t_comment` (`id`),
-  CONSTRAINT `t_replay_t_user_id_fk` FOREIGN KEY (`from_user_id`) REFERENCES `t_user` (`id`),
-  CONSTRAINT `t_replay_t_user_id_fk_2` FOREIGN KEY (`to_user_id`) REFERENCES `t_user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='回复表';
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `t_reply`
---
-
-LOCK TABLES `t_reply` WRITE;
-/*!40000 ALTER TABLE `t_reply` DISABLE KEYS */;
-/*!40000 ALTER TABLE `t_reply` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -162,34 +127,6 @@ INSERT INTO `t_role` VALUES (3,'ROLE_TOURIST','游客用户',0);
 UNLOCK TABLES;
 
 --
--- Table structure for table `t_role_menu`
---
-
-DROP TABLE IF EXISTS `t_role_menu`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `t_role_menu` (
-  `id` int NOT NULL AUTO_INCREMENT COMMENT '菜单角色编号',
-  `role_id` int NOT NULL COMMENT '角色编号',
-  `menu_id` int NOT NULL COMMENT '菜单编号',
-  PRIMARY KEY (`id`),
-  KEY `t_role_menu_t_menu_id_fk` (`menu_id`),
-  KEY `t_role_menu_t_role_id_fk` (`role_id`),
-  CONSTRAINT `t_role_menu_t_menu_id_fk` FOREIGN KEY (`menu_id`) REFERENCES `t_menu` (`id`),
-  CONSTRAINT `t_role_menu_t_role_id_fk` FOREIGN KEY (`role_id`) REFERENCES `t_role` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='角色菜单表';
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `t_role_menu`
---
-
-LOCK TABLES `t_role_menu` WRITE;
-/*!40000 ALTER TABLE `t_role_menu` DISABLE KEYS */;
-/*!40000 ALTER TABLE `t_role_menu` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `t_user`
 --
 
@@ -200,7 +137,7 @@ CREATE TABLE `t_user` (
   `id` bigint NOT NULL AUTO_INCREMENT COMMENT '用户编号',
   `username` varchar(255) NOT NULL COMMENT '用户名',
   `password` varchar(68) NOT NULL COMMENT '密码',
-  `email` varchar(255) DEFAULT NULL COMMENT '邮箱',
+  `email` varchar(255) NOT NULL COMMENT '邮箱',
   `nickname` varchar(20) DEFAULT NULL COMMENT '昵称',
   `is_disable` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否禁用 0.否 1.是',
   `create_time` datetime NOT NULL DEFAULT (now()) COMMENT '创建时间',
@@ -262,45 +199,15 @@ INSERT INTO `t_user_role` VALUES (7,7,3);
 UNLOCK TABLES;
 
 --
--- Table structure for table `t_user_viewpoint`
+-- Table structure for table `t_attraction`
 --
 
-DROP TABLE IF EXISTS `t_user_viewpoint`;
+DROP TABLE IF EXISTS `t_attraction`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `t_user_viewpoint` (
-  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '用户景点编号',
-  `user_id` bigint NOT NULL COMMENT '用户编号',
-  `viewpoint_id` bigint NOT NULL COMMENT '景点编号',
-  PRIMARY KEY (`id`),
-  KEY `t_user_viewpoint_t_user_id_fk` (`user_id`),
-  KEY `t_user_viewpoint_t_viewpoint_id_fk` (`viewpoint_id`),
-  CONSTRAINT `t_user_viewpoint_t_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `t_user` (`id`),
-  CONSTRAINT `t_user_viewpoint_t_viewpoint_id_fk` FOREIGN KEY (`viewpoint_id`) REFERENCES `t_viewpoint` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户景点表';
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `t_user_viewpoint`
---
-
-LOCK TABLES `t_user_viewpoint` WRITE;
-/*!40000 ALTER TABLE `t_user_viewpoint` DISABLE KEYS */;
-INSERT INTO `t_user_viewpoint` VALUES (1,2,1);
-INSERT INTO `t_user_viewpoint` VALUES (2,2,2);
-/*!40000 ALTER TABLE `t_user_viewpoint` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `t_viewpoint`
---
-
-DROP TABLE IF EXISTS `t_viewpoint`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `t_viewpoint` (
+CREATE TABLE `t_attraction` (
   `id` bigint NOT NULL AUTO_INCREMENT COMMENT '景点编号',
-  `viewpoint_name` varchar(255) NOT NULL COMMENT '景点名称',
+  `attraction_name` varchar(255) NOT NULL COMMENT '景点名称',
   `description` text NOT NULL COMMENT '景点描述',
   `location` varchar(255) NOT NULL COMMENT '详细地址',
   `score` double DEFAULT NULL COMMENT '景点评分',
@@ -313,26 +220,117 @@ CREATE TABLE `t_viewpoint` (
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`),
-  KEY `t_viewpoint_t_areas_code_fk` (`area_code`),
-  KEY `t_viewpoint_t_cities_code_fk` (`city_code`),
-  KEY `t_viewpoint_t_provinces_code_fk` (`province_code`),
-  KEY `t_viewpoint_t_streets_code_fk` (`street_code`),
-  CONSTRAINT `t_viewpoint_t_areas_code_fk` FOREIGN KEY (`area_code`) REFERENCES `t_areas` (`code`) ON UPDATE CASCADE,
-  CONSTRAINT `t_viewpoint_t_cities_code_fk` FOREIGN KEY (`city_code`) REFERENCES `t_cities` (`code`) ON UPDATE CASCADE,
-  CONSTRAINT `t_viewpoint_t_provinces_code_fk` FOREIGN KEY (`province_code`) REFERENCES `t_provinces` (`code`) ON UPDATE CASCADE,
-  CONSTRAINT `t_viewpoint_t_streets_code_fk` FOREIGN KEY (`street_code`) REFERENCES `t_streets` (`code`) ON UPDATE CASCADE
+  KEY `t_attraction_t_areas_code_fk` (`area_code`),
+  KEY `t_attraction_t_cities_code_fk` (`city_code`),
+  KEY `t_attraction_t_provinces_code_fk` (`province_code`),
+  KEY `t_attraction_t_streets_code_fk` (`street_code`),
+  CONSTRAINT `t_attraction_t_areas_code_fk` FOREIGN KEY (`area_code`) REFERENCES `t_areas` (`code`),
+  CONSTRAINT `t_attraction_t_cities_code_fk` FOREIGN KEY (`city_code`) REFERENCES `t_cities` (`code`),
+  CONSTRAINT `t_attraction_t_provinces_code_fk` FOREIGN KEY (`province_code`) REFERENCES `t_provinces` (`code`),
+  CONSTRAINT `t_attraction_t_streets_code_fk` FOREIGN KEY (`street_code`) REFERENCES `t_streets` (`code`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='景点表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `t_viewpoint`
+-- Dumping data for table `t_attraction`
 --
 
-LOCK TABLES `t_viewpoint` WRITE;
-/*!40000 ALTER TABLE `t_viewpoint` DISABLE KEYS */;
-INSERT INTO `t_viewpoint` VALUES (1,'故宫博物院','08:30-16:30开放（15:30停止入园）','北京市东城区景山前街4号',NULL,11,1101,110101,110101002,1,0,'2024-03-15 16:59:30','2024-03-17 17:41:39');
-INSERT INTO `t_viewpoint` VALUES (2,'天坛','06:30-22:00开放（21:00停止入园）','北京市东城区天坛路甲1号',NULL,11,1101,110101,110101016,1,0,'2024-03-17 18:16:32','2024-03-17 18:20:31');
-/*!40000 ALTER TABLE `t_viewpoint` ENABLE KEYS */;
+LOCK TABLES `t_attraction` WRITE;
+/*!40000 ALTER TABLE `t_attraction` DISABLE KEYS */;
+INSERT INTO `t_attraction` VALUES (1,'故宫博物院','08:30-16:30开放（15:30停止入园）','北京市东城区景山前街4号',NULL,11,1101,110101,110101002,1,0,'2024-03-15 16:59:30','2024-03-17 17:41:39');
+INSERT INTO `t_attraction` VALUES (2,'天坛','06:30-22:00开放（21:00停止入园）','北京市东城区天坛路甲1号',NULL,11,1101,110101,110101016,1,0,'2024-03-17 18:16:32','2024-03-17 18:20:31');
+/*!40000 ALTER TABLE `t_attraction` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `t_reply`
+--
+
+DROP TABLE IF EXISTS `t_reply`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `t_reply` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '回复编号',
+  `comment_id` bigint NOT NULL COMMENT '评论编号',
+  `content` text NOT NULL COMMENT '回复内容',
+  `from_user_id` bigint NOT NULL COMMENT '回复用户编号',
+  `to_user_id` bigint NOT NULL COMMENT '目标用户编号',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  KEY `t_replay_t_comment_id_fk` (`comment_id`),
+  KEY `t_replay_t_user_id_fk` (`from_user_id`),
+  KEY `t_replay_t_user_id_fk_2` (`to_user_id`),
+  CONSTRAINT `t_replay_t_comment_id_fk` FOREIGN KEY (`comment_id`) REFERENCES `t_comment` (`id`),
+  CONSTRAINT `t_replay_t_user_id_fk` FOREIGN KEY (`from_user_id`) REFERENCES `t_user` (`id`),
+  CONSTRAINT `t_replay_t_user_id_fk_2` FOREIGN KEY (`to_user_id`) REFERENCES `t_user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='回复表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `t_reply`
+--
+
+LOCK TABLES `t_reply` WRITE;
+/*!40000 ALTER TABLE `t_reply` DISABLE KEYS */;
+/*!40000 ALTER TABLE `t_reply` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `t_post`
+--
+
+DROP TABLE IF EXISTS `t_post`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `t_post` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '动态编号',
+  `title` varchar(255) NOT NULL COMMENT '动态标题',
+  `content` text NOT NULL COMMENT '动态内容',
+  `user_id` bigint NOT NULL COMMENT '用户编号',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  KEY `t_topic_t_user_id_fk` (`user_id`),
+  CONSTRAINT `t_post_t_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `t_user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='动态表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `t_post`
+--
+
+LOCK TABLES `t_post` WRITE;
+/*!40000 ALTER TABLE `t_post` DISABLE KEYS */;
+/*!40000 ALTER TABLE `t_post` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `t_role_menu`
+--
+
+DROP TABLE IF EXISTS `t_role_menu`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `t_role_menu` (
+  `id` int NOT NULL AUTO_INCREMENT COMMENT '菜单角色编号',
+  `role_id` int NOT NULL COMMENT '角色编号',
+  `menu_id` int NOT NULL COMMENT '菜单编号',
+  PRIMARY KEY (`id`),
+  KEY `t_role_menu_t_menu_id_fk` (`menu_id`),
+  KEY `t_role_menu_t_role_id_fk` (`role_id`),
+  CONSTRAINT `t_role_menu_t_menu_id_fk` FOREIGN KEY (`menu_id`) REFERENCES `t_menu` (`id`),
+  CONSTRAINT `t_role_menu_t_role_id_fk` FOREIGN KEY (`role_id`) REFERENCES `t_role` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='角色菜单表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `t_role_menu`
+--
+
+LOCK TABLES `t_role_menu` WRITE;
+/*!40000 ALTER TABLE `t_role_menu` DISABLE KEYS */;
+/*!40000 ALTER TABLE `t_role_menu` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -344,4 +342,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-03-20 13:02:34
+-- Dump completed on 2024-03-21 18:06:16

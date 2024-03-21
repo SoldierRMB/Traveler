@@ -1,9 +1,9 @@
 package com.soldiersoft.traveler.controller;
 
+import com.soldiersoft.traveler.model.vo.AttractionVO;
 import com.soldiersoft.traveler.model.vo.ResultVO;
-import com.soldiersoft.traveler.model.vo.UserViewpointVO;
-import com.soldiersoft.traveler.model.vo.ViewpointVO;
-import com.soldiersoft.traveler.service.ViewpointService;
+import com.soldiersoft.traveler.model.vo.UserAttractionVO;
+import com.soldiersoft.traveler.service.AttractionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,35 +15,35 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/staff")
 public class StaffController {
-    private final ViewpointService viewpointService;
+    private final AttractionService attractionService;
 
     @Autowired
-    public StaffController(ViewpointService viewpointService) {
-        this.viewpointService = viewpointService;
+    public StaffController(AttractionService attractionService) {
+        this.attractionService = attractionService;
     }
 
     @Operation(description = "景点管理员通过景点编号获取景点信息")
-    @GetMapping("/staffGetViewpointById")
+    @GetMapping("/staffGetAttractionById")
     @PreAuthorize("authentication.principal.equals(#username)")
-    public ResultVO<ViewpointVO> staffGetViewpointById(@RequestParam Long viewpointId, String username) {
-        return ResultVO.ok(viewpointService.staffGetViewpointById(viewpointId, username));
+    public ResultVO<AttractionVO> staffGetAttractionById(@RequestParam Long attractionId, String username) {
+        return ResultVO.ok(attractionService.staffGetAttractionById(attractionId, username));
     }
 
     @Operation(description = "发布景点信息")
-    @PostMapping("/postViewpoint")
-    public ResultVO<String> postViewpoint(@RequestBody @Validated UserViewpointVO userViewpointVO) {
-        return ResultVO.ok(viewpointService.postViewpoint(userViewpointVO));
+    @PostMapping("/postAttraction")
+    public ResultVO<String> postAttraction(@RequestBody @Validated UserAttractionVO userAttractionVO) {
+        return ResultVO.ok(attractionService.postAttraction(userAttractionVO));
     }
 
     @Operation(description = "更新景点信息")
-    @PutMapping("/updateViewpoint")
-    public ResultVO<String> updateViewpoint(@RequestBody @Validated ViewpointVO viewpointVO) {
-        return ResultVO.ok(viewpointService.updateViewpoint(viewpointVO));
+    @PutMapping("/updateAttraction")
+    public ResultVO<String> updateAttraction(@RequestBody @Validated AttractionVO attractionVO) {
+        return ResultVO.ok(attractionService.updateAttraction(attractionVO));
     }
 
     @Operation(description = "删除景点信息")
-    @PutMapping("/deleteViewpoint")
-    public ResultVO<String> deleteViewpoint(@RequestParam Long viewpointId) {
-        return ResultVO.ok(viewpointService.deleteViewpoint(viewpointId));
+    @PutMapping("/deleteAttraction")
+    public ResultVO<String> deleteAttraction(@RequestParam Long attractionId) {
+        return ResultVO.ok(attractionService.deleteAttraction(attractionId));
     }
 }

@@ -51,7 +51,7 @@ public class Comment implements Serializable {
     /**
      * 景点评论 0.非景点评论
      */
-    private Long viewpointId;
+    private Long attractionId;
     /**
      * 创建时间
      */

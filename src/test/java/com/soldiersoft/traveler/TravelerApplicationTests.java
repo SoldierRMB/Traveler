@@ -1,6 +1,6 @@
 package com.soldiersoft.traveler;
 
-import com.soldiersoft.traveler.entity.Viewpoint;
+import com.soldiersoft.traveler.entity.Attraction;
 import com.soldiersoft.traveler.model.dto.MailDTO;
 import com.soldiersoft.traveler.service.MailService;
 import com.soldiersoft.traveler.service.StreetService;
@@ -37,11 +37,11 @@ class TravelerApplicationTests {
 
     @Test
     void idsToBeanIds() {
-        List<Long> viewpointIds = List.of(1L, 2L, 3L);
-        List<Viewpoint> viewpoints = viewpointIds.stream()
-                .map(id -> Viewpoint.builder().id(id).build())
+        List<Long> attractionIds = List.of(1L, 2L, 3L);
+        List<Attraction> attractions = attractionIds.stream()
+                .map(id -> com.soldiersoft.traveler.entity.Attraction.builder().id(id).build())
                 .filter(Objects::nonNull)
                 .toList();
-        System.out.println(viewpoints);
+        System.out.println(attractions);
     }
 }

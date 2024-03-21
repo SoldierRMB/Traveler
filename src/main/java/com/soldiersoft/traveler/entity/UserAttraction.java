@@ -15,14 +15,14 @@ import java.io.Serializable;
 /**
  * 用户景点表
  *
- * @TableName t_user_viewpoint
+ * @TableName t_user_attraction
  */
-@TableName(value = "t_user_viewpoint")
+@TableName(value = "t_user_attraction")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserViewpoint implements Serializable {
+public class UserAttraction implements Serializable {
     @Serial
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
@@ -38,5 +38,5 @@ public class UserViewpoint implements Serializable {
     /**
      * 景点编号
      */
-    private Long viewpointId;
+    private Long attractionId;
 }
