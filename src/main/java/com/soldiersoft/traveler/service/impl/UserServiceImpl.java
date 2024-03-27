@@ -90,8 +90,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         Map<String, Object> user = new HashMap<>();
         userDetailsVO = (UserDetailsVO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         List<String> authorities = userDetailsVO.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
-        user.put("username", userDetailsVO.getUsername());
-        user.put("authorities", authorities);
+        user.put("sub", userDetailsVO.getUsername());
+        user.put("aud", authorities);
         payload.putAll(user);
         byte[] key = "1234567890".getBytes();
         final JWTSigner signer = JWTSignerUtil.hs256(key);

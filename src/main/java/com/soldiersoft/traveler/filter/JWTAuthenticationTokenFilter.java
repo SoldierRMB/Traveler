@@ -40,7 +40,7 @@ public class JWTAuthenticationTokenFilter extends OncePerRequestFilter {
                 jwt.getHeader(JWTHeader.TYPE);
                 Object username = jwt.getPayload("username");
                 List<SimpleGrantedAuthority> authorities = convertToListOfString(
-                        (List<?>) jwt.getPayload("authorities")).stream()
+                        (List<?>) jwt.getPayload("aud")).stream()
                         .map(SimpleGrantedAuthority::new)
                         .toList();
 
