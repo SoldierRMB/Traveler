@@ -186,6 +186,17 @@ public class AttractionServiceImpl extends ServiceImpl<AttractionMapper, Attract
                 )
                 .orElse(null);
     }
+
+    @Override
+    public List<AttractionVO> getAllAttractions() {
+        return Optional.ofNullable(lambdaQuery().list())
+                .map(attractions -> attractions.stream().map(attraction -> {
+                    AttractionVO attractionVO = new AttractionVO();
+                    BeanUtils.copyProperties(attraction, attractionVO);
+                    return attractionVO;
+                }).toList())
+                .orElse(null);
+    }
 }
 
 

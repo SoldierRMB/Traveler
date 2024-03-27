@@ -29,4 +29,6 @@ public interface AttractionService extends IService<Attraction> {
     AttractionVO getAttractionById(Long attractionId);
 
     List<AttractionVO> getAttractionsByCityCode(Long cityCode);
+
+    List<AttractionVO> getAllAttractions();
 }

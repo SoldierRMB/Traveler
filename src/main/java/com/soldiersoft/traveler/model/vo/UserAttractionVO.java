@@ -18,4 +18,8 @@ public class UserAttractionVO {
     @Valid
     @NotNull
     private AttractionVO attractionVO;
+    private ProvinceVO provinceVO;
+    private CityVO cityVO;
+    private AreaVO areaVO;
+    private StreetVO streetVO;
 }

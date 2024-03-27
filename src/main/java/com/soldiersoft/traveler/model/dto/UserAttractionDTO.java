@@ -1,7 +1,6 @@
 package com.soldiersoft.traveler.model.dto;
 
-import com.soldiersoft.traveler.entity.Attraction;
-import com.soldiersoft.traveler.entity.User;
+import com.soldiersoft.traveler.entity.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,4 +13,8 @@ import lombok.NoArgsConstructor;
 public class UserAttractionDTO {
     private User user;
     private Attraction attraction;
+    private Province province;
+    private City city;
+    private Area area;
+    private Street street;
 }

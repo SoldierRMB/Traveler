@@ -1,10 +1,7 @@
 package com.soldiersoft.traveler.controller;
 
 import com.soldiersoft.traveler.model.vo.*;
-import com.soldiersoft.traveler.service.AreaService;
-import com.soldiersoft.traveler.service.CityService;
-import com.soldiersoft.traveler.service.ProvinceService;
-import com.soldiersoft.traveler.service.StreetService;
+import com.soldiersoft.traveler.service.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,13 +20,15 @@ public class CommonController {
     private final CityService cityService;
     private final AreaService areaService;
     private final StreetService streetService;
+    private final AttractionService attractionService;
 
     @Autowired
-    public CommonController(ProvinceService provinceService, CityService cityService, AreaService areaService, StreetService streetService) {
+    public CommonController(ProvinceService provinceService, CityService cityService, AreaService areaService, StreetService streetService, AttractionService attractionService) {
         this.provinceService = provinceService;
         this.cityService = cityService;
         this.areaService = areaService;
         this.streetService = streetService;
+        this.attractionService = attractionService;
     }
 
     @Operation(description = "查询所有省份信息")
@@ -60,5 +59,11 @@ public class CommonController {
     @GetMapping("/getPositionByStreetCode")
     public ResultVO<LocationVO> getPositionByStreetCode(@RequestParam Long streetCode) {
         return ResultVO.ok(streetService.getPositionByStreetCode(streetCode));
+    }
+
+    @Operation(description = "获取所有景点信息")
+    @GetMapping("/getAllAttractions")
+    public ResultVO<List<AttractionVO>> getAllAttractions() {
+        return ResultVO.ok(attractionService.getAllAttractions());
     }
 }
