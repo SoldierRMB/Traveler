@@ -23,7 +23,7 @@ public class ProvinceServiceImpl extends ServiceImpl<ProvinceMapper, Province>
     @Override
     public List<ProvinceVO> getAllProvinces() {
         return Optional.ofNullable(lambdaQuery().list())
-                .map(list -> list.stream().map(province ->{
+                .map(provinces -> provinces.stream().map(province ->{
                     ProvinceVO provinceVO = new ProvinceVO();
                     BeanUtils.copyProperties(province, provinceVO);
                     return provinceVO;
