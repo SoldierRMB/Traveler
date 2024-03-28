@@ -22,7 +22,7 @@ public class StaffController {
         this.attractionService = attractionService;
     }
 
-    @Operation(description = "景点管理员通过景点编号获取景点信息")
+    @Operation(description = "通过景点编号获取景点信息")
     @GetMapping("/staffGetAttractionById")
     @PreAuthorize("authentication.principal.equals(#username)")
     public ResultVO<AttractionVO> staffGetAttractionById(@RequestParam Long attractionId, String username) {
@@ -31,19 +31,22 @@ public class StaffController {
 
     @Operation(description = "发布景点信息")
     @PostMapping("/postAttraction")
-    public ResultVO<String> postAttraction(@RequestBody @Validated UserAttractionVO userAttractionVO) {
-        return ResultVO.ok(attractionService.postAttraction(userAttractionVO));
+    @PreAuthorize("authentication.principal.equals(#username)")
+    public ResultVO<String> postAttraction(@RequestBody @Validated UserAttractionVO userAttractionVO, String username) {
+        return ResultVO.ok(attractionService.postAttraction(userAttractionVO, username));
     }
 
     @Operation(description = "更新景点信息")
     @PutMapping("/updateAttraction")
-    public ResultVO<String> updateAttraction(@RequestBody @Validated AttractionVO attractionVO) {
-        return ResultVO.ok(attractionService.updateAttraction(attractionVO));
+    @PreAuthorize("authentication.principal.equals(#username)")
+    public ResultVO<String> updateAttraction(@RequestBody @Validated AttractionVO attractionVO, String username) {
+        return ResultVO.ok(attractionService.updateAttraction(attractionVO, username));
     }
 
     @Operation(description = "删除景点信息")
     @PutMapping("/deleteAttraction")
-    public ResultVO<String> deleteAttraction(@RequestParam Long attractionId) {
-        return ResultVO.ok(attractionService.deleteAttraction(attractionId));
+    @PreAuthorize("authentication.principal.equals(#username)")
+    public ResultVO<String> deleteAttraction(@RequestParam Long attractionId, String username) {
+        return ResultVO.ok(attractionService.deleteAttraction(attractionId, username));
     }
 }
