@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Tag(name = "CommonController", description = "通用接口")
+@Tag(name = "GuestController", description = "游客接口")
 @RestController
-@RequestMapping("/common")
-public class CommonController {
+@RequestMapping("/guest")
+public class GuestController {
     private final ProvinceService provinceService;
     private final CityService cityService;
     private final AreaService areaService;
@@ -23,7 +23,7 @@ public class CommonController {
     private final AttractionService attractionService;
 
     @Autowired
-    public CommonController(ProvinceService provinceService, CityService cityService, AreaService areaService, StreetService streetService, AttractionService attractionService) {
+    public GuestController(ProvinceService provinceService, CityService cityService, AreaService areaService, StreetService streetService, AttractionService attractionService) {
         this.provinceService = provinceService;
         this.cityService = cityService;
         this.areaService = areaService;

@@ -41,8 +41,8 @@ public class WebSecurityConfig {
         return http
                 .authorizeHttpRequests(registry -> registry
                         .requestMatchers(WHITE_LIST).permitAll()
-                        .requestMatchers("/common/**").permitAll()
                         .requestMatchers("/user/**").permitAll()
+                        .requestMatchers("/guest/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/staff/**").hasRole("STAFF")
                         .requestMatchers("/tourist/**").hasRole("TOURIST")
