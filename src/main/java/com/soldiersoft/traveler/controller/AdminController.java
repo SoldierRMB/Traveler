@@ -37,4 +37,10 @@ public class AdminController {
     public ResultVO<List<UserAttractionVO>> getAllUserAttractions() {
         return ResultVO.ok(userAttractionService.getAllUserAttractions());
     }
+
+    @Operation(description = "获取所有未审核用户景点")
+    @GetMapping("/getAllUnreviewedUserAttractions")
+    public ResultVO<List<UserAttractionVO>> getAllUnreviewedUserAttractions() {
+        return ResultVO.ok(userAttractionService.getAllUnreviewedUserAttractions());
+    }
 }

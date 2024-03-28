@@ -18,4 +18,6 @@ public interface UserAttractionService extends IService<UserAttraction> {
     List<UserAttractionDTO> getUserAttractionByUserId(Long userId);
 
     List<UserAttractionVO> getAllUserAttractions();
+
+    List<UserAttractionVO> getAllUnreviewedUserAttractions();
 }

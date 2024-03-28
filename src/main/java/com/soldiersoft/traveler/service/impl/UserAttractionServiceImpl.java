@@ -29,6 +29,52 @@ public class UserAttractionServiceImpl extends ServiceImpl<UserAttractionMapper,
         this.userAttractionMapper = userAttractionMapper;
     }
 
+    private MPJLambdaWrapper<UserAttraction> createWrapper() {
+        return new MPJLambdaWrapper<>(UserAttraction.class)
+                .selectAll(UserAttraction.class)
+                .selectAssociation(User.class, UserAttractionDTO::getUser)
+                .selectAssociation(Attraction.class, UserAttractionDTO::getAttraction)
+                .selectAssociation(Province.class, UserAttractionDTO::getProvince)
+                .selectAssociation(City.class, UserAttractionDTO::getCity)
+                .selectAssociation(Area.class, UserAttractionDTO::getArea)
+                .selectAssociation(Street.class, UserAttractionDTO::getStreet)
+                .leftJoin(User.class, User::getId, UserAttraction::getUserId)
+                .leftJoin(Attraction.class, Attraction::getId, UserAttraction::getAttractionId)
+                .leftJoin(Province.class, Province::getCode, Attraction::getProvinceCode)
+                .leftJoin(City.class, City::getCode, Attraction::getCityCode)
+                .leftJoin(Area.class, Area::getCode, Attraction::getAreaCode)
+                .leftJoin(Street.class, Street::getCode, Attraction::getStreetCode);
+    }
+
+    private UserAttractionVO mapToUserAttractionVO(UserAttractionDTO userAttractionDTO) {
+        User user = userAttractionDTO.getUser();
+        Attraction attraction = userAttractionDTO.getAttraction();
+        Province province = userAttractionDTO.getProvince();
+        City city = userAttractionDTO.getCity();
+        Area area = userAttractionDTO.getArea();
+        Street street = userAttractionDTO.getStreet();
+
+        UserVO userVO = UserVO.builder()
+                .id(user.getId())
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .build();
+
+        AttractionVO attractionVO = new AttractionVO();
+        ProvinceVO provinceVO = new ProvinceVO();
+        CityVO cityVO = new CityVO();
+        AreaVO areaVO = new AreaVO();
+        StreetVO streetVO = new StreetVO();
+
+        BeanUtils.copyProperties(attraction, attractionVO);
+        BeanUtils.copyProperties(province, provinceVO);
+        BeanUtils.copyProperties(city, cityVO);
+        BeanUtils.copyProperties(area, areaVO);
+        BeanUtils.copyProperties(street, streetVO);
+
+        return new UserAttractionVO(userVO, attractionVO, provinceVO, cityVO, areaVO, streetVO);
+    }
+
     @Override
     public Boolean saveUserAttractionFromAttraction(UserAttractionDTO userAttractionDTO) {
         try {
@@ -57,45 +103,17 @@ public class UserAttractionServiceImpl extends ServiceImpl<UserAttractionMapper,
 
     @Override
     public List<UserAttractionVO> getAllUserAttractions() {
-        MPJLambdaWrapper<UserAttraction> wrapper = new MPJLambdaWrapper<>(UserAttraction.class)
-                .selectAll(UserAttraction.class)
-                .selectAssociation(User.class, UserAttractionDTO::getUser)
-                .selectAssociation(Attraction.class, UserAttractionDTO::getAttraction)
-                .selectAssociation(Province.class, UserAttractionDTO::getProvince)
-                .selectAssociation(City.class, UserAttractionDTO::getCity)
-                .selectAssociation(Area.class, UserAttractionDTO::getArea)
-                .selectAssociation(Street.class, UserAttractionDTO::getStreet)
-                .leftJoin(User.class, User::getId, UserAttraction::getUserId)
-                .leftJoin(Attraction.class, Attraction::getId, UserAttraction::getAttractionId)
-                .leftJoin(Province.class, Province::getCode, Attraction::getProvinceCode)
-                .leftJoin(City.class, City::getCode, Attraction::getCityCode)
-                .leftJoin(Area.class, Area::getCode, Attraction::getAreaCode)
-                .leftJoin(Street.class, Street::getCode, Attraction::getStreetCode);
+        MPJLambdaWrapper<UserAttraction> wrapper = createWrapper();
         return userAttractionMapper.selectJoinList(UserAttractionDTO.class, wrapper).stream()
-                .map(userAttractionDTO -> {
-                    User user = userAttractionDTO.getUser();
-                    Attraction attraction = userAttractionDTO.getAttraction();
-                    Province province = userAttractionDTO.getProvince();
-                    City city = userAttractionDTO.getCity();
-                    Area area = userAttractionDTO.getArea();
-                    Street street = userAttractionDTO.getStreet();
-                    UserVO userVO = UserVO.builder()
-                            .id(user.getId())
-                            .username(user.getUsername())
-                            .email(user.getEmail())
-                            .build();
-                    AttractionVO attractionVO = new AttractionVO();
-                    ProvinceVO provinceVO = new ProvinceVO();
-                    CityVO cityVO = new CityVO();
-                    AreaVO areaVO = new AreaVO();
-                    StreetVO streetVO = new StreetVO();
-                    BeanUtils.copyProperties(attraction, attractionVO);
-                    BeanUtils.copyProperties(province, provinceVO);
-                    BeanUtils.copyProperties(city, cityVO);
-                    BeanUtils.copyProperties(area, areaVO);
-                    BeanUtils.copyProperties(street, streetVO);
-                    return new UserAttractionVO(userVO, attractionVO, provinceVO, cityVO, areaVO, streetVO);
-                }).toList();
+                .map(this::mapToUserAttractionVO).toList();
+    }
+
+    @Override
+    public List<UserAttractionVO> getAllUnreviewedUserAttractions() {
+        MPJLambdaWrapper<UserAttraction> wrapper = createWrapper()
+                .eq(Attraction::getReviewed, 0);
+        return userAttractionMapper.selectJoinList(UserAttractionDTO.class, wrapper).stream()
+                .map(this::mapToUserAttractionVO).toList();
     }
 }
 
