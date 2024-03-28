@@ -18,11 +18,11 @@ public interface AttractionService extends IService<Attraction> {
 
     Boolean getAttractionIsPresent(Long attractionId);
 
-    String postAttraction(UserAttractionVO userAttractionVO);
+    String postAttraction(UserAttractionVO userAttractionVO, String username);
 
-    String updateAttraction(AttractionVO attractionVO);
+    String updateAttraction(AttractionVO attractionVO, String username);
 
-    String deleteAttraction(Long attractionId);
+    String deleteAttraction(Long attractionId, String username);
 
     String reviewAttractions(Long[] attractionIds);
 
