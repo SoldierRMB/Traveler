@@ -29,23 +29,6 @@ public class UserAttractionServiceImpl extends ServiceImpl<UserAttractionMapper,
         this.userAttractionMapper = userAttractionMapper;
     }
 
-    private MPJLambdaWrapper<UserAttraction> createWrapper() {
-        return new MPJLambdaWrapper<>(UserAttraction.class)
-                .selectAll(UserAttraction.class)
-                .selectAssociation(User.class, UserAttractionDTO::getUser)
-                .selectAssociation(Attraction.class, UserAttractionDTO::getAttraction)
-                .selectAssociation(Province.class, UserAttractionDTO::getProvince)
-                .selectAssociation(City.class, UserAttractionDTO::getCity)
-                .selectAssociation(Area.class, UserAttractionDTO::getArea)
-                .selectAssociation(Street.class, UserAttractionDTO::getStreet)
-                .leftJoin(User.class, User::getId, UserAttraction::getUserId)
-                .leftJoin(Attraction.class, Attraction::getId, UserAttraction::getAttractionId)
-                .leftJoin(Province.class, Province::getCode, Attraction::getProvinceCode)
-                .leftJoin(City.class, City::getCode, Attraction::getCityCode)
-                .leftJoin(Area.class, Area::getCode, Attraction::getAreaCode)
-                .leftJoin(Street.class, Street::getCode, Attraction::getStreetCode);
-    }
-
     private UserAttractionVO mapToUserAttractionVO(UserAttractionDTO userAttractionDTO) {
         User user = userAttractionDTO.getUser();
         Attraction attraction = userAttractionDTO.getAttraction();
@@ -102,16 +85,28 @@ public class UserAttractionServiceImpl extends ServiceImpl<UserAttractionMapper,
     }
 
     @Override
-    public List<UserAttractionVO> getAllUserAttractions() {
-        MPJLambdaWrapper<UserAttraction> wrapper = createWrapper();
-        return userAttractionMapper.selectJoinList(UserAttractionDTO.class, wrapper).stream()
-                .map(this::mapToUserAttractionVO).toList();
-    }
-
-    @Override
-    public List<UserAttractionVO> getAllUnreviewedUserAttractions() {
-        MPJLambdaWrapper<UserAttraction> wrapper = createWrapper()
-                .eq(Attraction::getReviewed, 0);
+    public List<UserAttractionVO> getUserAttractions(Boolean reviewed) {
+        MPJLambdaWrapper<UserAttraction> wrapper = new MPJLambdaWrapper<>(UserAttraction.class)
+                .selectAll(UserAttraction.class)
+                .selectAssociation(User.class, UserAttractionDTO::getUser)
+                .selectAssociation(Attraction.class, UserAttractionDTO::getAttraction)
+                .selectAssociation(Province.class, UserAttractionDTO::getProvince)
+                .selectAssociation(City.class, UserAttractionDTO::getCity)
+                .selectAssociation(Area.class, UserAttractionDTO::getArea)
+                .selectAssociation(Street.class, UserAttractionDTO::getStreet)
+                .leftJoin(User.class, User::getId, UserAttraction::getUserId)
+                .leftJoin(Attraction.class, Attraction::getId, UserAttraction::getAttractionId)
+                .leftJoin(Province.class, Province::getCode, Attraction::getProvinceCode)
+                .leftJoin(City.class, City::getCode, Attraction::getCityCode)
+                .leftJoin(Area.class, Area::getCode, Attraction::getAreaCode)
+                .leftJoin(Street.class, Street::getCode, Attraction::getStreetCode)
+                .func(attraction -> {
+                    if (reviewed) {
+                        attraction.in(Attraction::getReviewed, 1, 2);
+                    } else {
+                        attraction.eq(Attraction::getReviewed, 0);
+                    }
+                });
         return userAttractionMapper.selectJoinList(UserAttractionDTO.class, wrapper).stream()
                 .map(this::mapToUserAttractionVO).toList();
     }
