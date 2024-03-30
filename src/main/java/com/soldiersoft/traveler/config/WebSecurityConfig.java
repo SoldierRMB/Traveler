@@ -43,6 +43,7 @@ public class WebSecurityConfig {
                         .requestMatchers(WHITE_LIST).permitAll()
                         .requestMatchers("/user/**").permitAll()
                         .requestMatchers("/guest/**").permitAll()
+                        .requestMatchers("/common/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/staff/**").hasRole("STAFF")
                         .requestMatchers("/tourist/**").hasRole("TOURIST")
