@@ -28,19 +28,19 @@ public class AdminController {
 
     @Operation(description = "批量审核景点")
     @PutMapping("/reviewAttractions")
-    public ResultVO<String> reviewAttractions(@Validated @RequestBody Long[] attractionIds) {
-        return ResultVO.ok(attractionService.reviewAttractions(attractionIds));
+    public ResultVO<String> reviewAttractions(@Validated @RequestBody Long[] attractionIds, @RequestParam Boolean pass) {
+        return ResultVO.ok(attractionService.reviewAttractions(attractionIds, pass));
     }
 
     @Operation(description = "获取所有用户景点")
-    @GetMapping("/getAllUserAttractions")
+    @GetMapping("/getUserAttractions")
     public ResultVO<List<UserAttractionVO>> getAllUserAttractions() {
-        return ResultVO.ok(userAttractionService.getAllUserAttractions());
+        return ResultVO.ok(userAttractionService.getUserAttractions(true));
     }
 
     @Operation(description = "获取所有未审核用户景点")
-    @GetMapping("/getAllUnreviewedUserAttractions")
-    public ResultVO<List<UserAttractionVO>> getAllUnreviewedUserAttractions() {
-        return ResultVO.ok(userAttractionService.getAllUnreviewedUserAttractions());
+    @GetMapping("/getUnreviewedUserAttractions")
+    public ResultVO<List<UserAttractionVO>> getUnreviewedUserAttractions() {
+        return ResultVO.ok(userAttractionService.getUserAttractions(false));
     }
 }

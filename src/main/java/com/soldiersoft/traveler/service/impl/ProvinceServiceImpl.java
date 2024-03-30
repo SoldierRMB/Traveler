@@ -21,7 +21,7 @@ public class ProvinceServiceImpl extends ServiceImpl<ProvinceMapper, Province>
         implements ProvinceService {
 
     @Override
-    public List<ProvinceVO> getAllProvinces() {
+    public List<ProvinceVO> getProvinces() {
         return Optional.ofNullable(lambdaQuery().list())
                 .map(provinces -> provinces.stream().map(province ->{
                     ProvinceVO provinceVO = new ProvinceVO();

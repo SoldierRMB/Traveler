@@ -13,5 +13,5 @@ import java.util.List;
  */
 public interface ProvinceService extends IService<Province> {
 
-    List<ProvinceVO> getAllProvinces();
+    List<ProvinceVO> getProvinces();
 }
