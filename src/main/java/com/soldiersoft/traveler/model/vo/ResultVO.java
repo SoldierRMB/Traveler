@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.http.ResponseEntity;
 
 import static com.soldiersoft.traveler.enums.StatusCodeEnum.FAIL;
 import static com.soldiersoft.traveler.enums.StatusCodeEnum.SUCCESS;
@@ -35,28 +36,39 @@ public class ResultVO<T> {
         return resultVO(true, SUCCESS.getCode(), message, data);
     }
 
-    public static <T> ResultVO<T> fail() {
-        return resultVO(false, FAIL.getCode(), FAIL.getDesc(), null);
+    public static <T> ResponseEntity<ResultVO<T>> fail() {
+        return ResponseEntity
+                .status(FAIL.getCode())
+                .body(resultVO(false, FAIL.getCode(), FAIL.getDesc(), null));
     }
 
-    public static <T> ResultVO<T> fail(StatusCodeEnum statusCodeEnum) {
-        return resultVO(false, statusCodeEnum.getCode(), statusCodeEnum.getDesc(), null);
+    public static <T> ResponseEntity<ResultVO<T>> fail(StatusCodeEnum statusCodeEnum) {
+        return ResponseEntity
+                .status(statusCodeEnum.getCode())
+                .body(resultVO(false, statusCodeEnum.getCode(), statusCodeEnum.getDesc(), null));
     }
 
-    public static <T> ResultVO<T> fail(String message) {
-        return resultVO(false, message);
+    public static <T> ResponseEntity<ResultVO<T>> fail(String message) {
+        return ResponseEntity
+                .status(FAIL.getCode())
+                .body(resultVO(false, FAIL.getCode(), message, null));
     }
 
-    public static <T> ResultVO<T> fail(T data) {
-        return resultVO(false, FAIL.getCode(), FAIL.getDesc(), data);
+    public static <T> ResponseEntity<ResultVO<T>> fail(T data) {
+        return ResponseEntity
+                .status(FAIL.getCode())
+                .body(resultVO(false, FAIL.getCode(), FAIL.getDesc(), data));
     }
 
-    public static <T> ResultVO<T> fail(T data, String message) {
-        return resultVO(false, FAIL.getCode(), message, data);
+    public static <T> ResponseEntity<ResultVO<T>> fail(T data, String message) {
+        return ResponseEntity
+                .status(FAIL.getCode()).body(resultVO(false, FAIL.getCode(), message, data));
     }
 
-    public static <T> ResultVO<T> fail(Integer code, String message) {
-        return resultVO(false, code, message, null);
+    public static <T> ResponseEntity<ResultVO<T>> fail(Integer code, String message) {
+        return ResponseEntity
+                .status(code)
+                .body(resultVO(false, code, message, null));
     }
 
     private static <T> ResultVO<T> resultVO(Boolean flag, String message) {
