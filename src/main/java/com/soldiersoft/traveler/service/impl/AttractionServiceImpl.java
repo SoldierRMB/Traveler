@@ -10,8 +10,6 @@ import com.soldiersoft.traveler.mapper.AttractionMapper;
 import com.soldiersoft.traveler.model.dto.UserAttractionDTO;
 import com.soldiersoft.traveler.model.dto.UserDTO;
 import com.soldiersoft.traveler.model.vo.AttractionVO;
-import com.soldiersoft.traveler.model.vo.UserAttractionVO;
-import com.soldiersoft.traveler.model.vo.UserVO;
 import com.soldiersoft.traveler.service.AttractionService;
 import com.soldiersoft.traveler.service.UserAttractionService;
 import com.soldiersoft.traveler.service.UserService;
@@ -66,13 +64,11 @@ public class AttractionServiceImpl extends ServiceImpl<AttractionMapper, Attract
 
     @Override
     @Transactional
-    public String postAttraction(UserAttractionVO userAttractionVO, String username) {
+    public String postAttraction(AttractionVO attractionVO, String username) {
         try {
-            UserVO userVO = userAttractionVO.getUserVO();
-            AttractionVO attractionVO = userAttractionVO.getAttractionVO();
-            User user = User.builder()
-                    .id(userVO.getId())
-                    .build();
+            UserDTO userDTO = userService.getUserByUsername(username);
+            User user = new User();
+            BeanUtils.copyProperties(userDTO, user);
             Attraction attraction = Attraction.builder()
                     .attractionName(attractionVO.getAttractionName())
                     .description(attractionVO.getDescription())
@@ -92,7 +88,7 @@ public class AttractionServiceImpl extends ServiceImpl<AttractionMapper, Attract
             else
                 return null;
         } catch (BizException e) {
-            throw new BizException("景点发布失败，请联系管理员", userAttractionVO);
+            throw new BizException("景点发布失败，请联系管理员", attractionVO);
         }
     }
 
@@ -136,7 +132,7 @@ public class AttractionServiceImpl extends ServiceImpl<AttractionMapper, Attract
 
     @Override
     @Transactional
-    public String reviewAttractions(Long[] attractionIds) {
+    public String reviewAttractions(Long[] attractionIds, Boolean pass) {
         try {
             Long[] attractions = Arrays.stream(attractionIds)
                     .filter(this::getAttractionIsPresent)
@@ -146,7 +142,13 @@ public class AttractionServiceImpl extends ServiceImpl<AttractionMapper, Attract
             if (attractions.length == 0)
                 return "没有需要审核的景点";
             LambdaUpdateWrapper<Attraction> wrapper = new LambdaUpdateWrapper<Attraction>()
-                    .set(Attraction::getReviewed, 1);
+                    .func(attraction -> {
+                        if (pass) {
+                            attraction.set(Attraction::getReviewed, 1);
+                        } else {
+                            attraction.set(Attraction::getReviewed, 2);
+                        }
+                    });
             Arrays.stream(attractions).forEach(attractionId ->
                     wrapper.or().eq(Attraction::getId, attractionId));
             int rows = attractionMapper.update(wrapper);
@@ -188,7 +190,7 @@ public class AttractionServiceImpl extends ServiceImpl<AttractionMapper, Attract
     }
 
     @Override
-    public List<AttractionVO> getAllAttractions() {
+    public List<AttractionVO> getAttractions() {
         return Optional.ofNullable(lambdaQuery().list())
                 .map(attractions -> attractions.stream().map(attraction -> {
                     AttractionVO attractionVO = new AttractionVO();

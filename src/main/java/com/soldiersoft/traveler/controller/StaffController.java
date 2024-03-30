@@ -2,7 +2,6 @@ package com.soldiersoft.traveler.controller;
 
 import com.soldiersoft.traveler.model.vo.AttractionVO;
 import com.soldiersoft.traveler.model.vo.ResultVO;
-import com.soldiersoft.traveler.model.vo.UserAttractionVO;
 import com.soldiersoft.traveler.service.AttractionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -32,8 +31,8 @@ public class StaffController {
     @Operation(description = "发布景点信息")
     @PostMapping("/postAttraction")
     @PreAuthorize("authentication.principal.equals(#username)")
-    public ResultVO<String> postAttraction(@RequestBody @Validated UserAttractionVO userAttractionVO, String username) {
-        return ResultVO.ok(attractionService.postAttraction(userAttractionVO, username));
+    public ResultVO<String> postAttraction(@RequestBody @Validated AttractionVO attractionVO, String username) {
+        return ResultVO.ok(attractionService.postAttraction(attractionVO, username));
     }
 
     @Operation(description = "更新景点信息")

@@ -3,7 +3,6 @@ package com.soldiersoft.traveler.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.soldiersoft.traveler.entity.Attraction;
 import com.soldiersoft.traveler.model.vo.AttractionVO;
-import com.soldiersoft.traveler.model.vo.UserAttractionVO;
 
 import java.util.List;
 
@@ -18,17 +17,17 @@ public interface AttractionService extends IService<Attraction> {
 
     Boolean getAttractionIsPresent(Long attractionId);
 
-    String postAttraction(UserAttractionVO userAttractionVO, String username);
+    String postAttraction(AttractionVO attractionVO, String username);
 
     String updateAttraction(AttractionVO attractionVO, String username);
 
     String deleteAttraction(Long attractionId, String username);
 
-    String reviewAttractions(Long[] attractionIds);
+    String reviewAttractions(Long[] attractionIds, Boolean pass);
 
     AttractionVO getAttractionById(Long attractionId);
 
     List<AttractionVO> getAttractionsByCityCode(Long cityCode);
 
-    List<AttractionVO> getAllAttractions();
+    List<AttractionVO> getAttractions();
 }
