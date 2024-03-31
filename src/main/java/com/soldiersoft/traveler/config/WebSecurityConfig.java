@@ -21,7 +21,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import static com.soldiersoft.traveler.enums.StatusCodeEnum.FORBIDDEN;
 import static com.soldiersoft.traveler.enums.StatusCodeEnum.UNAUTHORIZED;
 
 @Configuration
@@ -52,11 +51,8 @@ public class WebSecurityConfig {
                 .exceptionHandling(conf -> conf
                         .authenticationEntryPoint((request, response, authException) -> {
                             response.setContentType("application/json;charset=utf-8");
+                            response.setStatus(UNAUTHORIZED.getCode());
                             response.getWriter().println(JSONUtil.toJsonStr(ResultVO.fail(UNAUTHORIZED)));
-                        })
-                        .accessDeniedHandler((request, response, accessDeniedException) -> {
-                            response.setContentType("application/json;charset=utf-8");
-                            response.getWriter().println(JSONUtil.toJsonStr(ResultVO.fail(FORBIDDEN)));
                         })
                 )
                 .logout(conf -> conf
