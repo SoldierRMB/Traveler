@@ -15,4 +15,4 @@ A backend service, powered by Spring Boot.
 6. Run TravelerApplication
 
 ## Quick start for frontend
-1. See [traveler-vue](https://github.com/SoldierRMB/traveler-vue)
+1. See [Traveler-Vue](https://github.com/SoldierRMB/Traveler-Vue)

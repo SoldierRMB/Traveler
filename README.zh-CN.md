@@ -15,4 +15,4 @@ Spring Boot后端系统
 6. 运行TravelerApplication
 
 ## 快速开始前端
-1. 查看 [traveler-vue](https://github.com/SoldierRMB/traveler-vue)
+1. 查看 [Traveler-Vue](https://github.com/SoldierRMB/Traveler-Vue)
