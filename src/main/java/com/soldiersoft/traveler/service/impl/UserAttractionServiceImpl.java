@@ -6,8 +6,10 @@ import com.soldiersoft.traveler.entity.*;
 import com.soldiersoft.traveler.exception.BizException;
 import com.soldiersoft.traveler.mapper.UserAttractionMapper;
 import com.soldiersoft.traveler.model.dto.UserAttractionDTO;
+import com.soldiersoft.traveler.model.dto.UserDTO;
 import com.soldiersoft.traveler.model.vo.*;
 import com.soldiersoft.traveler.service.UserAttractionService;
+import com.soldiersoft.traveler.service.UserService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,10 +25,12 @@ import java.util.List;
 public class UserAttractionServiceImpl extends ServiceImpl<UserAttractionMapper, UserAttraction>
         implements UserAttractionService {
     private final UserAttractionMapper userAttractionMapper;
+    private final UserService userService;
 
     @Autowired
-    public UserAttractionServiceImpl(UserAttractionMapper userAttractionMapper) {
+    public UserAttractionServiceImpl(UserAttractionMapper userAttractionMapper, UserService userService) {
         this.userAttractionMapper = userAttractionMapper;
+        this.userService = userService;
     }
 
     private UserAttractionVO mapToUserAttractionVO(UserAttractionDTO userAttractionDTO) {
@@ -73,18 +77,6 @@ public class UserAttractionServiceImpl extends ServiceImpl<UserAttractionMapper,
     }
 
     @Override
-    public List<UserAttractionDTO> getUserAttractionByUserId(Long userId) {
-        MPJLambdaWrapper<UserAttraction> wrapper = new MPJLambdaWrapper<>(UserAttraction.class)
-                .selectAll(UserAttraction.class)
-                .selectAssociation(User.class, UserAttractionDTO::getUser)
-                .selectAssociation(Attraction.class, UserAttractionDTO::getAttraction)
-                .leftJoin(User.class, User::getId, UserAttraction::getUserId)
-                .leftJoin(Attraction.class, com.soldiersoft.traveler.entity.Attraction::getId, UserAttraction::getAttractionId)
-                .eq(UserAttraction::getUserId, userId);
-        return userAttractionMapper.selectJoinList(UserAttractionDTO.class, wrapper);
-    }
-
-    @Override
     public List<UserAttractionVO> getUserAttractions(Boolean reviewed) {
         MPJLambdaWrapper<UserAttraction> wrapper = new MPJLambdaWrapper<>(UserAttraction.class)
                 .selectAll(UserAttraction.class)
@@ -107,6 +99,28 @@ public class UserAttractionServiceImpl extends ServiceImpl<UserAttractionMapper,
                         attraction.eq(Attraction::getReviewed, 0);
                     }
                 });
+        return userAttractionMapper.selectJoinList(UserAttractionDTO.class, wrapper).stream()
+                .map(this::mapToUserAttractionVO).toList();
+    }
+
+    @Override
+    public List<UserAttractionVO> getUserAttractionsByUsername(String username) {
+        UserDTO userDTO = userService.getUserByUsername(username);
+        MPJLambdaWrapper<UserAttraction> wrapper = new MPJLambdaWrapper<>(UserAttraction.class)
+                .selectAll(UserAttraction.class)
+                .selectAssociation(User.class, UserAttractionDTO::getUser)
+                .selectAssociation(Attraction.class, UserAttractionDTO::getAttraction)
+                .selectAssociation(Province.class, UserAttractionDTO::getProvince)
+                .selectAssociation(City.class, UserAttractionDTO::getCity)
+                .selectAssociation(Area.class, UserAttractionDTO::getArea)
+                .selectAssociation(Street.class, UserAttractionDTO::getStreet)
+                .leftJoin(User.class, User::getId, UserAttraction::getUserId)
+                .leftJoin(Attraction.class, Attraction::getId, UserAttraction::getAttractionId)
+                .leftJoin(Province.class, Province::getCode, Attraction::getProvinceCode)
+                .leftJoin(City.class, City::getCode, Attraction::getCityCode)
+                .leftJoin(Area.class, Area::getCode, Attraction::getAreaCode)
+                .leftJoin(Street.class, Street::getCode, Attraction::getStreetCode)
+                .eq(UserAttraction::getUserId, userDTO.getId());
         return userAttractionMapper.selectJoinList(UserAttractionDTO.class, wrapper).stream()
                 .map(this::mapToUserAttractionVO).toList();
     }

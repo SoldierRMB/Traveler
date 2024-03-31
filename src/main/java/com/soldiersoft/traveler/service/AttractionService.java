@@ -13,8 +13,6 @@ import java.util.List;
  */
 public interface AttractionService extends IService<Attraction> {
 
-    AttractionVO staffGetAttractionById(Long attractionId, String username);
-
     Boolean getAttractionIsPresent(Long attractionId);
 
     String postAttraction(AttractionVO attractionVO, String username);

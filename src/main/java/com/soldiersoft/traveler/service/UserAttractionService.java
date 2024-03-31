@@ -15,7 +15,7 @@ import java.util.List;
 public interface UserAttractionService extends IService<UserAttraction> {
     Boolean saveUserAttractionFromAttraction(UserAttractionDTO userAttractionDTO);
 
-    List<UserAttractionDTO> getUserAttractionByUserId(Long userId);
-
     List<UserAttractionVO> getUserAttractions(Boolean reviewed);
+
+    List<UserAttractionVO> getUserAttractionsByUsername(String username);
 }

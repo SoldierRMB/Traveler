@@ -41,22 +41,6 @@ public class AttractionServiceImpl extends ServiceImpl<AttractionMapper, Attract
     }
 
     @Override
-    public AttractionVO staffGetAttractionById(Long attractionId, String username) {
-        UserDTO userDTO = userService.getUserByUsername(username);
-        return Optional.ofNullable(userDTO)
-                .flatMap(user -> lambdaQuery().eq(Attraction::getId, attractionId).oneOpt())
-                .flatMap(vp -> userAttractionService.getUserAttractionByUserId(userDTO.getId()).stream()
-                        .filter(userAttractionDTO -> userAttractionDTO.getAttraction().equals(vp))
-                        .findFirst()
-                        .map(userAttractionDTO -> {
-                            AttractionVO vo = new AttractionVO();
-                            BeanUtils.copyProperties(vp, vo);
-                            return vo;
-                        }))
-                .orElse(null);
-    }
-
-    @Override
     public Boolean getAttractionIsPresent(Long attractionId) {
         Attraction attraction = lambdaQuery().eq(Attraction::getId, attractionId).one();
         return Optional.ofNullable(attraction).isPresent();
