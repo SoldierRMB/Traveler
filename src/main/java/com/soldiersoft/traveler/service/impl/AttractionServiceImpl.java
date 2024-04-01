@@ -7,6 +7,7 @@ import com.soldiersoft.traveler.entity.Attraction;
 import com.soldiersoft.traveler.entity.User;
 import com.soldiersoft.traveler.exception.BizException;
 import com.soldiersoft.traveler.mapper.AttractionMapper;
+import com.soldiersoft.traveler.model.dto.AttractionDTO;
 import com.soldiersoft.traveler.model.dto.UserAttractionDTO;
 import com.soldiersoft.traveler.model.dto.UserDTO;
 import com.soldiersoft.traveler.model.vo.AttractionVO;
@@ -47,30 +48,33 @@ public class AttractionServiceImpl extends ServiceImpl<AttractionMapper, Attract
     }
 
     @Override
+    public Map<Long, AttractionDTO> getAttractionsMapByUsername(String username) {
+        return userAttractionService.getUserAttractionsByUsername(username).stream()
+                .collect(Collectors.toMap(userAttractionVO -> userAttractionVO.getAttractionVO().getId(),
+                        userAttractionVO -> {
+                            AttractionVO attractionVO = userAttractionVO.getAttractionVO();
+                            AttractionDTO attractionDTO = new AttractionDTO();
+                            BeanUtils.copyProperties(attractionVO, attractionDTO);
+                            return attractionDTO;
+                        }));
+    }
+
+    @Override
     @Transactional
     public String postAttraction(AttractionVO attractionVO, String username) {
         try {
             UserDTO userDTO = userService.getUserByUsername(username);
             User user = new User();
             BeanUtils.copyProperties(userDTO, user);
-            Attraction attraction = Attraction.builder()
-                    .attractionName(attractionVO.getAttractionName())
-                    .description(attractionVO.getDescription())
-                    .location(attractionVO.getLocation())
-                    .provinceCode(attractionVO.getProvinceCode())
-                    .cityCode(attractionVO.getCityCode())
-                    .areaCode(attractionVO.getAreaCode())
-                    .streetCode(attractionVO.getStreetCode())
-                    .build();
+            Attraction attraction = new Attraction();
+            BeanUtils.copyProperties(attractionVO, attraction);
             save(attraction);
             UserAttractionDTO userAttractionDTO = UserAttractionDTO.builder()
                     .user(user)
                     .attraction(attraction)
                     .build();
-            if (userAttractionService.saveUserAttractionFromAttraction(userAttractionDTO))
-                return "景点发布成功，待管理员审核";
-            else
-                return null;
+            return userAttractionService.saveUserAttractionFromAttraction(userAttractionDTO)
+                    ? "景点发布成功，待管理员审核" : null;
         } catch (BizException e) {
             throw new BizException("景点发布失败，请联系管理员", attractionVO);
         }
@@ -79,20 +83,15 @@ public class AttractionServiceImpl extends ServiceImpl<AttractionMapper, Attract
     @Override
     public String updateAttraction(AttractionVO attractionVO, String username) {
         try {
-            Boolean attractionIsPresent = getAttractionIsPresent(attractionVO.getId());
-            if (attractionIsPresent) {
-                lambdaUpdate()
-                        .set(Attraction::getAttractionName, attractionVO.getAttractionName())
-                        .set(Attraction::getDescription, attractionVO.getDescription())
-                        .set(Attraction::getLocation, attractionVO.getLocation())
-                        .set(Attraction::getProvinceCode, attractionVO.getProvinceCode())
-                        .set(Attraction::getCityCode, attractionVO.getCityCode())
-                        .set(Attraction::getAreaCode, attractionVO.getAreaCode())
-                        .set(Attraction::getStreetCode, attractionVO.getStreetCode())
-                        .eq(Attraction::getId, attractionVO.getId())
-                        .update();
-                return "景点更新成功";
-            } else throw new BizException("景点不存在");
+            Map<Long, AttractionDTO> map = getAttractionsMapByUsername(username);
+            AttractionDTO attractionDTO = map.get(attractionVO.getId());
+            if (attractionDTO == null) {
+                return "景点不存在";
+            }
+            Attraction attraction = new Attraction();
+            BeanUtils.copyProperties(attractionVO, attraction);
+            updateById(attraction);
+            return "景点更新成功";
         } catch (BizException e) {
             throw new BizException("景点更新失败，请联系管理员");
         }
@@ -101,14 +100,16 @@ public class AttractionServiceImpl extends ServiceImpl<AttractionMapper, Attract
     @Override
     public String deleteAttraction(Long attractionId, String username) {
         try {
-            Boolean attractionIsPresent = getAttractionIsPresent(attractionId);
-            if (attractionIsPresent) {
-                lambdaUpdate()
-                        .set(Attraction::getIsDeleted, 1)
-                        .eq(Attraction::getId, attractionId)
-                        .update();
-                return "景点删除成功";
-            } else throw new BizException("景点不存在");
+            Map<Long, AttractionDTO> map = getAttractionsMapByUsername(username);
+            AttractionDTO attractionDTO = map.get(attractionId);
+            if (attractionDTO == null) {
+                return "景点不存在";
+            }
+            lambdaUpdate()
+                    .set(Attraction::getIsDeleted, 1)
+                    .eq(Attraction::getId, attractionId)
+                    .update();
+            return "景点删除成功";
         } catch (BizException e) {
             throw new BizException("景点删除失败，请联系管理员");
         }
@@ -126,13 +127,7 @@ public class AttractionServiceImpl extends ServiceImpl<AttractionMapper, Attract
             if (attractions.length == 0)
                 return "没有需要审核的景点";
             LambdaUpdateWrapper<Attraction> wrapper = new LambdaUpdateWrapper<Attraction>()
-                    .func(attraction -> {
-                        if (pass) {
-                            attraction.set(Attraction::getReviewed, 1);
-                        } else {
-                            attraction.set(Attraction::getReviewed, 2);
-                        }
-                    });
+                    .func(attraction -> attraction.set(Attraction::getReviewed, pass ? 1 : 2));
             Arrays.stream(attractions).forEach(attractionId ->
                     wrapper.or().eq(Attraction::getId, attractionId));
             int rows = attractionMapper.update(wrapper);
@@ -175,13 +170,34 @@ public class AttractionServiceImpl extends ServiceImpl<AttractionMapper, Attract
 
     @Override
     public List<AttractionVO> getAttractions() {
-        return Optional.ofNullable(lambdaQuery().list())
+        return Optional.ofNullable(lambdaQuery()
+                        .eq(Attraction::getReviewed, 1)
+                        .eq(Attraction::getIsDeleted, 0)
+                        .list())
                 .map(attractions -> attractions.stream().map(attraction -> {
                     AttractionVO attractionVO = new AttractionVO();
                     BeanUtils.copyProperties(attraction, attractionVO);
                     return attractionVO;
                 }).toList())
                 .orElse(null);
+    }
+
+    @Override
+    public String restoreAttraction(Long attractionId, String username) {
+        try {
+            Map<Long, AttractionDTO> map = getAttractionsMapByUsername(username);
+            AttractionDTO attractionDTO = map.get(attractionId);
+            if (attractionDTO == null) {
+                return "景点不存在";
+            }
+            lambdaUpdate()
+                    .set(Attraction::getIsDeleted, 0)
+                    .eq(Attraction::getId, attractionId)
+                    .update();
+            return "景点已恢复";
+        } catch (BizException e) {
+            throw new RuntimeException("景点恢复失败，请联系管理员");
+        }
     }
 }
 

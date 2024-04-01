@@ -2,9 +2,11 @@ package com.soldiersoft.traveler.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.soldiersoft.traveler.entity.Attraction;
+import com.soldiersoft.traveler.model.dto.AttractionDTO;
 import com.soldiersoft.traveler.model.vo.AttractionVO;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Soldier_RMB
@@ -14,6 +16,8 @@ import java.util.List;
 public interface AttractionService extends IService<Attraction> {
 
     Boolean getAttractionIsPresent(Long attractionId);
+
+    Map<Long, AttractionDTO> getAttractionsMapByUsername(String username);
 
     String postAttraction(AttractionVO attractionVO, String username);
 
@@ -28,4 +32,6 @@ public interface AttractionService extends IService<Attraction> {
     List<AttractionVO> getAttractionsByCityCode(Long cityCode);
 
     List<AttractionVO> getAttractions();
+
+    String restoreAttraction(Long attractionId, String username);
 }

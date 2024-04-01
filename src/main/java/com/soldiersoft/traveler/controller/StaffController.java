@@ -48,6 +48,13 @@ public class StaffController {
         return ResultVO.ok(attractionService.deleteAttraction(attractionId, username));
     }
 
+    @Operation(description = "恢复删除景点信息")
+    @PutMapping("/restoreAttraction")
+    @PreAuthorize("authentication.principal.equals(#username)")
+    public ResultVO<String> restoreAttraction(@RequestParam Long attractionId, @RequestParam String username) {
+        return ResultVO.ok(attractionService.restoreAttraction(attractionId, username));
+    }
+
     @Operation(description = "通过用户名获取用户景点信息")
     @GetMapping("/getUserAttractionsByUsername")
     @PreAuthorize("authentication.principal.equals(#username)")
