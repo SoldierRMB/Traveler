@@ -34,7 +34,7 @@ public class GuestController {
         return ResultVO.ok(streetService.getPositionByStreetCode(streetCode));
     }
 
-    @Operation(description = "获取所有景点信息")
+    @Operation(description = "获取所有审核通过景点信息")
     @GetMapping("/getAttractions")
     public ResultVO<List<AttractionVO>> getAttractions() {
         return ResultVO.ok(attractionService.getAttractions());
