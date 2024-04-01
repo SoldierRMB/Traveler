@@ -43,4 +43,10 @@ public class AdminController {
     public ResultVO<List<UserAttractionVO>> getUnreviewedUserAttractions() {
         return ResultVO.ok(userAttractionService.getUserAttractions(false));
     }
+
+    @Operation(description = "彻底删除用户景点")
+    @DeleteMapping("/completeDeleteUserAttraction")
+    public ResultVO<String> completeDeleteUserAttraction(@RequestParam Long attractionId) {
+        return ResultVO.ok(userAttractionService.completeDeleteUserAttraction(attractionId));
+    }
 }

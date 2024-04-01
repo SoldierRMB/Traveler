@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.yulichang.wrapper.MPJLambdaWrapper;
 import com.soldiersoft.traveler.entity.*;
 import com.soldiersoft.traveler.exception.BizException;
+import com.soldiersoft.traveler.mapper.AttractionMapper;
 import com.soldiersoft.traveler.mapper.UserAttractionMapper;
 import com.soldiersoft.traveler.model.dto.UserAttractionDTO;
 import com.soldiersoft.traveler.model.dto.UserDTO;
@@ -13,6 +14,7 @@ import com.soldiersoft.traveler.service.UserService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -25,11 +27,13 @@ import java.util.List;
 public class UserAttractionServiceImpl extends ServiceImpl<UserAttractionMapper, UserAttraction>
         implements UserAttractionService {
     private final UserAttractionMapper userAttractionMapper;
+    private final AttractionMapper attractionMapper;
     private final UserService userService;
 
     @Autowired
-    public UserAttractionServiceImpl(UserAttractionMapper userAttractionMapper, UserService userService) {
+    public UserAttractionServiceImpl(UserAttractionMapper userAttractionMapper, AttractionMapper attractionMapper, UserService userService) {
         this.userAttractionMapper = userAttractionMapper;
+        this.attractionMapper = attractionMapper;
         this.userService = userService;
     }
 
@@ -92,13 +96,8 @@ public class UserAttractionServiceImpl extends ServiceImpl<UserAttractionMapper,
                 .leftJoin(City.class, City::getCode, Attraction::getCityCode)
                 .leftJoin(Area.class, Area::getCode, Attraction::getAreaCode)
                 .leftJoin(Street.class, Street::getCode, Attraction::getStreetCode)
-                .func(attraction -> {
-                    if (reviewed) {
-                        attraction.in(Attraction::getReviewed, 1, 2);
-                    } else {
-                        attraction.eq(Attraction::getReviewed, 0);
-                    }
-                });
+                .func(attraction -> attraction.in(Attraction::getReviewed,
+                        reviewed ? 1 : 0, reviewed ? 2 : null));
         return userAttractionMapper.selectJoinList(UserAttractionDTO.class, wrapper).stream()
                 .map(this::mapToUserAttractionVO).toList();
     }
@@ -123,6 +122,14 @@ public class UserAttractionServiceImpl extends ServiceImpl<UserAttractionMapper,
                 .eq(UserAttraction::getUserId, userDTO.getId());
         return userAttractionMapper.selectJoinList(UserAttractionDTO.class, wrapper).stream()
                 .map(this::mapToUserAttractionVO).toList();
+    }
+
+    @Override
+    @Transactional
+    public String completeDeleteUserAttraction(Long attractionId) {
+        int deleteUserAttraction = userAttractionMapper.deleteById(attractionId);
+        int deleteAttraction = attractionMapper.deleteById(attractionId);
+        return (deleteUserAttraction > 0 && deleteAttraction > 0 ? "删除成功" : "删除失败");
     }
 }
 

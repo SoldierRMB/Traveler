@@ -18,4 +18,6 @@ public interface UserAttractionService extends IService<UserAttraction> {
     List<UserAttractionVO> getUserAttractions(Boolean reviewed);
 
     List<UserAttractionVO> getUserAttractionsByUsername(String username);
+
+    String completeDeleteUserAttraction(Long attractionId);
 }
