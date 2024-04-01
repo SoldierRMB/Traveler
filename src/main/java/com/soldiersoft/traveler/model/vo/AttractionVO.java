@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
@@ -22,7 +23,7 @@ public class AttractionVO {
     @NotBlank
     private String location;
     @Digits(integer = 5, fraction = 2)
-    private Double score;
+    private BigDecimal score;
     @NotBlank
     private Long provinceCode;
     @NotBlank

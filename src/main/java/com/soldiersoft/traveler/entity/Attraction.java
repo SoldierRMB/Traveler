@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
@@ -47,7 +48,7 @@ public class Attraction implements Serializable {
     /**
      * 景点评分
      */
-    private Double score;
+    private BigDecimal score;
     /**
      * 省级编号
      */

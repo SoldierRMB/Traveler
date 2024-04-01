@@ -9,7 +9,7 @@
         <result property="attractionName" column="attraction_name" jdbcType="VARCHAR"/>
         <result property="description" column="description" jdbcType="VARCHAR"/>
         <result property="location" column="location" jdbcType="VARCHAR"/>
-        <result property="score" column="score" jdbcType="DOUBLE"/>
+        <result property="score" column="score" jdbcType="DECIMAL"/>
         <result property="provinceCode" column="province_code" jdbcType="BIGINT"/>
         <result property="cityCode" column="city_code" jdbcType="BIGINT"/>
         <result property="areaCode" column="area_code" jdbcType="BIGINT"/>
