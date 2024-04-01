@@ -61,7 +61,7 @@ public class AttractionServiceImpl extends ServiceImpl<AttractionMapper, Attract
 
     @Override
     @Transactional
-    public String postAttraction(AttractionVO attractionVO, String username) {
+    public String publishAttraction(AttractionVO attractionVO, String username) {
         try {
             UserDTO userDTO = userService.getUserByUsername(username);
             User user = new User();

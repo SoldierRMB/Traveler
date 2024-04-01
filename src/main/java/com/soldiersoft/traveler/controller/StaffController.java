@@ -28,10 +28,10 @@ public class StaffController {
     }
 
     @Operation(description = "发布景点信息")
-    @PostMapping("/postAttraction")
+    @PostMapping("/publishAttraction")
     @PreAuthorize("authentication.principal.equals(#username)")
-    public ResultVO<String> postAttraction(@RequestBody @Validated AttractionVO attractionVO, String username) {
-        return ResultVO.ok(attractionService.postAttraction(attractionVO, username));
+    public ResultVO<String> publishAttraction(@RequestBody @Validated AttractionVO attractionVO, String username) {
+        return ResultVO.ok(attractionService.publishAttraction(attractionVO, username));
     }
 
     @Operation(description = "更新景点信息")
