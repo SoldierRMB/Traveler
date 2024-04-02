@@ -1,6 +1,6 @@
 package com.soldiersoft.traveler.mapper;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.github.yulichang.base.MPJBaseMapper;
 import com.soldiersoft.traveler.entity.Order;
 
 /**
@@ -9,7 +9,7 @@ import com.soldiersoft.traveler.entity.Order;
 * @createDate 2024-04-01 21:06:21
 * @Entity com.soldiersoft.traveler.entity.Order
 */
-public interface OrderMapper extends BaseMapper<Order> {
+public interface OrderMapper extends MPJBaseMapper<Order> {
 
 }
 
