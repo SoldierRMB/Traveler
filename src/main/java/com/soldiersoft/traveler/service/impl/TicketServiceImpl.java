@@ -72,7 +72,16 @@ public class TicketServiceImpl extends ServiceImpl<TicketMapper, Ticket>
 
     @Override
     public String updateTicket(AttractionTicketVO attractionTicketVO, String username) {
-        return null;
+        Map<Long, AttractionDTO> map = attractionService.getAttractionsMapByUsername(username);
+        AttractionDTO attractionDTO = map.get(attractionTicketVO.getAttractionVO().getId());
+        if (attractionDTO == null) {
+            throw new BizException("景点不存在");
+        }
+        TicketVO ticketVO = attractionTicketVO.getTicketVO();
+        Ticket ticket = new Ticket();
+        BeanUtils.copyProperties(ticketVO, ticket);
+        updateById(ticket);
+        return "门票更新成功";
     }
 }
 
