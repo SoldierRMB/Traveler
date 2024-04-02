@@ -82,35 +82,27 @@ public class AttractionServiceImpl extends ServiceImpl<AttractionMapper, Attract
 
     @Override
     public String updateAttraction(AttractionVO attractionVO, String username) {
-        try {
-            Map<Long, AttractionDTO> map = getAttractionsMapByUsername(username);
-            if (!map.containsKey(attractionVO.getId())) {
-                return "景点不存在";
-            }
-            Attraction attraction = new Attraction();
-            BeanUtils.copyProperties(attractionVO, attraction);
-            updateById(attraction);
-            return "景点更新成功";
-        } catch (BizException e) {
-            throw new BizException("景点更新失败，请联系管理员");
+        Map<Long, AttractionDTO> map = getAttractionsMapByUsername(username);
+        if (!map.containsKey(attractionVO.getId())) {
+            throw new BizException("景点不存在");
         }
+        Attraction attraction = new Attraction();
+        BeanUtils.copyProperties(attractionVO, attraction);
+        updateById(attraction);
+        return "景点更新成功";
     }
 
     @Override
     public String deleteAttraction(Long attractionId, String username) {
-        try {
-            Map<Long, AttractionDTO> map = getAttractionsMapByUsername(username);
-            if (!map.containsKey(attractionId)) {
-                return "景点不存在";
-            }
-            lambdaUpdate()
-                    .set(Attraction::getIsDeleted, 1)
-                    .eq(Attraction::getId, attractionId)
-                    .update();
-            return "景点删除成功";
-        } catch (BizException e) {
-            throw new BizException("景点删除失败，请联系管理员");
+        Map<Long, AttractionDTO> map = getAttractionsMapByUsername(username);
+        if (!map.containsKey(attractionId)) {
+            throw new BizException("景点不存在");
         }
+        lambdaUpdate()
+                .set(Attraction::getIsDeleted, 1)
+                .eq(Attraction::getId, attractionId)
+                .update();
+        return "景点删除成功";
     }
 
     @Override
@@ -182,19 +174,15 @@ public class AttractionServiceImpl extends ServiceImpl<AttractionMapper, Attract
 
     @Override
     public String restoreAttraction(Long attractionId, String username) {
-        try {
-            Map<Long, AttractionDTO> map = getAttractionsMapByUsername(username);
-            if (!map.containsKey(attractionId)) {
-                return "景点不存在";
-            }
-            lambdaUpdate()
-                    .set(Attraction::getIsDeleted, 0)
-                    .eq(Attraction::getId, attractionId)
-                    .update();
-            return "景点已恢复";
-        } catch (BizException e) {
-            throw new RuntimeException("景点恢复失败，请联系管理员");
+        Map<Long, AttractionDTO> map = getAttractionsMapByUsername(username);
+        if (!map.containsKey(attractionId)) {
+            throw new BizException("景点不存在");
         }
+        lambdaUpdate()
+                .set(Attraction::getIsDeleted, 0)
+                .eq(Attraction::getId, attractionId)
+                .update();
+        return "景点已恢复";
     }
 }
 

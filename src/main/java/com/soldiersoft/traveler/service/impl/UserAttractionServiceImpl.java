@@ -76,7 +76,7 @@ public class UserAttractionServiceImpl extends ServiceImpl<UserAttractionMapper,
             save(userAttraction);
             return true;
         } catch (Exception e) {
-            throw new BizException(userAttractionDTO);
+            throw new BizException("保存用户景点失败，请联系管理员");
         }
     }
 
