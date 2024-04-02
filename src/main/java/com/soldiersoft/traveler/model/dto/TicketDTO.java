@@ -17,4 +17,5 @@ public class TicketDTO {
     private BigDecimal price;
     private Integer ticketType;
     private String description;
+    private Integer isDeleted;
 }
