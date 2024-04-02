@@ -36,6 +36,7 @@ public class AttractionTicketServiceImpl extends ServiceImpl<AttractionTicketMap
                 .selectAssociation(Ticket.class, AttractionTicketDTO::getTicket)
                 .leftJoin(Attraction.class, Attraction::getId, AttractionTicket::getAttractionId)
                 .leftJoin(Ticket.class, Ticket::getId, AttractionTicket::getTicketId)
+                .eq(Ticket::getIsDeleted, 0)
                 .eq(AttractionTicket::getAttractionId, attractionId);
         return attractionTicketMapper.selectJoinList(AttractionTicketDTO.class, wrapper);
     }

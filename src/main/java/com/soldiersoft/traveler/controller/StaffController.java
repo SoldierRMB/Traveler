@@ -83,4 +83,11 @@ public class StaffController {
     public ResultVO<String> updateTicket(@RequestBody AttractionTicketVO attractionTicketVO, @RequestParam String username) {
         return ResultVO.ok(ticketService.updateTicket(attractionTicketVO, username));
     }
+
+    @Operation(description = "删除门票信息")
+    @PutMapping("/deleteTicket")
+    @PreAuthorize("authentication.principal.equals(#username)")
+    public ResultVO<String> deleteTicket(@RequestParam Long ticketId, @RequestParam String username) {
+        return ResultVO.ok(ticketService.deleteTicket(ticketId, username));
+    }
 }

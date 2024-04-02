@@ -83,6 +83,20 @@ public class TicketServiceImpl extends ServiceImpl<TicketMapper, Ticket>
         updateById(ticket);
         return "门票更新成功";
     }
+
+    @Override
+    public String deleteTicket(Long ticketId, String username) {
+        Map<Long, AttractionDTO> map = attractionService.getAttractionsMapByUsername(username);
+        AttractionDTO attractionDTO = map.get(ticketId);
+        if (attractionDTO == null) {
+            throw new BizException("景点不存在");
+        }
+        lambdaUpdate()
+                .set(Ticket::getIsDeleted, 1)
+                .eq(Ticket::getId, ticketId)
+                .update();
+        return "门票删除成功";
+    }
 }
 
 
