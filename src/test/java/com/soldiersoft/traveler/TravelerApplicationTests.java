@@ -2,6 +2,7 @@ package com.soldiersoft.traveler;
 
 import com.soldiersoft.traveler.entity.Attraction;
 import com.soldiersoft.traveler.model.dto.MailDTO;
+import com.soldiersoft.traveler.service.AttractionTicketService;
 import com.soldiersoft.traveler.service.MailService;
 import com.soldiersoft.traveler.service.StreetService;
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,8 @@ class TravelerApplicationTests {
     private MailService mailService;
     @Autowired
     private StreetService streetService;
+    @Autowired
+    private AttractionTicketService attractionTicketService;
 
     @Test
     void testSendEmail() {
@@ -43,5 +46,10 @@ class TravelerApplicationTests {
                 .filter(Objects::nonNull)
                 .toList();
         System.out.println(attractions);
+    }
+
+    @Test
+    void testGetAttractionTicketsByAttractionId() {
+        System.out.println(attractionTicketService.getAttractionTicketsByAttractionId(1L));
     }
 }
