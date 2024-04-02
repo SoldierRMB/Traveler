@@ -2,6 +2,10 @@ package com.soldiersoft.traveler.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.soldiersoft.traveler.entity.AttractionTicket;
+import com.soldiersoft.traveler.model.dto.AttractionTicketDTO;
+import com.soldiersoft.traveler.model.vo.AttractionTicketVO;
+
+import java.util.List;
 
 /**
 * @author Soldier_RMB
@@ -10,4 +14,7 @@ import com.soldiersoft.traveler.entity.AttractionTicket;
 */
 public interface AttractionTicketService extends IService<AttractionTicket> {
 
+    String publishAttractionTicket(AttractionTicketVO attractionTicketVO, String username);
+
+    List<AttractionTicketDTO> getAttractionTicketsByAttractionId(Long attractionId);
 }

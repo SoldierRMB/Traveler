@@ -1,9 +1,9 @@
 package com.soldiersoft.traveler.controller;
 
-import com.soldiersoft.traveler.model.vo.AttractionVO;
-import com.soldiersoft.traveler.model.vo.ResultVO;
-import com.soldiersoft.traveler.model.vo.UserAttractionVO;
+import com.soldiersoft.traveler.model.vo.*;
 import com.soldiersoft.traveler.service.AttractionService;
+import com.soldiersoft.traveler.service.AttractionTicketService;
+import com.soldiersoft.traveler.service.TicketService;
 import com.soldiersoft.traveler.service.UserAttractionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -20,11 +20,15 @@ import java.util.List;
 public class StaffController {
     private final AttractionService attractionService;
     private final UserAttractionService userAttractionService;
+    private final AttractionTicketService attractionTicketService;
+    private final TicketService ticketService;
 
     @Autowired
-    public StaffController(AttractionService attractionService, UserAttractionService userAttractionService) {
+    public StaffController(AttractionService attractionService, UserAttractionService userAttractionService, AttractionTicketService attractionTicketService, TicketService ticketService) {
         this.attractionService = attractionService;
         this.userAttractionService = userAttractionService;
+        this.attractionTicketService = attractionTicketService;
+        this.ticketService = ticketService;
     }
 
     @Operation(description = "发布景点信息")
@@ -60,5 +64,19 @@ public class StaffController {
     @PreAuthorize("authentication.principal.equals(#username)")
     public ResultVO<List<UserAttractionVO>> getUserAttractionsByUsername(@RequestParam String username) {
         return ResultVO.ok(userAttractionService.getUserAttractionsByUsername(username));
+    }
+
+    @Operation(description = "发布景点门票信息")
+    @PostMapping("/publishAttractionTicket")
+    @PreAuthorize("authentication.principal.equals(#username)")
+    public ResultVO<String> publishAttractionTicket(@RequestBody AttractionTicketVO attractionTicketVO, @RequestParam String username) {
+        return ResultVO.ok(attractionTicketService.publishAttractionTicket(attractionTicketVO, username));
+    }
+
+    @Operation(description = "通过景点编号获取门票信息")
+    @GetMapping("/getTicketsByAttractionId")
+    @PreAuthorize("authentication.principal.equals(#username)")
+    public ResultVO<List<TicketVO>> getTicketsByAttractionId(@RequestParam Long attractionId, @RequestParam String username) {
+        return ResultVO.ok(ticketService.getTicketsByAttractionId(attractionId, username));
     }
 }
