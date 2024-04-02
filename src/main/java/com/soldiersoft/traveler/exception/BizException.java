@@ -1,42 +1,43 @@
 package com.soldiersoft.traveler.exception;
 
-import cn.hutool.core.util.StrUtil;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.text.MessageFormat;
+import java.util.Arrays;
 
-@Data
 @EqualsAndHashCode(callSuper = true)
 public class BizException extends RuntimeException {
-    private String msg;
+    private String message;
     private Object[] args;
 
-    public BizException() {
-        super();
-    }
-
-    public BizException(String msg) {
-        super(msg);
-        this.msg = msg;
+    public BizException(String message) {
+        super(message);
+        this.message = message;
     }
 
     public BizException(Object... args) {
         this.args = args;
     }
 
-    public BizException(String msg, Object... args) {
-        this.msg = msg;
+    public BizException(String message, Object... args) {
+        super(message);
+        this.message = message;
         this.args = args;
     }
 
     @Override
+    public String toString() {
+        if (this.args != null && this.args.length > 0)
+            return "BizException{" +
+                    "message='" + message + '\'' +
+                    ", args=" + Arrays.toString(args) +
+                    '}';
+        return "BizException{" +
+                "message='" + message + '\'' +
+                '}';
+    }
+
+    @Override
     public String getMessage() {
-        if (StrUtil.isNotBlank(getMsg())) {
-            if (args != null && args.length > 0) {
-                return MessageFormat.format(msg, args);
-            }
-        }
         return super.getMessage();
     }
 }
