@@ -76,7 +76,7 @@ public class AttractionServiceImpl extends ServiceImpl<AttractionMapper, Attract
             return userAttractionService.saveUserAttractionFromAttraction(userAttractionDTO)
                     ? "景点发布成功，待管理员审核" : null;
         } catch (BizException e) {
-            throw new BizException("景点发布失败，请联系管理员", attractionVO);
+            throw new BizException("景点发布失败，请联系管理员");
         }
     }
 
@@ -84,8 +84,7 @@ public class AttractionServiceImpl extends ServiceImpl<AttractionMapper, Attract
     public String updateAttraction(AttractionVO attractionVO, String username) {
         try {
             Map<Long, AttractionDTO> map = getAttractionsMapByUsername(username);
-            AttractionDTO attractionDTO = map.get(attractionVO.getId());
-            if (attractionDTO == null) {
+            if (!map.containsKey(attractionVO.getId())) {
                 return "景点不存在";
             }
             Attraction attraction = new Attraction();
@@ -101,8 +100,7 @@ public class AttractionServiceImpl extends ServiceImpl<AttractionMapper, Attract
     public String deleteAttraction(Long attractionId, String username) {
         try {
             Map<Long, AttractionDTO> map = getAttractionsMapByUsername(username);
-            AttractionDTO attractionDTO = map.get(attractionId);
-            if (attractionDTO == null) {
+            if (!map.containsKey(attractionId)) {
                 return "景点不存在";
             }
             lambdaUpdate()
@@ -186,8 +184,7 @@ public class AttractionServiceImpl extends ServiceImpl<AttractionMapper, Attract
     public String restoreAttraction(Long attractionId, String username) {
         try {
             Map<Long, AttractionDTO> map = getAttractionsMapByUsername(username);
-            AttractionDTO attractionDTO = map.get(attractionId);
-            if (attractionDTO == null) {
+            if (!map.containsKey(attractionId)) {
                 return "景点不存在";
             }
             lambdaUpdate()

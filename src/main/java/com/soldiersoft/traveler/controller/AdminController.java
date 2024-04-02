@@ -22,7 +22,6 @@ public class AdminController {
     @Autowired
     public AdminController(AttractionService attractionService, UserAttractionService userAttractionService) {
         this.attractionService = attractionService;
-
         this.userAttractionService = userAttractionService;
     }
 
