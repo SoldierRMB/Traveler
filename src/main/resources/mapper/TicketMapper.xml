@@ -10,6 +10,6 @@
             <result property="price" column="price" jdbcType="DECIMAL"/>
             <result property="ticketType" column="ticket_type" jdbcType="TINYINT"/>
             <result property="description" column="description" jdbcType="VARCHAR"/>
-            <result property="isDeleted" column="isDeleted" jdbcType="TINYINT"/>
+            <result property="isDeleted" column="is_deleted" jdbcType="TINYINT"/>
     </resultMap>
 </mapper>
