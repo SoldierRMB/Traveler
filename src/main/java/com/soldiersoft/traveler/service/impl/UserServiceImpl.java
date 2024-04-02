@@ -7,6 +7,7 @@ import cn.hutool.jwt.signers.JWTSigner;
 import cn.hutool.jwt.signers.JWTSignerUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.soldiersoft.traveler.entity.User;
+import com.soldiersoft.traveler.entity.UserRole;
 import com.soldiersoft.traveler.exception.BizException;
 import com.soldiersoft.traveler.mapper.UserMapper;
 import com.soldiersoft.traveler.model.dto.UserDTO;
@@ -138,11 +139,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
                     .email(email)
                     .build();
             save(user);
-            userDTO.setId(user.getId());
-            if (userRoleService.saveUserRoleFromUser(userDTO))
-                return "注册成功";
-            else
-                return null;
+            UserRole userRole = UserRole.builder()
+                    .userId(user.getId())
+                    .roleId(userDTO.getUserType())
+                    .build();
+            userRoleService.save(userRole);
+            return "注册成功";
         } catch (Exception e) {
             throw new BizException("注册失败，请联系管理员");
         }

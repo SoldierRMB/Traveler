@@ -4,11 +4,10 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.soldiersoft.traveler.entity.Attraction;
-import com.soldiersoft.traveler.entity.User;
+import com.soldiersoft.traveler.entity.UserAttraction;
 import com.soldiersoft.traveler.exception.BizException;
 import com.soldiersoft.traveler.mapper.AttractionMapper;
 import com.soldiersoft.traveler.model.dto.AttractionDTO;
-import com.soldiersoft.traveler.model.dto.UserAttractionDTO;
 import com.soldiersoft.traveler.model.dto.UserDTO;
 import com.soldiersoft.traveler.model.vo.AttractionVO;
 import com.soldiersoft.traveler.service.AttractionService;
@@ -64,17 +63,15 @@ public class AttractionServiceImpl extends ServiceImpl<AttractionMapper, Attract
     public String publishAttraction(AttractionVO attractionVO, String username) {
         try {
             UserDTO userDTO = userService.getUserByUsername(username);
-            User user = new User();
-            BeanUtils.copyProperties(userDTO, user);
             Attraction attraction = new Attraction();
             BeanUtils.copyProperties(attractionVO, attraction);
             save(attraction);
-            UserAttractionDTO userAttractionDTO = UserAttractionDTO.builder()
-                    .user(user)
-                    .attraction(attraction)
+            UserAttraction userAttraction = UserAttraction.builder()
+                    .userId(userDTO.getId())
+                    .attractionId(attraction.getId())
                     .build();
-            return userAttractionService.saveUserAttractionFromAttraction(userAttractionDTO)
-                    ? "景点发布成功，待管理员审核" : null;
+            userAttractionService.save(userAttraction);
+            return "景点发布成功，待管理员审核";
         } catch (BizException e) {
             throw new BizException("景点发布失败，请联系管理员");
         }

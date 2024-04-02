@@ -2,7 +2,6 @@ package com.soldiersoft.traveler.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.soldiersoft.traveler.entity.UserAttraction;
-import com.soldiersoft.traveler.model.dto.UserAttractionDTO;
 import com.soldiersoft.traveler.model.vo.UserAttractionVO;
 
 import java.util.List;
@@ -13,8 +12,6 @@ import java.util.List;
  * @createDate 2024-03-13 15:04:11
  */
 public interface UserAttractionService extends IService<UserAttraction> {
-    Boolean saveUserAttractionFromAttraction(UserAttractionDTO userAttractionDTO);
-
     List<UserAttractionVO> getUserAttractions(Boolean reviewed);
 
     List<UserAttractionVO> getUserAttractionsByUsername(String username);

@@ -3,7 +3,6 @@ package com.soldiersoft.traveler.service.impl;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.yulichang.wrapper.MPJLambdaWrapper;
 import com.soldiersoft.traveler.entity.*;
-import com.soldiersoft.traveler.exception.BizException;
 import com.soldiersoft.traveler.mapper.AttractionMapper;
 import com.soldiersoft.traveler.mapper.UserAttractionMapper;
 import com.soldiersoft.traveler.model.dto.UserAttractionDTO;
@@ -64,20 +63,6 @@ public class UserAttractionServiceImpl extends ServiceImpl<UserAttractionMapper,
         BeanUtils.copyProperties(street, streetVO);
 
         return new UserAttractionVO(userVO, attractionVO, provinceVO, cityVO, areaVO, streetVO);
-    }
-
-    @Override
-    public Boolean saveUserAttractionFromAttraction(UserAttractionDTO userAttractionDTO) {
-        try {
-            UserAttraction userAttraction = UserAttraction.builder()
-                    .userId(userAttractionDTO.getUser().getId())
-                    .attractionId(userAttractionDTO.getAttraction().getId())
-                    .build();
-            save(userAttraction);
-            return true;
-        } catch (Exception e) {
-            throw new BizException("保存用户景点失败，请联系管理员");
-        }
     }
 
     @Override

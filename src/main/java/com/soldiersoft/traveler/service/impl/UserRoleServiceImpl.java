@@ -6,13 +6,10 @@ import com.soldiersoft.traveler.entity.Role;
 import com.soldiersoft.traveler.entity.User;
 import com.soldiersoft.traveler.entity.UserRole;
 import com.soldiersoft.traveler.mapper.UserRoleMapper;
-import com.soldiersoft.traveler.model.dto.UserDTO;
 import com.soldiersoft.traveler.model.dto.UserRoleDTO;
 import com.soldiersoft.traveler.service.UserRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.stream.IntStream;
 
 /**
  * @author Soldier_RMB
@@ -39,16 +36,5 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole>
                 .leftJoin(Role.class, Role::getId, UserRole::getRoleId)
                 .eq(UserRole::getUserId, userId);
         return userRoleMapper.selectJoinOne(UserRoleDTO.class, wrapper);
-    }
-
-    @Override
-    public Boolean saveUserRoleFromUser(UserDTO userDTO) {
-        return IntStream.of(userDTO.getUserType())
-                .filter(roleId -> roleId == 1 || roleId == 2 || roleId == 3)
-                .mapToObj(roleId -> UserRole.builder()
-                        .userId(userDTO.getId())
-                        .roleId(roleId)
-                        .build())
-                .allMatch(this::save);
     }
 }
