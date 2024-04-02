@@ -66,11 +66,11 @@ public class StaffController {
         return ResultVO.ok(userAttractionService.getUserAttractionsByUsername(username));
     }
 
-    @Operation(description = "发布景点门票信息")
-    @PostMapping("/publishAttractionTicket")
+    @Operation(description = "发布门票信息")
+    @PostMapping("/publishTicket")
     @PreAuthorize("authentication.principal.equals(#username)")
-    public ResultVO<String> publishAttractionTicket(@RequestBody AttractionTicketVO attractionTicketVO, @RequestParam String username) {
-        return ResultVO.ok(attractionTicketService.publishAttractionTicket(attractionTicketVO, username));
+    public ResultVO<String> publishTicket(@RequestBody AttractionTicketVO attractionTicketVO, @RequestParam String username) {
+        return ResultVO.ok(ticketService.publishTicket(attractionTicketVO, username));
     }
 
     @Operation(description = "通过景点编号获取门票信息")
@@ -78,5 +78,12 @@ public class StaffController {
     @PreAuthorize("authentication.principal.equals(#username)")
     public ResultVO<List<TicketVO>> getTicketsByAttractionId(@RequestParam Long attractionId, @RequestParam String username) {
         return ResultVO.ok(ticketService.getTicketsByAttractionId(attractionId, username));
+    }
+
+    @Operation(description = "更新门票信息")
+    @PutMapping("/updateTicket")
+    @PreAuthorize("authentication.principal.equals(#username)")
+    public ResultVO<String> updateTicket(@RequestBody AttractionTicketVO attractionTicketVO, @RequestParam String username) {
+        return ResultVO.ok(ticketService.updateTicket(attractionTicketVO, username));
     }
 }
