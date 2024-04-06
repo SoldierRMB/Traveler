@@ -41,7 +41,7 @@ public class Ticket implements Serializable {
      */
     private BigDecimal price;
     /**
-     * 门票类型 1.成人票 2.优惠票
+     * 门票类型 1.全价票 2.优惠票
      */
     private Integer ticketType;
     /**

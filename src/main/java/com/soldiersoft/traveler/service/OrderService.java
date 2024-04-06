@@ -2,6 +2,7 @@ package com.soldiersoft.traveler.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.soldiersoft.traveler.entity.Order;
+import com.soldiersoft.traveler.model.vo.OrderVO;
 
 /**
 * @author Soldier_RMB
@@ -10,4 +11,7 @@ import com.soldiersoft.traveler.entity.Order;
 */
 public interface OrderService extends IService<Order> {
 
+    OrderVO booking(OrderVO orderVO, String username);
+
+    OrderVO completePayment(Long orderId, String username);
 }

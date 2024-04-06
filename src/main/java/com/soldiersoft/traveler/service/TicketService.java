@@ -16,6 +16,8 @@ public interface TicketService extends IService<Ticket> {
 
     List<TicketVO> getTicketsByAttractionId(Long attractionId, String username);
 
+    List<TicketVO> getTicketsByAttractionId(Long attractionId);
+
     String publishTicket(AttractionTicketVO attractionTicketVO, String username);
 
     String updateTicket(AttractionTicketVO attractionTicketVO, String username);

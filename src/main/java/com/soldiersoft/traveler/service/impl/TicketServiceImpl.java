@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author Soldier_RMB
@@ -40,7 +41,7 @@ public class TicketServiceImpl extends ServiceImpl<TicketMapper, Ticket>
     public List<TicketVO> getTicketsByAttractionId(Long attractionId, String username) {
         Map<Long, AttractionDTO> map = attractionService.getAttractionsMapByUsername(username);
         if (!map.containsKey(attractionId)) {
-            return null;
+            throw new BizException("景点不存在");
         }
         return attractionTicketService.getAttractionTicketsByAttractionId(attractionId).stream()
                 .map(dto -> {
@@ -51,16 +52,25 @@ public class TicketServiceImpl extends ServiceImpl<TicketMapper, Ticket>
     }
 
     @Override
+    public List<TicketVO> getTicketsByAttractionId(Long attractionId) {
+        return attractionTicketService.getAttractionTicketsByAttractionId(attractionId).stream()
+                .filter(dto -> dto.getAttraction().getIsDeleted() == 0 && dto.getAttraction().getReviewed() == 1)
+                .map(dto -> {
+                    TicketVO ticketVO = new TicketVO();
+                    BeanUtils.copyProperties(dto.getTicket(), ticketVO);
+                    return ticketVO;
+                })
+                .collect(Collectors.collectingAndThen(Collectors.toList(), list -> {
+                    if (list.isEmpty())
+                        throw new BizException("景点不存在");
+                    return list;
+                }));
+    }
+
+    @Override
     @Transactional
     public String publishTicket(AttractionTicketVO attractionTicketVO, String username) {
-        Map<Long, AttractionDTO> map = attractionService.getAttractionsMapByUsername(username);
-        AttractionDTO attractionDTO = map.get(attractionTicketVO.getAttractionVO().getId());
-        if (attractionDTO == null) {
-            throw new BizException("景点不存在");
-        }
-        TicketVO ticketVO = attractionTicketVO.getTicketVO();
-        Ticket ticket = new Ticket();
-        BeanUtils.copyProperties(ticketVO, ticket);
+        Ticket ticket = verifyAttractionTicket(attractionTicketVO, username);
         save(ticket);
         AttractionTicket attractionTicket = AttractionTicket.builder()
                 .attractionId(attractionTicketVO.getAttractionVO().getId())
@@ -70,8 +80,7 @@ public class TicketServiceImpl extends ServiceImpl<TicketMapper, Ticket>
         return "门票发布成功";
     }
 
-    @Override
-    public String updateTicket(AttractionTicketVO attractionTicketVO, String username) {
+    private Ticket verifyAttractionTicket(AttractionTicketVO attractionTicketVO, String username) {
         Map<Long, AttractionDTO> map = attractionService.getAttractionsMapByUsername(username);
         AttractionDTO attractionDTO = map.get(attractionTicketVO.getAttractionVO().getId());
         if (attractionDTO == null) {
@@ -80,6 +89,12 @@ public class TicketServiceImpl extends ServiceImpl<TicketMapper, Ticket>
         TicketVO ticketVO = attractionTicketVO.getTicketVO();
         Ticket ticket = new Ticket();
         BeanUtils.copyProperties(ticketVO, ticket);
+        return ticket;
+    }
+
+    @Override
+    public String updateTicket(AttractionTicketVO attractionTicketVO, String username) {
+        Ticket ticket = verifyAttractionTicket(attractionTicketVO, username);
         updateById(ticket);
         return "门票更新成功";
     }
