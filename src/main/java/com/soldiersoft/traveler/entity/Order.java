@@ -1,5 +1,6 @@
 package com.soldiersoft.traveler.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -30,8 +31,8 @@ public class Order implements Serializable {
     /**
      * 订单编号
      */
-    @TableId
-    private byte[] id;
+    @TableId(type = IdType.ASSIGN_ID)
+    private Long id;
     /**
      * 用户编号
      */
