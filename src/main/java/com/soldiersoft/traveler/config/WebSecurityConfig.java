@@ -90,7 +90,7 @@ public class WebSecurityConfig {
     @Bean
     RoleHierarchy roleHierarchy() {
         RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
-        roleHierarchy.setHierarchy("ROLE_ADMIN > ROLE_STAFF \n ROLE_ADMIN > ROLE_TOURIST");
+        roleHierarchy.setHierarchy("ROLE_ADMIN > ROLE_STAFF \n ROLE_ADMIN > ROLE_TOURIST \n ROLE_STAFF > ROLE_TOURIST");
         return roleHierarchy;
     }
 }
