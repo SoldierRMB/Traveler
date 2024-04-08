@@ -2,6 +2,7 @@ package com.soldiersoft.traveler.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.soldiersoft.traveler.entity.Order;
+import com.soldiersoft.traveler.model.vo.OrderTicketVO;
 import com.soldiersoft.traveler.model.vo.OrderVO;
 
 import java.util.List;
@@ -17,7 +18,9 @@ public interface OrderService extends IService<Order> {
 
     OrderVO completePayment(Long orderId, String username);
 
-    List<OrderVO> getUserOrders(String username);
+    List<OrderTicketVO> getUserOrders(String username);
 
-    List<OrderVO> getOrdersByAttractionId(Long attractionId, String username);
+    List<OrderTicketVO> getOrdersByAttractionId(Long attractionId, String username);
+
+    List<OrderTicketVO> getStaffOrders(String username);
 }

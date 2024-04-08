@@ -1,9 +1,6 @@
 package com.soldiersoft.traveler.controller;
 
-import com.soldiersoft.traveler.model.vo.AttractionVO;
-import com.soldiersoft.traveler.model.vo.OrderVO;
-import com.soldiersoft.traveler.model.vo.ResultVO;
-import com.soldiersoft.traveler.model.vo.TicketVO;
+import com.soldiersoft.traveler.model.vo.*;
 import com.soldiersoft.traveler.service.AttractionService;
 import com.soldiersoft.traveler.service.OrderService;
 import com.soldiersoft.traveler.service.TicketService;
@@ -65,7 +62,7 @@ public class TouristController {
     @Operation(description = "获取用户订单列表")
     @GetMapping("/getUserOrders")
     @PreAuthorize("authentication.principal.equals(#username)")
-    public ResultVO<List<OrderVO>> getUserOrders(@RequestParam String username) {
+    public ResultVO<List<OrderTicketVO>> getUserOrders(@RequestParam String username) {
         return ResultVO.ok(orderService.getUserOrders(username));
     }
 }

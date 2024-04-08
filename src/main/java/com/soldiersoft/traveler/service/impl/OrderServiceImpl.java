@@ -6,11 +6,13 @@ import com.soldiersoft.traveler.entity.Order;
 import com.soldiersoft.traveler.entity.Ticket;
 import com.soldiersoft.traveler.mapper.OrderMapper;
 import com.soldiersoft.traveler.model.dto.UserDTO;
+import com.soldiersoft.traveler.model.vo.OrderTicketVO;
 import com.soldiersoft.traveler.model.vo.OrderVO;
 import com.soldiersoft.traveler.model.vo.TicketVO;
 import com.soldiersoft.traveler.service.OrderService;
 import com.soldiersoft.traveler.service.TicketService;
 import com.soldiersoft.traveler.service.UserService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -64,22 +66,39 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order>
     }
 
     @Override
-    public List<OrderVO> getUserOrders(String username) {
+    public List<OrderTicketVO> getUserOrders(String username) {
         UserDTO userDTO = userService.getUserByUsername(username);
         return lambdaQuery()
                 .eq(Order::getUserId, userDTO.getId())
                 .list().stream()
-                .map(order -> BeanUtil.copyProperties(order, OrderVO.class))
+                .map(this::mapToOrderTicketVO)
                 .toList();
     }
 
     @Override
-    public List<OrderVO> getOrdersByAttractionId(Long attractionId, String username) {
+    public List<OrderTicketVO> getOrdersByAttractionId(Long attractionId, String username) {
         return ticketService.getTicketsByAttractionId(attractionId, username).stream()
                 .map(TicketVO::getId)
                 .flatMap(ticketId -> lambdaQuery().eq(Order::getTicketId, ticketId).list().stream())
-                .map(order -> BeanUtil.copyProperties(order, OrderVO.class))
+                .map(this::mapToOrderTicketVO)
                 .toList();
+    }
+
+    @Override
+    public List<OrderTicketVO> getStaffOrders(String username) {
+        return null;
+    }
+
+    private OrderTicketVO mapToOrderTicketVO(Order order) {
+        Ticket ticket = ticketService
+                .lambdaQuery()
+                .eq(Ticket::getId, order.getTicketId())
+                .one();
+        OrderVO orderVO = new OrderVO();
+        TicketVO ticketVO = new TicketVO();
+        BeanUtils.copyProperties(order, orderVO);
+        BeanUtils.copyProperties(ticket, ticketVO);
+        return new OrderTicketVO(orderVO, ticketVO);
     }
 }
 
