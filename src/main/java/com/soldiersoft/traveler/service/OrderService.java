@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.soldiersoft.traveler.entity.Order;
 import com.soldiersoft.traveler.model.vo.OrderVO;
 
+import java.util.List;
+
 /**
 * @author Soldier_RMB
 * @description 针对表【t_order(订单表)】的数据库操作Service
@@ -14,4 +16,8 @@ public interface OrderService extends IService<Order> {
     OrderVO booking(OrderVO orderVO, String username);
 
     OrderVO completePayment(Long orderId, String username);
+
+    List<OrderVO> getUserOrders(String username);
+
+    List<OrderVO> getOrdersByAttractionId(Long attractionId, String username);
 }

@@ -2,6 +2,7 @@ package com.soldiersoft.traveler.controller;
 
 import com.soldiersoft.traveler.model.vo.*;
 import com.soldiersoft.traveler.service.AttractionService;
+import com.soldiersoft.traveler.service.OrderService;
 import com.soldiersoft.traveler.service.TicketService;
 import com.soldiersoft.traveler.service.UserAttractionService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -20,12 +21,14 @@ public class StaffController {
     private final AttractionService attractionService;
     private final UserAttractionService userAttractionService;
     private final TicketService ticketService;
+    private final OrderService orderService;
 
     @Autowired
-    public StaffController(AttractionService attractionService, UserAttractionService userAttractionService, TicketService ticketService) {
+    public StaffController(AttractionService attractionService, UserAttractionService userAttractionService, TicketService ticketService, OrderService orderService) {
         this.attractionService = attractionService;
         this.userAttractionService = userAttractionService;
         this.ticketService = ticketService;
+        this.orderService = orderService;
     }
 
     @Operation(description = "发布景点信息")
@@ -89,5 +92,12 @@ public class StaffController {
     @PreAuthorize("authentication.principal.equals(#username)")
     public ResultVO<String> deleteTicket(@RequestParam Long ticketId, @RequestParam String username) {
         return ResultVO.ok(ticketService.deleteTicket(ticketId, username));
+    }
+
+    @Operation(description = "通过景点编号获取景点订单信息")
+    @GetMapping("/getOrdersByAttractionId")
+    @PreAuthorize("authentication.principal.equals(#username)")
+    public ResultVO<List<OrderVO>> getOrdersByAttractionId(@RequestParam Long attractionId, @RequestParam String username) {
+        return ResultVO.ok(orderService.getOrdersByAttractionId(attractionId, username));
     }
 }

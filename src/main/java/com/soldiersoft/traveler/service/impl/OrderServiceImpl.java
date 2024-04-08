@@ -7,6 +7,7 @@ import com.soldiersoft.traveler.entity.Ticket;
 import com.soldiersoft.traveler.mapper.OrderMapper;
 import com.soldiersoft.traveler.model.dto.UserDTO;
 import com.soldiersoft.traveler.model.vo.OrderVO;
+import com.soldiersoft.traveler.model.vo.TicketVO;
 import com.soldiersoft.traveler.service.OrderService;
 import com.soldiersoft.traveler.service.TicketService;
 import com.soldiersoft.traveler.service.UserService;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * @author Soldier_RMB
@@ -59,6 +61,25 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order>
         order.setStatus(2);
         updateById(order);
         return BeanUtil.copyProperties(order, OrderVO.class);
+    }
+
+    @Override
+    public List<OrderVO> getUserOrders(String username) {
+        UserDTO userDTO = userService.getUserByUsername(username);
+        return lambdaQuery()
+                .eq(Order::getUserId, userDTO.getId())
+                .list().stream()
+                .map(order -> BeanUtil.copyProperties(order, OrderVO.class))
+                .toList();
+    }
+
+    @Override
+    public List<OrderVO> getOrdersByAttractionId(Long attractionId, String username) {
+        return ticketService.getTicketsByAttractionId(attractionId, username).stream()
+                .map(TicketVO::getId)
+                .flatMap(ticketId -> lambdaQuery().eq(Order::getTicketId, ticketId).list().stream())
+                .map(order -> BeanUtil.copyProperties(order, OrderVO.class))
+                .toList();
     }
 }
 

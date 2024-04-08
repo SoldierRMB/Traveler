@@ -61,4 +61,11 @@ public class TouristController {
     public ResultVO<OrderVO> completePayment(@RequestParam Long orderId, String username) {
         return ResultVO.ok(orderService.completePayment(orderId, username));
     }
+
+    @Operation(description = "获取用户订单列表")
+    @GetMapping("/getUserOrders")
+    @PreAuthorize("authentication.principal.equals(#username)")
+    public ResultVO<List<OrderVO>> getUserOrders(@RequestParam String username) {
+        return ResultVO.ok(orderService.getUserOrders(username));
+    }
 }
