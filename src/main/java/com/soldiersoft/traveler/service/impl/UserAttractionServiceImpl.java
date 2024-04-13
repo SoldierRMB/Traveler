@@ -8,6 +8,7 @@ import com.soldiersoft.traveler.mapper.UserAttractionMapper;
 import com.soldiersoft.traveler.model.dto.UserAttractionDTO;
 import com.soldiersoft.traveler.model.dto.UserDTO;
 import com.soldiersoft.traveler.model.vo.*;
+import com.soldiersoft.traveler.service.AttractionTicketService;
 import com.soldiersoft.traveler.service.UserAttractionService;
 import com.soldiersoft.traveler.service.UserService;
 import org.springframework.beans.BeanUtils;
@@ -27,12 +28,14 @@ public class UserAttractionServiceImpl extends ServiceImpl<UserAttractionMapper,
         implements UserAttractionService {
     private final UserAttractionMapper userAttractionMapper;
     private final AttractionMapper attractionMapper;
+    private final AttractionTicketService attractionTicketService;
     private final UserService userService;
 
     @Autowired
-    public UserAttractionServiceImpl(UserAttractionMapper userAttractionMapper, AttractionMapper attractionMapper, UserService userService) {
+    public UserAttractionServiceImpl(UserAttractionMapper userAttractionMapper, AttractionMapper attractionMapper, AttractionTicketService attractionTicketService, UserService userService) {
         this.userAttractionMapper = userAttractionMapper;
         this.attractionMapper = attractionMapper;
+        this.attractionTicketService = attractionTicketService;
         this.userService = userService;
     }
 
@@ -112,9 +115,10 @@ public class UserAttractionServiceImpl extends ServiceImpl<UserAttractionMapper,
     @Override
     @Transactional
     public String completeDeleteUserAttraction(Long attractionId) {
+        int deleteAttractionTicket = attractionTicketService.deleteAttractionTicketsByAttractionId(attractionId);
         int deleteUserAttraction = userAttractionMapper.deleteById(attractionId);
         int deleteAttraction = attractionMapper.deleteById(attractionId);
-        return (deleteUserAttraction > 0 && deleteAttraction > 0 ? "删除成功" : "删除失败");
+        return (deleteAttractionTicket >= 0 && deleteUserAttraction >= 0 && deleteAttraction >= 0 ? "删除成功" : "删除失败");
     }
 }
 

@@ -14,4 +14,6 @@ import java.util.List;
 public interface AttractionTicketService extends IService<AttractionTicket> {
 
     List<AttractionTicketDTO> getAttractionTicketsByAttractionId(Long attractionId);
+
+    int deleteAttractionTicketsByAttractionId(Long attractionId);
 }

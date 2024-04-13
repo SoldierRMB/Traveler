@@ -62,7 +62,7 @@ public class TicketServiceImpl extends ServiceImpl<TicketMapper, Ticket>
                 })
                 .collect(Collectors.collectingAndThen(Collectors.toList(), list -> {
                     if (list.isEmpty())
-                        throw new BizException("景点门票不存在");
+                        return null;
                     return list;
                 }));
     }
