@@ -16,6 +16,38 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `t_order`
+--
+
+DROP TABLE IF EXISTS `t_order`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `t_order` (
+  `id` bigint unsigned NOT NULL COMMENT '订单编号',
+  `user_id` bigint NOT NULL COMMENT '用户编号',
+  `ticket_id` bigint NOT NULL COMMENT '门票编号',
+  `status` tinyint NOT NULL DEFAULT '1' COMMENT '订单状态 1.待支付 2.已支付 3.已完成 4.已取消',
+  `quantity` int NOT NULL COMMENT '门票数量',
+  `amount` decimal(10,2) NOT NULL COMMENT '订单金额',
+  `order_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '订单时间',
+  PRIMARY KEY (`id`),
+  KEY `t_order_t_ticket_id_fk` (`ticket_id`),
+  KEY `t_order_t_user_id_fk` (`user_id`),
+  CONSTRAINT `t_order_t_ticket_id_fk` FOREIGN KEY (`ticket_id`) REFERENCES `t_ticket` (`id`),
+  CONSTRAINT `t_order_t_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `t_user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='订单表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `t_order`
+--
+
+LOCK TABLES `t_order` WRITE;
+/*!40000 ALTER TABLE `t_order` DISABLE KEYS */;
+/*!40000 ALTER TABLE `t_order` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `t_menu`
 --
 
@@ -40,60 +72,34 @@ LOCK TABLES `t_menu` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `t_role_menu`
+-- Table structure for table `t_comment`
 --
 
-DROP TABLE IF EXISTS `t_role_menu`;
+DROP TABLE IF EXISTS `t_comment`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `t_role_menu` (
-  `id` int NOT NULL AUTO_INCREMENT COMMENT '菜单角色编号',
-  `role_id` int NOT NULL COMMENT '角色编号',
-  `menu_id` int NOT NULL COMMENT '菜单编号',
-  PRIMARY KEY (`id`),
-  KEY `t_role_menu_t_menu_id_fk` (`menu_id`),
-  KEY `t_role_menu_t_role_id_fk` (`role_id`),
-  CONSTRAINT `t_role_menu_t_menu_id_fk` FOREIGN KEY (`menu_id`) REFERENCES `t_menu` (`id`),
-  CONSTRAINT `t_role_menu_t_role_id_fk` FOREIGN KEY (`role_id`) REFERENCES `t_role` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='角色菜单表';
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `t_role_menu`
---
-
-LOCK TABLES `t_role_menu` WRITE;
-/*!40000 ALTER TABLE `t_role_menu` DISABLE KEYS */;
-/*!40000 ALTER TABLE `t_role_menu` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `t_post`
---
-
-DROP TABLE IF EXISTS `t_post`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `t_post` (
-  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '动态编号',
-  `title` varchar(255) NOT NULL COMMENT '动态标题',
-  `content` text NOT NULL COMMENT '动态内容',
-  `user_id` bigint NOT NULL COMMENT '用户编号',
+CREATE TABLE `t_comment` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '评论编号',
+  `comment_type` tinyint NOT NULL COMMENT '评论类型 1.主题评论 2.景点评论',
+  `content` text NOT NULL COMMENT '评论内容',
+  `from_user_id` bigint NOT NULL COMMENT '评论用户编号',
+  `post_id` bigint NOT NULL DEFAULT '0' COMMENT '动态编号 0.非动态评论',
+  `viewpoint_id` bigint NOT NULL DEFAULT '0' COMMENT '景点评论 0.非景点评论',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`),
-  KEY `t_topic_t_user_id_fk` (`user_id`),
-  CONSTRAINT `t_post_t_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `t_user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='动态表';
+  KEY `t_comment_t_user_id_fk` (`from_user_id`),
+  CONSTRAINT `t_comment_t_user_id_fk` FOREIGN KEY (`from_user_id`) REFERENCES `t_user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='评论表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `t_post`
+-- Dumping data for table `t_comment`
 --
 
-LOCK TABLES `t_post` WRITE;
-/*!40000 ALTER TABLE `t_post` DISABLE KEYS */;
-/*!40000 ALTER TABLE `t_post` ENABLE KEYS */;
+LOCK TABLES `t_comment` WRITE;
+/*!40000 ALTER TABLE `t_comment` DISABLE KEYS */;
+/*!40000 ALTER TABLE `t_comment` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -112,7 +118,7 @@ CREATE TABLE `t_attraction_ticket` (
   KEY `t_attraction_ticket_t_ticket_id_fk` (`ticket_id`),
   CONSTRAINT `t_attraction_ticket_t_attraction_id_fk` FOREIGN KEY (`attraction_id`) REFERENCES `t_attraction` (`id`),
   CONSTRAINT `t_attraction_ticket_t_ticket_id_fk` FOREIGN KEY (`ticket_id`) REFERENCES `t_ticket` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='景点门票表';
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='景点门票表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -121,58 +127,22 @@ CREATE TABLE `t_attraction_ticket` (
 
 LOCK TABLES `t_attraction_ticket` WRITE;
 /*!40000 ALTER TABLE `t_attraction_ticket` DISABLE KEYS */;
+INSERT INTO `t_attraction_ticket` VALUES (1,1,1);
+INSERT INTO `t_attraction_ticket` VALUES (2,1,2);
+INSERT INTO `t_attraction_ticket` VALUES (3,1,3);
+INSERT INTO `t_attraction_ticket` VALUES (4,1,4);
+INSERT INTO `t_attraction_ticket` VALUES (5,1,5);
+INSERT INTO `t_attraction_ticket` VALUES (6,1,6);
+INSERT INTO `t_attraction_ticket` VALUES (7,1,7);
+INSERT INTO `t_attraction_ticket` VALUES (8,1,8);
+INSERT INTO `t_attraction_ticket` VALUES (9,4,9);
+INSERT INTO `t_attraction_ticket` VALUES (10,4,10);
+INSERT INTO `t_attraction_ticket` VALUES (11,4,11);
+INSERT INTO `t_attraction_ticket` VALUES (12,4,12);
+INSERT INTO `t_attraction_ticket` VALUES (13,4,13);
+INSERT INTO `t_attraction_ticket` VALUES (14,4,14);
 /*!40000 ALTER TABLE `t_attraction_ticket` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `t_order`
---
-
-DROP TABLE IF EXISTS `t_order`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `t_order` (
-  `id` binary(16) NOT NULL COMMENT '订单编号',
-  `user_id` bigint NOT NULL COMMENT '用户编号',
-  `ticket_id` bigint NOT NULL COMMENT '门票编号',
-  `status` tinyint NOT NULL DEFAULT '1' COMMENT '订单状态 1.待支付 2.已支付 3.已完成 4.已取消',
-  `quantity` int NOT NULL COMMENT '门票数量',
-  `amount` decimal(10,2) NOT NULL COMMENT '订单金额',
-  `order_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '订单时间',
-  PRIMARY KEY (`id`),
-  KEY `t_order_t_ticket_id_fk` (`ticket_id`),
-  KEY `t_order_t_user_id_fk` (`user_id`),
-  CONSTRAINT `t_order_t_ticket_id_fk` FOREIGN KEY (`ticket_id`) REFERENCES `t_ticket` (`id`),
-  CONSTRAINT `t_order_t_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `t_user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='订单表';
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `t_order`
---
-
-LOCK TABLES `t_order` WRITE;
-/*!40000 ALTER TABLE `t_order` DISABLE KEYS */;
-/*!40000 ALTER TABLE `t_order` ENABLE KEYS */;
-UNLOCK TABLES;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
-/*!50032 DROP TRIGGER IF EXISTS t_order_trigger */;
-DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `t_order_trigger` BEFORE INSERT ON `t_order` FOR EACH ROW BEGIN
-    SET new.id = UUID_TO_BIN(UUID());
-END */;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `t_attraction`
@@ -213,72 +183,42 @@ CREATE TABLE `t_attraction` (
 
 LOCK TABLES `t_attraction` WRITE;
 /*!40000 ALTER TABLE `t_attraction` DISABLE KEYS */;
-INSERT INTO `t_attraction` VALUES (1,'故宫博物院','08:30-16:30开放（15:30停止入园）','北京市东城区景山前街4号',5.00,11,1101,110101,110101002,1,0,'2024-03-15 16:59:30','2024-04-01 17:41:03');
-INSERT INTO `t_attraction` VALUES (2,'天坛','06:30-22:00开放（21:00停止入园）','北京市东城区天坛路甲1号',5.00,11,1101,110101,110101016,2,0,'2024-03-17 18:16:32','2024-04-01 16:33:24');
+INSERT INTO `t_attraction` VALUES (1,'故宫博物院','08:30-16:30开放（15:30停止入园）','北京市东城区景山前街4号',5.00,11,1101,110101,110101002,1,0,'2024-03-15 16:59:30','2024-04-03 14:33:10');
+INSERT INTO `t_attraction` VALUES (2,'天坛','06:30-22:00开放（21:00停止入园）','北京市东城区天坛路甲1号',5.00,11,1101,110101,110101016,2,0,'2024-03-17 18:16:32','2024-03-28 20:28:21');
 INSERT INTO `t_attraction` VALUES (3,'八达岭长城','07:30-16:00开放','北京市延庆区G6京藏高速58号出口',NULL,11,1101,110119,110119102,1,1,'2024-03-28 14:49:32','2024-03-29 17:50:41');
-INSERT INTO `t_attraction` VALUES (4,'沈阳故宫','09:00-16:30开放（15:45停止入园）','沈阳市沈河区沈阳路171号',NULL,21,2101,210103,210103017,0,0,'2024-03-30 22:50:30','2024-03-30 22:50:30');
-INSERT INTO `t_attraction` VALUES (5,'张学良旧居','09:00-16:30开放（16:00停止入园）','沈阳市沈河区朝阳街少帅府巷46号',NULL,21,2101,210103,210103017,0,0,'2024-03-30 23:17:23','2024-03-30 23:17:23');
-INSERT INTO `t_attraction` VALUES (6,'沈阳方特欢乐世界','10:00-17:00开放','沈阳市沈北新区盛京大街55号',NULL,21,2101,210113,210113004,0,0,'2024-03-30 23:22:16','2024-03-30 23:22:16');
+INSERT INTO `t_attraction` VALUES (4,'沈阳故宫','09:00-16:30开放（15:45停止入园）','沈阳市沈河区沈阳路171号',NULL,21,2101,210103,210103017,0,0,'2024-03-30 22:50:30','2024-04-03 14:52:08');
+INSERT INTO `t_attraction` VALUES (5,'张学良旧居','09:00-16:30开放（16:00停止入园）','沈阳市沈河区朝阳街少帅府巷46号',NULL,21,2101,210103,210103017,1,0,'2024-03-30 23:17:23','2024-04-05 13:49:26');
+INSERT INTO `t_attraction` VALUES (6,'沈阳方特欢乐世界','10:00-17:00开放','沈阳市沈北新区盛京大街55号',NULL,21,2101,210113,210113004,2,0,'2024-03-30 23:22:16','2024-04-03 14:43:15');
 /*!40000 ALTER TABLE `t_attraction` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `t_comment`
+-- Table structure for table `t_post`
 --
 
-DROP TABLE IF EXISTS `t_comment`;
+DROP TABLE IF EXISTS `t_post`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `t_comment` (
-  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '评论编号',
-  `comment_type` tinyint NOT NULL COMMENT '评论类型 1.主题评论 2.景点评论',
-  `content` text NOT NULL COMMENT '评论内容',
-  `from_user_id` bigint NOT NULL COMMENT '评论用户编号',
-  `post_id` bigint NOT NULL DEFAULT '0' COMMENT '动态编号 0.非动态评论',
-  `viewpoint_id` bigint NOT NULL DEFAULT '0' COMMENT '景点评论 0.非景点评论',
+CREATE TABLE `t_post` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '动态编号',
+  `title` varchar(255) NOT NULL COMMENT '动态标题',
+  `content` text NOT NULL COMMENT '动态内容',
+  `user_id` bigint NOT NULL COMMENT '用户编号',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`),
-  KEY `t_comment_t_user_id_fk` (`from_user_id`),
-  CONSTRAINT `t_comment_t_user_id_fk` FOREIGN KEY (`from_user_id`) REFERENCES `t_user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='评论表';
+  KEY `t_topic_t_user_id_fk` (`user_id`),
+  CONSTRAINT `t_post_t_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `t_user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='动态表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `t_comment`
+-- Dumping data for table `t_post`
 --
 
-LOCK TABLES `t_comment` WRITE;
-/*!40000 ALTER TABLE `t_comment` DISABLE KEYS */;
-/*!40000 ALTER TABLE `t_comment` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `t_role`
---
-
-DROP TABLE IF EXISTS `t_role`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `t_role` (
-  `id` int NOT NULL AUTO_INCREMENT COMMENT '角色编号',
-  `role_name` varchar(255) NOT NULL COMMENT '角色名称',
-  `role_name_zh` varchar(255) NOT NULL COMMENT '中文角色名称',
-  `is_disable` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否禁用 0.否 1.是',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='角色表';
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `t_role`
---
-
-LOCK TABLES `t_role` WRITE;
-/*!40000 ALTER TABLE `t_role` DISABLE KEYS */;
-INSERT INTO `t_role` VALUES (1,'ROLE_ADMIN','系统管理员',0);
-INSERT INTO `t_role` VALUES (2,'ROLE_STAFF','景点管理员',0);
-INSERT INTO `t_role` VALUES (3,'ROLE_TOURIST','游客用户',0);
-/*!40000 ALTER TABLE `t_role` ENABLE KEYS */;
+LOCK TABLES `t_post` WRITE;
+/*!40000 ALTER TABLE `t_post` DISABLE KEYS */;
+/*!40000 ALTER TABLE `t_post` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -316,6 +256,62 @@ LOCK TABLES `t_reply` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `t_role`
+--
+
+DROP TABLE IF EXISTS `t_role`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `t_role` (
+  `id` int NOT NULL AUTO_INCREMENT COMMENT '角色编号',
+  `role_name` varchar(255) NOT NULL COMMENT '角色名称',
+  `role_name_zh` varchar(255) NOT NULL COMMENT '中文角色名称',
+  `is_disable` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否禁用 0.否 1.是',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='角色表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `t_role`
+--
+
+LOCK TABLES `t_role` WRITE;
+/*!40000 ALTER TABLE `t_role` DISABLE KEYS */;
+INSERT INTO `t_role` VALUES (1,'ROLE_ADMIN','系统管理员',0);
+INSERT INTO `t_role` VALUES (2,'ROLE_STAFF','景点管理员',0);
+INSERT INTO `t_role` VALUES (3,'ROLE_TOURIST','游客用户',0);
+/*!40000 ALTER TABLE `t_role` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `t_role_menu`
+--
+
+DROP TABLE IF EXISTS `t_role_menu`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `t_role_menu` (
+  `id` int NOT NULL AUTO_INCREMENT COMMENT '菜单角色编号',
+  `role_id` int NOT NULL COMMENT '角色编号',
+  `menu_id` int NOT NULL COMMENT '菜单编号',
+  PRIMARY KEY (`id`),
+  KEY `t_role_menu_t_menu_id_fk` (`menu_id`),
+  KEY `t_role_menu_t_role_id_fk` (`role_id`),
+  CONSTRAINT `t_role_menu_t_menu_id_fk` FOREIGN KEY (`menu_id`) REFERENCES `t_menu` (`id`),
+  CONSTRAINT `t_role_menu_t_role_id_fk` FOREIGN KEY (`role_id`) REFERENCES `t_role` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='角色菜单表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `t_role_menu`
+--
+
+LOCK TABLES `t_role_menu` WRITE;
+/*!40000 ALTER TABLE `t_role_menu` DISABLE KEYS */;
+/*!40000 ALTER TABLE `t_role_menu` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `t_ticket`
 --
 
@@ -326,10 +322,11 @@ CREATE TABLE `t_ticket` (
   `id` bigint NOT NULL AUTO_INCREMENT COMMENT '门票编号',
   `ticket_name` varchar(255) NOT NULL COMMENT '门票名称',
   `price` decimal(10,2) NOT NULL COMMENT '门票价格',
-  `ticket_type` tinyint NOT NULL COMMENT '门票类型 1.成人票 2.优惠票',
+  `ticket_type` tinyint NOT NULL COMMENT '门票类型 1.全价票 2.优惠票',
   `description` varchar(255) NOT NULL COMMENT '门票描述',
+  `is_deleted` tinyint NOT NULL DEFAULT '0' COMMENT '是否删除 0.未删除 1.已删除',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='门票表';
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='门票表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -338,6 +335,20 @@ CREATE TABLE `t_ticket` (
 
 LOCK TABLES `t_ticket` WRITE;
 /*!40000 ALTER TABLE `t_ticket` DISABLE KEYS */;
+INSERT INTO `t_ticket` VALUES (1,'旺季门票',60.00,1,'每年4月1日至10月31日',0);
+INSERT INTO `t_ticket` VALUES (2,'旺季门票（老年票）',30.00,2,'60周岁以上（含60周岁）老年人凭有效身份证原件，门票半价优惠',0);
+INSERT INTO `t_ticket` VALUES (3,'学生票',20.00,2,'18周岁以上、本科及以下学历（不含成人教育），可购学生票',0);
+INSERT INTO `t_ticket` VALUES (4,'淡季门票',40.00,1,'每年11月1日至次年3月31日',0);
+INSERT INTO `t_ticket` VALUES (5,'珍宝馆门票',10.00,1,'需单独购买',0);
+INSERT INTO `t_ticket` VALUES (6,'钟表馆门票',10.00,1,'需单独购买',0);
+INSERT INTO `t_ticket` VALUES (7,'珍宝馆门票（老年票、学生票）',5.00,2,'需单独购买',0);
+INSERT INTO `t_ticket` VALUES (8,'钟表馆门票（老年票、学生票）',5.00,2,'需单独购买',0);
+INSERT INTO `t_ticket` VALUES (9,'成人票（全价票）',50.00,1,'年龄18周岁（含）~60周岁（不含）',0);
+INSERT INTO `t_ticket` VALUES (10,'学生票（半价票）',25.00,2,'全日制本科或本科以下学生凭学生证（不含成人教育、研究生阶段）',0);
+INSERT INTO `t_ticket` VALUES (11,'老人票（半价票）',25.00,2,'60岁~69岁',0);
+INSERT INTO `t_ticket` VALUES (12,'优待票（沈阳居民专享）',25.00,2,'长期在沈阳居住的游客',0);
+INSERT INTO `t_ticket` VALUES (13,'儿童票',0.00,2,'6岁或1.3米以下',0);
+INSERT INTO `t_ticket` VALUES (14,'老人票',0.00,2,'70周岁以上',0);
 /*!40000 ALTER TABLE `t_ticket` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -462,4 +473,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-04-01 20:53:14
+-- Dump completed on 2024-04-08 17:02:19
