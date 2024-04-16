@@ -1,6 +1,11 @@
 package com.soldiersoft.traveler.controller;
 
-import com.soldiersoft.traveler.model.vo.*;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.soldiersoft.traveler.model.dto.OrderDTO;
+import com.soldiersoft.traveler.model.vo.AttractionVO;
+import com.soldiersoft.traveler.model.vo.OrderVO;
+import com.soldiersoft.traveler.model.vo.ResultVO;
+import com.soldiersoft.traveler.model.vo.TicketVO;
 import com.soldiersoft.traveler.service.AttractionService;
 import com.soldiersoft.traveler.service.OrderService;
 import com.soldiersoft.traveler.service.TicketService;
@@ -62,7 +67,7 @@ public class TouristController {
     @Operation(description = "获取用户订单列表")
     @GetMapping("/getUserOrders")
     @PreAuthorize("authentication.principal.equals(#username)")
-    public ResultVO<List<OrderTicketVO>> getUserOrders(@RequestParam String username) {
-        return ResultVO.ok(orderService.getUserOrders(username));
+    public ResultVO<Page<OrderDTO>> getUserOrders(@RequestParam String username, @RequestParam Long current, @RequestParam Long size) {
+        return ResultVO.ok(orderService.getUserOrders(username, current, size));
     }
 }

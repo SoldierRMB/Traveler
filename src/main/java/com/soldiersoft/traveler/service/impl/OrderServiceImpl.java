@@ -1,23 +1,26 @@
 package com.soldiersoft.traveler.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.github.yulichang.wrapper.MPJLambdaWrapper;
 import com.soldiersoft.traveler.entity.Order;
 import com.soldiersoft.traveler.entity.Ticket;
+import com.soldiersoft.traveler.entity.User;
 import com.soldiersoft.traveler.mapper.OrderMapper;
+import com.soldiersoft.traveler.model.dto.OrderDTO;
 import com.soldiersoft.traveler.model.dto.UserDTO;
-import com.soldiersoft.traveler.model.vo.OrderTicketVO;
 import com.soldiersoft.traveler.model.vo.OrderVO;
 import com.soldiersoft.traveler.model.vo.TicketVO;
 import com.soldiersoft.traveler.service.OrderService;
 import com.soldiersoft.traveler.service.TicketService;
 import com.soldiersoft.traveler.service.UserService;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Soldier_RMB
@@ -27,11 +30,13 @@ import java.util.List;
 @Service
 public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order>
         implements OrderService {
+    private final OrderMapper orderMapper;
     private final UserService userService;
     private final TicketService ticketService;
 
     @Autowired
-    public OrderServiceImpl(UserService userService, TicketService ticketService) {
+    public OrderServiceImpl(OrderMapper orderMapper, UserService userService, TicketService ticketService) {
+        this.orderMapper = orderMapper;
         this.userService = userService;
         this.ticketService = ticketService;
     }
@@ -66,42 +71,54 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order>
     }
 
     @Override
-    public List<OrderTicketVO> getUserOrders(String username) {
-        UserDTO userDTO = userService.getUserByUsername(username);
-        return lambdaQuery()
-                .eq(Order::getUserId, userDTO.getId())
-                .list().stream()
-                .map(this::mapToOrderTicketVO)
-                .toList();
+    public Page<OrderDTO> getUserOrders(String username, Long current, Long size) {
+        MPJLambdaWrapper<Order> wrapper = getOrderMPJLambdaWrapper()
+                .eq(User::getUsername, username);
+        Page<OrderDTO> orderDTOPage = orderMapper.selectJoinPage(new Page<>(current, size), OrderDTO.class, wrapper);
+        return processOrderDTOPage(orderDTOPage, null, username);
     }
 
     @Override
-    public List<OrderTicketVO> getOrdersByAttractionId(Long attractionId, String username) {
-        return ticketService.getTicketsByAttractionId(attractionId, username).stream()
-                .map(TicketVO::getId)
-                .flatMap(ticketId -> lambdaQuery().eq(Order::getTicketId, ticketId).list().stream())
-                .map(this::mapToOrderTicketVO)
-                .toList();
+    public Page<OrderDTO> getOrdersByAttractionId(Long attractionId, String username, Long current, Long size) {
+        return processOrderDTOPage(getOrderDTOPage(current, size), attractionId, username);
     }
 
     @Override
-    public List<OrderTicketVO> getStaffOrders(String username) {
-        return null;
+    public Page<OrderDTO> getAllOrders(Long current, Long size) {
+        return processOrderDTOPage(getOrderDTOPage(current, size), null, null);
     }
 
-    private OrderTicketVO mapToOrderTicketVO(Order order) {
-        Ticket ticket = ticketService
-                .lambdaQuery()
-                .eq(Ticket::getId, order.getTicketId())
-                .one();
-        OrderVO orderVO = new OrderVO();
-        TicketVO ticketVO = new TicketVO();
-        BeanUtils.copyProperties(order, orderVO);
-        BeanUtils.copyProperties(ticket, ticketVO);
-        return new OrderTicketVO(orderVO, ticketVO);
+    private Page<OrderDTO> getOrderDTOPage(Long current, Long size) {
+        MPJLambdaWrapper<Order> wrapper = getOrderMPJLambdaWrapper();
+        return orderMapper.selectJoinPage(new Page<>(current, size), OrderDTO.class, wrapper);
+    }
+
+    private static MPJLambdaWrapper<Order> getOrderMPJLambdaWrapper() {
+        return new MPJLambdaWrapper<Order>()
+                .selectAll(Order.class)
+                .selectAssociation(User.class, OrderDTO::getUser)
+                .selectAssociation(Ticket.class, OrderDTO::getTicket)
+                .leftJoin(User.class, User::getId, Order::getUserId)
+                .leftJoin(Ticket.class, Ticket::getId, Order::getTicketId);
+    }
+
+    private Page<OrderDTO> processOrderDTOPage(Page<OrderDTO> orderDTOPage, Long attractionId, String username) {
+        List<OrderDTO> list = orderDTOPage.getRecords().stream()
+                .filter(orderDTO -> {
+                    if (attractionId != null && username != null) {
+                        return ticketService.getTicketsByAttractionId(attractionId, username).stream()
+                                .map(TicketVO::getId)
+                                .anyMatch(id -> Objects.equals(id, orderDTO.getTicket().getId()));
+                    }
+                    return true;
+                })
+                .peek(orderDTO -> {
+                    User user = orderDTO.getUser();
+                    user.setPassword(null);
+                    user.setIsDisable(null);
+                }).toList();
+        orderDTOPage.setRecords(list);
+        orderDTOPage.setTotal(list.size());
+        return orderDTOPage;
     }
 }
-
-
-
-
