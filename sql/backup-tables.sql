@@ -58,7 +58,7 @@ INSERT INTO `t_attraction` VALUES (1,'故宫博物院','08:30-16:30开放（15:3
 INSERT INTO `t_attraction` VALUES (2,'天坛','06:30-22:00开放（21:00停止入园）','北京市东城区天坛路甲1号',5.00,11,1101,110101,110101016,2,0,'2024-03-17 18:16:32','2024-03-28 20:28:21');
 INSERT INTO `t_attraction` VALUES (3,'八达岭长城','07:30-16:00开放','北京市延庆区G6京藏高速58号出口',NULL,11,1101,110119,110119102,1,1,'2024-03-28 14:49:32','2024-03-29 17:50:41');
 INSERT INTO `t_attraction` VALUES (4,'沈阳故宫','09:00-16:30开放（15:45停止入园）','沈阳市沈河区沈阳路171号',NULL,21,2101,210103,210103017,0,0,'2024-03-30 22:50:30','2024-04-03 14:52:08');
-INSERT INTO `t_attraction` VALUES (5,'张学良旧居','09:00-16:30开放（16:00停止入园）','沈阳市沈河区朝阳街少帅府巷46号',NULL,21,2101,210103,210103017,1,0,'2024-03-30 23:17:23','2024-04-03 14:43:02');
+INSERT INTO `t_attraction` VALUES (5,'张学良旧居','09:00-16:30开放（16:00停止入园）','沈阳市沈河区朝阳街少帅府巷46号',NULL,21,2101,210103,210103017,1,0,'2024-03-30 23:17:23','2024-04-05 13:49:26');
 INSERT INTO `t_attraction` VALUES (6,'沈阳方特欢乐世界','10:00-17:00开放','沈阳市沈北新区盛京大街55号',NULL,21,2101,210113,210113004,2,0,'2024-03-30 23:22:16','2024-04-03 14:43:15');
 /*!40000 ALTER TABLE `t_attraction` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -79,7 +79,7 @@ CREATE TABLE `t_attraction_ticket` (
   KEY `t_attraction_ticket_t_ticket_id_fk` (`ticket_id`),
   CONSTRAINT `t_attraction_ticket_t_attraction_id_fk` FOREIGN KEY (`attraction_id`) REFERENCES `t_attraction` (`id`),
   CONSTRAINT `t_attraction_ticket_t_ticket_id_fk` FOREIGN KEY (`ticket_id`) REFERENCES `t_ticket` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='景点门票表';
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='景点门票表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -96,6 +96,12 @@ INSERT INTO `t_attraction_ticket` VALUES (5,1,5);
 INSERT INTO `t_attraction_ticket` VALUES (6,1,6);
 INSERT INTO `t_attraction_ticket` VALUES (7,1,7);
 INSERT INTO `t_attraction_ticket` VALUES (8,1,8);
+INSERT INTO `t_attraction_ticket` VALUES (9,4,9);
+INSERT INTO `t_attraction_ticket` VALUES (10,4,10);
+INSERT INTO `t_attraction_ticket` VALUES (11,4,11);
+INSERT INTO `t_attraction_ticket` VALUES (12,4,12);
+INSERT INTO `t_attraction_ticket` VALUES (13,4,13);
+INSERT INTO `t_attraction_ticket` VALUES (14,4,14);
 /*!40000 ALTER TABLE `t_attraction_ticket` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -114,7 +120,7 @@ CREATE TABLE `t_ticket` (
   `description` varchar(255) NOT NULL COMMENT '门票描述',
   `is_deleted` tinyint NOT NULL DEFAULT '0' COMMENT '是否删除 0.未删除 1.已删除',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='门票表';
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='门票表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -131,6 +137,12 @@ INSERT INTO `t_ticket` VALUES (5,'珍宝馆门票',10.00,1,'需单独购买',0);
 INSERT INTO `t_ticket` VALUES (6,'钟表馆门票',10.00,1,'需单独购买',0);
 INSERT INTO `t_ticket` VALUES (7,'珍宝馆门票（老年票、学生票）',5.00,2,'需单独购买',0);
 INSERT INTO `t_ticket` VALUES (8,'钟表馆门票（老年票、学生票）',5.00,2,'需单独购买',0);
+INSERT INTO `t_ticket` VALUES (9,'成人票（全价票）',50.00,1,'年龄18周岁（含）~60周岁（不含）',0);
+INSERT INTO `t_ticket` VALUES (10,'学生票（半价票）',25.00,2,'全日制本科或本科以下学生凭学生证（不含成人教育、研究生阶段）',0);
+INSERT INTO `t_ticket` VALUES (11,'老人票（半价票）',25.00,2,'60岁~69岁',0);
+INSERT INTO `t_ticket` VALUES (12,'优待票（沈阳居民专享）',25.00,2,'长期在沈阳居住的游客',0);
+INSERT INTO `t_ticket` VALUES (13,'儿童票',0.00,2,'6岁或1.3米以下',0);
+INSERT INTO `t_ticket` VALUES (14,'老人票',0.00,2,'70周岁以上',0);
 /*!40000 ALTER TABLE `t_ticket` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -177,4 +189,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-04-03 15:35:52
+-- Dump completed on 2024-04-13 21:38:12
