@@ -30,6 +30,10 @@ spring:
   web:
     resources:
       add-mappings: false
+  servlet:
+    multipart:
+      max-file-size: 128MB
+      max-request-size: 128MB
 
 springdoc:
   swagger-ui:
@@ -41,3 +45,5 @@ logging:
 
 mybatis-plus:
   mapper-locations: classpath*:/mapper/*Mapper.xml
+
+upload-path: D:/home/traveler
