@@ -23,6 +23,11 @@ import java.util.List;
 
 @Component
 public class JWTAuthenticationTokenFilter extends OncePerRequestFilter {
+    @SuppressWarnings("unchecked")
+    public static List<String> convertToListOfString(List<?> list) {
+        return (List<String>) list;
+    }
+
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain)
             throws ServletException, IOException {
@@ -71,10 +76,5 @@ public class JWTAuthenticationTokenFilter extends OncePerRequestFilter {
             return bearerToken.substring(7); // 去除"Bearer "前缀
         }
         return null;
-    }
-
-    @SuppressWarnings("unchecked")
-    public static List<String> convertToListOfString(List<?> list) {
-        return (List<String>) list;
     }
 }

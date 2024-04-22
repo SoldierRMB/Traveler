@@ -26,6 +26,12 @@ import static com.soldiersoft.traveler.enums.StatusCodeEnum.UNAUTHORIZED;
 @Configuration
 @EnableMethodSecurity
 public class WebSecurityConfig {
+    private static final String[] WHITE_LIST = {
+            "/v3/api-docs/**",
+            "/v3/api-docs.yaml",
+            "/swagger-ui/**",
+            "/swagger-ui.html"
+    };
     private final UserDetailsService userDetailsService;
     private final JWTAuthenticationTokenFilter jwtAuthenticationTokenFilter;
 
@@ -72,13 +78,6 @@ public class WebSecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
-    private static final String[] WHITE_LIST = {
-            "/v3/api-docs/**",
-            "/v3/api-docs.yaml",
-            "/swagger-ui/**",
-            "/swagger-ui.html"
-    };
 
     @Bean
     public AuthenticationManager authenticationManager() {

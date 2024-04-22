@@ -18,7 +18,7 @@ public class TicketVO {
     @NotBlank
     private String ticketName;
     @NotBlank
-    @Digits(integer=10, fraction=2)
+    @Digits(integer = 10, fraction = 2)
     private BigDecimal price;
     @NotBlank
     private Integer ticketType;

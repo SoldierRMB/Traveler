@@ -23,7 +23,7 @@ public class AreaServiceImpl extends ServiceImpl<AreaMapper, Area>
     @Override
     public List<AreaVO> getAreasByCityCode(Long cityCode) {
         return Optional.ofNullable(lambdaQuery().eq(Area::getCityCode, cityCode).list())
-                .map(list -> list.stream().map(area ->{
+                .map(list -> list.stream().map(area -> {
                     AreaVO areaVO = new AreaVO();
                     BeanUtils.copyProperties(area, areaVO);
                     return areaVO;

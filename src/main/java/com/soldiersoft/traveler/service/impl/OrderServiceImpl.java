@@ -41,6 +41,15 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order>
         this.ticketService = ticketService;
     }
 
+    private static MPJLambdaWrapper<Order> getOrderMPJLambdaWrapper() {
+        return new MPJLambdaWrapper<Order>()
+                .selectAll(Order.class)
+                .selectAssociation(User.class, OrderDTO::getUser)
+                .selectAssociation(Ticket.class, OrderDTO::getTicket)
+                .leftJoin(User.class, User::getId, Order::getUserId)
+                .leftJoin(Ticket.class, Ticket::getId, Order::getTicketId);
+    }
+
     @Override
     public OrderVO booking(OrderVO orderVO, String username) {
         UserDTO userDTO = userService.getUserByUsername(username);
@@ -91,15 +100,6 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order>
     private Page<OrderDTO> getOrderDTOPage(Long current, Long size) {
         MPJLambdaWrapper<Order> wrapper = getOrderMPJLambdaWrapper();
         return orderMapper.selectJoinPage(new Page<>(current, size), OrderDTO.class, wrapper);
-    }
-
-    private static MPJLambdaWrapper<Order> getOrderMPJLambdaWrapper() {
-        return new MPJLambdaWrapper<Order>()
-                .selectAll(Order.class)
-                .selectAssociation(User.class, OrderDTO::getUser)
-                .selectAssociation(Ticket.class, OrderDTO::getTicket)
-                .leftJoin(User.class, User::getId, Order::getUserId)
-                .leftJoin(Ticket.class, Ticket::getId, Order::getTicketId);
     }
 
     private Page<OrderDTO> processOrderDTOPage(Page<OrderDTO> orderDTOPage, Long attractionId, String username) {

@@ -8,10 +8,10 @@ import com.soldiersoft.traveler.model.vo.TicketVO;
 import java.util.List;
 
 /**
-* @author Soldier_RMB
-* @description 针对表【t_ticket(门票表)】的数据库操作Service
-* @createDate 2024-04-01 21:06:21
-*/
+ * @author Soldier_RMB
+ * @description 针对表【t_ticket(门票表)】的数据库操作Service
+ * @createDate 2024-04-01 21:06:21
+ */
 public interface TicketService extends IService<Ticket> {
 
     List<TicketVO> getTicketsByAttractionId(Long attractionId, String username);

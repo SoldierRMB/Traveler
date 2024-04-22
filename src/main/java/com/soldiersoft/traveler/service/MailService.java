@@ -8,5 +8,6 @@ public interface MailService {
     String generateCode();
 
     Boolean sendCode(String to);
+
     Boolean verifyCode(String to, String code);
 }
