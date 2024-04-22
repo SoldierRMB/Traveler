@@ -1,16 +1,12 @@
 package com.soldiersoft.traveler.controller;
 
 import com.soldiersoft.traveler.model.vo.*;
-import com.soldiersoft.traveler.service.AreaService;
-import com.soldiersoft.traveler.service.CityService;
-import com.soldiersoft.traveler.service.ProvinceService;
-import com.soldiersoft.traveler.service.StreetService;
+import com.soldiersoft.traveler.service.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -22,12 +18,16 @@ public class CommonController {
     private final CityService cityService;
     private final AreaService areaService;
     private final StreetService streetService;
+    private final FileService fileService;
+    private final AttractionImageService attractionImageService;
 
-    public CommonController(ProvinceService provinceService, CityService cityService, AreaService areaService, StreetService streetService) {
+    public CommonController(ProvinceService provinceService, CityService cityService, AreaService areaService, StreetService streetService, FileService fileService, AttractionImageService attractionImageService) {
         this.provinceService = provinceService;
         this.cityService = cityService;
         this.areaService = areaService;
         this.streetService = streetService;
+        this.fileService = fileService;
+        this.attractionImageService = attractionImageService;
     }
 
     @Operation(description = "查询所有省份信息")
@@ -52,5 +52,17 @@ public class CommonController {
     @GetMapping("/getStreetsByAreaCode")
     public ResultVO<List<StreetVO>> getStreetsByAreaCode(@RequestParam Long areaCode) {
         return ResultVO.ok(streetService.getStreetsByAreaCode(areaCode));
+    }
+
+    @Operation(description = "通过图片名称获取图片")
+    @GetMapping("/getImage/{imageName}")
+    public ResponseEntity<Resource> getImage(@PathVariable String imageName) {
+        return fileService.getImage(imageName);
+    }
+
+    @Operation(description = "通过景点编号获取景点图片")
+    @GetMapping("/getAttractionImageByAttractionId")
+    public ResponseEntity<Resource> getAttractionImageByAttractionId(@RequestParam Long attractionId) {
+        return attractionImageService.getAttractionImageByAttractionId(attractionId);
     }
 }

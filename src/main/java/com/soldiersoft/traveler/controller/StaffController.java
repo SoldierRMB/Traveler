@@ -3,16 +3,14 @@ package com.soldiersoft.traveler.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.soldiersoft.traveler.model.dto.OrderDTO;
 import com.soldiersoft.traveler.model.vo.*;
-import com.soldiersoft.traveler.service.AttractionService;
-import com.soldiersoft.traveler.service.OrderService;
-import com.soldiersoft.traveler.service.TicketService;
-import com.soldiersoft.traveler.service.UserAttractionService;
+import com.soldiersoft.traveler.service.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -24,13 +22,15 @@ public class StaffController {
     private final UserAttractionService userAttractionService;
     private final TicketService ticketService;
     private final OrderService orderService;
+    private final AttractionImageService attractionImageService;
 
     @Autowired
-    public StaffController(AttractionService attractionService, UserAttractionService userAttractionService, TicketService ticketService, OrderService orderService) {
+    public StaffController(AttractionService attractionService, UserAttractionService userAttractionService, TicketService ticketService, OrderService orderService, AttractionImageService attractionImageService) {
         this.attractionService = attractionService;
         this.userAttractionService = userAttractionService;
         this.ticketService = ticketService;
         this.orderService = orderService;
+        this.attractionImageService = attractionImageService;
     }
 
     @Operation(description = "发布景点信息")
@@ -101,5 +101,19 @@ public class StaffController {
     @PreAuthorize("authentication.principal.equals(#username)")
     public ResultVO<Page<OrderDTO>> getOrdersByAttractionId(@RequestParam Long attractionId, @RequestParam String username, @RequestParam Long current, @RequestParam Long size) {
         return ResultVO.ok(orderService.getOrdersByAttractionId(attractionId, username, current, size));
+    }
+
+    @Operation(description = "上传景点图片")
+    @PostMapping("/uploadAttractionImage")
+    @PreAuthorize("authentication.principal.equals(#username)")
+    public ResultVO<String> uploadAttractionImage(@RequestParam("file") MultipartFile file, @RequestParam Long attractionId, @RequestParam String username) {
+        return ResultVO.ok(attractionImageService.uploadAttractionImage(file, attractionId, username));
+    }
+
+    @Operation(description = "更新景点图片")
+    @PutMapping("/updateAttractionImage")
+    @PreAuthorize("authentication.principal.equals(#username)")
+    public ResultVO<String> updateAttractionImage(@RequestParam("file") MultipartFile file, @RequestParam Long attractionId, @RequestParam String username) {
+        return ResultVO.ok(attractionImageService.updateAttractionImage(file, attractionId, username));
     }
 }
