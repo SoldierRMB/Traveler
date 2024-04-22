@@ -34,4 +34,6 @@ public interface AttractionService extends IService<Attraction> {
     List<AttractionVO> getAttractions();
 
     String restoreAttraction(Long attractionId, String username);
+
+    String completeDeleteUserAttraction(Long attractionId);
 }

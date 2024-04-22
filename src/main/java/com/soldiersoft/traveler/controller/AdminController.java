@@ -51,7 +51,7 @@ public class AdminController {
     @Operation(description = "彻底删除用户景点")
     @DeleteMapping("/completeDeleteUserAttraction")
     public ResultVO<String> completeDeleteUserAttraction(@RequestParam Long attractionId) {
-        return ResultVO.ok(userAttractionService.completeDeleteUserAttraction(attractionId));
+        return ResultVO.ok(attractionService.completeDeleteUserAttraction(attractionId));
     }
 
     @Operation(description = "获取所有景点订单")

@@ -181,6 +181,12 @@ public class AttractionServiceImpl extends ServiceImpl<AttractionMapper, Attract
                 .update();
         return "景点已恢复";
     }
+
+    @Override
+    @Transactional
+    public String completeDeleteUserAttraction(Long attractionId) {
+        return attractionMapper.deleteById(attractionId) > 0 ? "删除成功" : "删除失败";
+    }
 }
 
 

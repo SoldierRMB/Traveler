@@ -3,18 +3,15 @@ package com.soldiersoft.traveler.service.impl;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.yulichang.wrapper.MPJLambdaWrapper;
 import com.soldiersoft.traveler.entity.*;
-import com.soldiersoft.traveler.mapper.AttractionMapper;
 import com.soldiersoft.traveler.mapper.UserAttractionMapper;
 import com.soldiersoft.traveler.model.dto.UserAttractionDTO;
 import com.soldiersoft.traveler.model.dto.UserDTO;
 import com.soldiersoft.traveler.model.vo.*;
-import com.soldiersoft.traveler.service.AttractionTicketService;
 import com.soldiersoft.traveler.service.UserAttractionService;
 import com.soldiersoft.traveler.service.UserService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -27,16 +24,29 @@ import java.util.List;
 public class UserAttractionServiceImpl extends ServiceImpl<UserAttractionMapper, UserAttraction>
         implements UserAttractionService {
     private final UserAttractionMapper userAttractionMapper;
-    private final AttractionMapper attractionMapper;
-    private final AttractionTicketService attractionTicketService;
     private final UserService userService;
 
     @Autowired
-    public UserAttractionServiceImpl(UserAttractionMapper userAttractionMapper, AttractionMapper attractionMapper, AttractionTicketService attractionTicketService, UserService userService) {
+    public UserAttractionServiceImpl(UserAttractionMapper userAttractionMapper, UserService userService) {
         this.userAttractionMapper = userAttractionMapper;
-        this.attractionMapper = attractionMapper;
-        this.attractionTicketService = attractionTicketService;
         this.userService = userService;
+    }
+
+    private static MPJLambdaWrapper<UserAttraction> getUserAttractionMPJLambdaWrapper() {
+        return new MPJLambdaWrapper<>(UserAttraction.class)
+                .selectAll(UserAttraction.class)
+                .selectAssociation(User.class, UserAttractionDTO::getUser)
+                .selectAssociation(Attraction.class, UserAttractionDTO::getAttraction)
+                .selectAssociation(Province.class, UserAttractionDTO::getProvince)
+                .selectAssociation(City.class, UserAttractionDTO::getCity)
+                .selectAssociation(Area.class, UserAttractionDTO::getArea)
+                .selectAssociation(Street.class, UserAttractionDTO::getStreet)
+                .leftJoin(User.class, User::getId, UserAttraction::getUserId)
+                .leftJoin(Attraction.class, Attraction::getId, UserAttraction::getAttractionId)
+                .leftJoin(Province.class, Province::getCode, Attraction::getProvinceCode)
+                .leftJoin(City.class, City::getCode, Attraction::getCityCode)
+                .leftJoin(Area.class, Area::getCode, Attraction::getAreaCode)
+                .leftJoin(Street.class, Street::getCode, Attraction::getStreetCode);
     }
 
     private UserAttractionVO mapToUserAttractionVO(UserAttractionDTO userAttractionDTO) {
@@ -84,32 +94,6 @@ public class UserAttractionServiceImpl extends ServiceImpl<UserAttractionMapper,
                 .eq(UserAttraction::getUserId, userDTO.getId());
         return userAttractionMapper.selectJoinList(UserAttractionDTO.class, wrapper).stream()
                 .map(this::mapToUserAttractionVO).toList();
-    }
-
-    private static MPJLambdaWrapper<UserAttraction> getUserAttractionMPJLambdaWrapper() {
-        return new MPJLambdaWrapper<>(UserAttraction.class)
-                .selectAll(UserAttraction.class)
-                .selectAssociation(User.class, UserAttractionDTO::getUser)
-                .selectAssociation(Attraction.class, UserAttractionDTO::getAttraction)
-                .selectAssociation(Province.class, UserAttractionDTO::getProvince)
-                .selectAssociation(City.class, UserAttractionDTO::getCity)
-                .selectAssociation(Area.class, UserAttractionDTO::getArea)
-                .selectAssociation(Street.class, UserAttractionDTO::getStreet)
-                .leftJoin(User.class, User::getId, UserAttraction::getUserId)
-                .leftJoin(Attraction.class, Attraction::getId, UserAttraction::getAttractionId)
-                .leftJoin(Province.class, Province::getCode, Attraction::getProvinceCode)
-                .leftJoin(City.class, City::getCode, Attraction::getCityCode)
-                .leftJoin(Area.class, Area::getCode, Attraction::getAreaCode)
-                .leftJoin(Street.class, Street::getCode, Attraction::getStreetCode);
-    }
-
-    @Override
-    @Transactional
-    public String completeDeleteUserAttraction(Long attractionId) {
-        int deleteAttractionTicket = attractionTicketService.deleteAttractionTicketsByAttractionId(attractionId);
-        int deleteUserAttraction = userAttractionMapper.deleteById(attractionId);
-        int deleteAttraction = attractionMapper.deleteById(attractionId);
-        return (deleteAttractionTicket >= 0 && deleteUserAttraction >= 0 && deleteAttraction >= 0 ? "删除成功" : "删除失败");
     }
 }
 
