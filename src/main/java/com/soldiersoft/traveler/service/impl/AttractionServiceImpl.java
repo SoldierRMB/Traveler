@@ -60,7 +60,7 @@ public class AttractionServiceImpl extends ServiceImpl<AttractionMapper, Attract
 
     @Override
     @Transactional
-    public String publishAttraction(AttractionVO attractionVO, String username) {
+    public Attraction publishAttraction(AttractionVO attractionVO, String username) {
         try {
             UserDTO userDTO = userService.getUserByUsername(username);
             Attraction attraction = new Attraction();
@@ -71,14 +71,14 @@ public class AttractionServiceImpl extends ServiceImpl<AttractionMapper, Attract
                     .attractionId(attraction.getId())
                     .build();
             userAttractionService.save(userAttraction);
-            return "景点发布成功，待管理员审核";
+            return attraction;
         } catch (BizException e) {
             throw new BizException("景点发布失败，请联系管理员");
         }
     }
 
     @Override
-    public String updateAttraction(AttractionVO attractionVO, String username) {
+    public Attraction updateAttraction(AttractionVO attractionVO, String username) {
         Map<Long, AttractionDTO> map = getAttractionsMapByUsername(username);
         if (!map.containsKey(attractionVO.getId())) {
             throw new BizException("景点不存在");
@@ -86,7 +86,7 @@ public class AttractionServiceImpl extends ServiceImpl<AttractionMapper, Attract
         Attraction attraction = new Attraction();
         BeanUtils.copyProperties(attractionVO, attraction);
         updateById(attraction);
-        return "景点更新成功";
+        return attraction;
     }
 
     @Override

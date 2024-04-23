@@ -19,9 +19,9 @@ public interface AttractionService extends IService<Attraction> {
 
     Map<Long, AttractionDTO> getAttractionsMapByUsername(String username);
 
-    String publishAttraction(AttractionVO attractionVO, String username);
+    Attraction publishAttraction(AttractionVO attractionVO, String username);
 
-    String updateAttraction(AttractionVO attractionVO, String username);
+    Attraction updateAttraction(AttractionVO attractionVO, String username);
 
     String deleteAttraction(Long attractionId, String username);
 

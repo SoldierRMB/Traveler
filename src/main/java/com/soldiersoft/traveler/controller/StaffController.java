@@ -1,6 +1,7 @@
 package com.soldiersoft.traveler.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.soldiersoft.traveler.entity.Attraction;
 import com.soldiersoft.traveler.model.dto.OrderDTO;
 import com.soldiersoft.traveler.model.vo.*;
 import com.soldiersoft.traveler.service.*;
@@ -36,14 +37,14 @@ public class StaffController {
     @Operation(description = "发布景点信息")
     @PostMapping("/publishAttraction")
     @PreAuthorize("authentication.principal.equals(#username)")
-    public ResultVO<String> publishAttraction(@RequestBody @Validated AttractionVO attractionVO, String username) {
+    public ResultVO<Attraction> publishAttraction(@RequestBody @Validated AttractionVO attractionVO, String username) {
         return ResultVO.ok(attractionService.publishAttraction(attractionVO, username));
     }
 
     @Operation(description = "更新景点信息")
     @PutMapping("/updateAttraction")
     @PreAuthorize("authentication.principal.equals(#username)")
-    public ResultVO<String> updateAttraction(@RequestBody @Validated AttractionVO attractionVO, @RequestParam String username) {
+    public ResultVO<Attraction> updateAttraction(@RequestBody @Validated AttractionVO attractionVO, @RequestParam String username) {
         return ResultVO.ok(attractionService.updateAttraction(attractionVO, username));
     }
 
