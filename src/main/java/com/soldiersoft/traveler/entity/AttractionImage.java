@@ -27,7 +27,7 @@ public class AttractionImage implements Serializable {
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
     /**
-     * 图片编号
+     * 景点图片编号
      */
     @TableId(type = IdType.AUTO)
     private Long id;
