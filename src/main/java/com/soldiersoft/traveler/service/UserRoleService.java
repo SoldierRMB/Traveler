@@ -1,5 +1,6 @@
 package com.soldiersoft.traveler.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.soldiersoft.traveler.entity.UserRole;
 import com.soldiersoft.traveler.model.dto.UserRoleDTO;
@@ -11,4 +12,6 @@ import com.soldiersoft.traveler.model.dto.UserRoleDTO;
  */
 public interface UserRoleService extends IService<UserRole> {
     UserRoleDTO getUserRoleByUserId(Long userId);
+
+    Page<UserRoleDTO> getUserRoles(Long current, Long size);
 }

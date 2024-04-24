@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserRoleDTO {
+    private Integer id;
     private User user;
     private Role role;
 }

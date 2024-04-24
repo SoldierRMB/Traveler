@@ -1,5 +1,6 @@
 package com.soldiersoft.traveler.service.impl;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.yulichang.wrapper.MPJLambdaWrapper;
 import com.soldiersoft.traveler.entity.Role;
@@ -28,13 +29,23 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole>
 
     @Override
     public UserRoleDTO getUserRoleByUserId(Long userId) {
-        MPJLambdaWrapper<UserRole> wrapper = new MPJLambdaWrapper<>(UserRole.class)
+        MPJLambdaWrapper<UserRole> wrapper = getUserRoleMPJLambdaWrapper()
+                .eq(UserRole::getUserId, userId);
+        return userRoleMapper.selectJoinOne(UserRoleDTO.class, wrapper);
+    }
+
+    @Override
+    public Page<UserRoleDTO> getUserRoles(Long current, Long size) {
+        MPJLambdaWrapper<UserRole> wrapper = getUserRoleMPJLambdaWrapper();
+        return userRoleMapper.selectJoinPage(new Page<>(current, size), UserRoleDTO.class, wrapper);
+    }
+
+    private MPJLambdaWrapper<UserRole> getUserRoleMPJLambdaWrapper() {
+        return new MPJLambdaWrapper<>(UserRole.class)
                 .selectAll(UserRole.class)
                 .selectAssociation(User.class, UserRoleDTO::getUser)
                 .selectAssociation(Role.class, UserRoleDTO::getRole)
                 .leftJoin(User.class, User::getId, UserRole::getUserId)
-                .leftJoin(Role.class, Role::getId, UserRole::getRoleId)
-                .eq(UserRole::getUserId, userId);
-        return userRoleMapper.selectJoinOne(UserRoleDTO.class, wrapper);
+                .leftJoin(Role.class, Role::getId, UserRole::getRoleId);
     }
 }

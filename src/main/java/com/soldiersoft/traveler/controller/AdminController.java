@@ -2,11 +2,13 @@ package com.soldiersoft.traveler.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.soldiersoft.traveler.model.dto.OrderDTO;
+import com.soldiersoft.traveler.model.dto.UserRoleDTO;
 import com.soldiersoft.traveler.model.vo.ResultVO;
 import com.soldiersoft.traveler.model.vo.UserAttractionVO;
 import com.soldiersoft.traveler.service.AttractionService;
 import com.soldiersoft.traveler.service.OrderService;
 import com.soldiersoft.traveler.service.UserAttractionService;
+import com.soldiersoft.traveler.service.UserRoleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +24,14 @@ public class AdminController {
     private final AttractionService attractionService;
     private final UserAttractionService userAttractionService;
     private final OrderService orderService;
+    private final UserRoleService userRoleService;
 
     @Autowired
-    public AdminController(AttractionService attractionService, UserAttractionService userAttractionService, OrderService orderService) {
+    public AdminController(AttractionService attractionService, UserAttractionService userAttractionService, OrderService orderService, UserRoleService userRoleService) {
         this.attractionService = attractionService;
         this.userAttractionService = userAttractionService;
         this.orderService = orderService;
+        this.userRoleService = userRoleService;
     }
 
     @Operation(description = "批量审核景点")
@@ -58,5 +62,11 @@ public class AdminController {
     @GetMapping("/getAllOrders")
     public ResultVO<Page<OrderDTO>> getAllOrders(@RequestParam Long current, @RequestParam Long size) {
         return ResultVO.ok(orderService.getAllOrders(current, size));
+    }
+
+    @Operation(description = "获取所有用户角色信息")
+    @GetMapping("/getUserRoles")
+    public ResultVO<Page<UserRoleDTO>> getUserRoles(@RequestParam Long current, @RequestParam Long size) {
+        return ResultVO.ok(userRoleService.getUserRoles(current, size));
     }
 }
