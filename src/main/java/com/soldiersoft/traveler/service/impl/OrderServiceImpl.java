@@ -77,14 +77,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order>
 
     @Override
     public OrderVO completePayment(Long orderId, String username) {
-        UserDTO userDTO = userService.getUserByUsername(username);
-        Order order = lambdaQuery()
-                .eq(Order::getId, orderId)
-                .eq(Order::getUserId, userDTO.getId())
-                .one();
-        order.setStatus(2);
-        updateById(order);
-        return BeanUtil.copyProperties(order, OrderVO.class);
+        return updateOrderStatus(orderId, username, 2);
     }
 
     @Override
@@ -103,6 +96,11 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order>
     @Override
     public Page<OrderDTO> getAllOrders(Long current, Long size) {
         return processOrderDTOPage(getOrderDTOPage(current, size), null, null);
+    }
+
+    @Override
+    public OrderVO cancelOrder(Long orderId, String username) {
+        return updateOrderStatus(orderId, username, 4);
     }
 
     @Override
@@ -151,5 +149,16 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order>
         orderDTOPage.setRecords(list);
         orderDTOPage.setTotal(list.size());
         return orderDTOPage;
+    }
+
+    private OrderVO updateOrderStatus(Long orderId, String username, Integer status) {
+        UserDTO userDTO = userService.getUserByUsername(username);
+        Order order = lambdaQuery()
+                .eq(Order::getId, orderId)
+                .eq(Order::getUserId, userDTO.getId())
+                .one();
+        order.setStatus(status);
+        updateById(order);
+        return BeanUtil.copyProperties(order, OrderVO.class);
     }
 }

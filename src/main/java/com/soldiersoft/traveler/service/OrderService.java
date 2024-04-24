@@ -23,5 +23,7 @@ public interface OrderService extends IService<Order> {
 
     Page<OrderDTO> getAllOrders(Long current, Long size);
 
+    OrderVO cancelOrder(Long orderId, String username);
+
     String useTicket(Long attractionId, Long orderId, String username);
 }

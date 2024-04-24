@@ -71,6 +71,13 @@ public class TouristController {
         return ResultVO.ok(orderService.getUserOrders(username, current, size));
     }
 
+    @Operation(description = "取消订单")
+    @PutMapping("/cancelOrder")
+    @PreAuthorize("authentication.principal.equals(#username)")
+    public ResultVO<OrderVO> cancelOrder(@RequestParam Long orderId, String username) {
+        return ResultVO.ok(orderService.cancelOrder(orderId, username));
+    }
+
     @Operation(description = "发布旅游动态信息")
     @PostMapping("/publishPost")
     @PreAuthorize("authentication.principal.equals(#username)")
