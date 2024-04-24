@@ -1,9 +1,12 @@
 package com.soldiersoft.traveler.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.soldiersoft.traveler.model.dto.PostDTO;
 import com.soldiersoft.traveler.model.vo.AttractionVO;
 import com.soldiersoft.traveler.model.vo.LocationVO;
 import com.soldiersoft.traveler.model.vo.ResultVO;
 import com.soldiersoft.traveler.service.AttractionService;
+import com.soldiersoft.traveler.service.PostService;
 import com.soldiersoft.traveler.service.StreetService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -21,11 +24,13 @@ import java.util.List;
 public class GuestController {
     private final StreetService streetService;
     private final AttractionService attractionService;
+    private final PostService postService;
 
     @Autowired
-    public GuestController(StreetService streetService, AttractionService attractionService) {
+    public GuestController(StreetService streetService, AttractionService attractionService, PostService postService) {
         this.streetService = streetService;
         this.attractionService = attractionService;
+        this.postService = postService;
     }
 
     @Operation(description = "通过街道编码获取位置信息")
@@ -38,5 +43,11 @@ public class GuestController {
     @GetMapping("/getAttractions")
     public ResultVO<List<AttractionVO>> getAttractions() {
         return ResultVO.ok(attractionService.getAttractions());
+    }
+
+    @Operation(description = "获取所有旅游动态信息")
+    @GetMapping("/getPosts")
+    public ResultVO<Page<PostDTO>> getPosts(@RequestParam Long current, @RequestParam Long size) {
+        return ResultVO.ok(postService.getPosts(current, size));
     }
 }

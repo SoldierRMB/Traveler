@@ -2,12 +2,10 @@ package com.soldiersoft.traveler.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.soldiersoft.traveler.model.dto.OrderDTO;
-import com.soldiersoft.traveler.model.vo.AttractionVO;
-import com.soldiersoft.traveler.model.vo.OrderVO;
-import com.soldiersoft.traveler.model.vo.ResultVO;
-import com.soldiersoft.traveler.model.vo.TicketVO;
+import com.soldiersoft.traveler.model.vo.*;
 import com.soldiersoft.traveler.service.AttractionService;
 import com.soldiersoft.traveler.service.OrderService;
+import com.soldiersoft.traveler.service.PostService;
 import com.soldiersoft.traveler.service.TicketService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -24,12 +22,14 @@ public class TouristController {
     private final AttractionService attractionService;
     private final TicketService ticketService;
     private final OrderService orderService;
+    private final PostService postService;
 
     @Autowired
-    public TouristController(AttractionService attractionService, TicketService ticketService, OrderService orderService) {
+    public TouristController(AttractionService attractionService, TicketService ticketService, OrderService orderService, PostService postService) {
         this.attractionService = attractionService;
         this.ticketService = ticketService;
         this.orderService = orderService;
+        this.postService = postService;
     }
 
     @Operation(description = "通过景点编号获取审核通过景点信息")
@@ -69,5 +69,12 @@ public class TouristController {
     @PreAuthorize("authentication.principal.equals(#username)")
     public ResultVO<Page<OrderDTO>> getUserOrders(@RequestParam String username, @RequestParam Long current, @RequestParam Long size) {
         return ResultVO.ok(orderService.getUserOrders(username, current, size));
+    }
+
+    @Operation(description = "发布旅游动态信息")
+    @PostMapping("/publishPost")
+    @PreAuthorize("authentication.principal.equals(#username)")
+    public ResultVO<String> publishPost(@RequestBody PostVO postVO, String username) {
+        return ResultVO.ok(postService.publishPost(postVO, username));
     }
 }
