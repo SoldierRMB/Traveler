@@ -1,17 +1,21 @@
 package com.soldiersoft.traveler.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.yulichang.wrapper.MPJLambdaWrapper;
 import com.soldiersoft.traveler.entity.Order;
 import com.soldiersoft.traveler.entity.Ticket;
 import com.soldiersoft.traveler.entity.User;
+import com.soldiersoft.traveler.exception.BizException;
 import com.soldiersoft.traveler.mapper.OrderMapper;
+import com.soldiersoft.traveler.model.dto.AttractionDTO;
 import com.soldiersoft.traveler.model.dto.OrderDTO;
 import com.soldiersoft.traveler.model.dto.UserDTO;
 import com.soldiersoft.traveler.model.vo.OrderVO;
 import com.soldiersoft.traveler.model.vo.TicketVO;
+import com.soldiersoft.traveler.service.AttractionService;
 import com.soldiersoft.traveler.service.OrderService;
 import com.soldiersoft.traveler.service.TicketService;
 import com.soldiersoft.traveler.service.UserService;
@@ -20,7 +24,9 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * @author Soldier_RMB
@@ -33,12 +39,14 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order>
     private final OrderMapper orderMapper;
     private final UserService userService;
     private final TicketService ticketService;
+    private final AttractionService attractionService;
 
     @Autowired
-    public OrderServiceImpl(OrderMapper orderMapper, UserService userService, TicketService ticketService) {
+    public OrderServiceImpl(OrderMapper orderMapper, UserService userService, TicketService ticketService, AttractionService attractionService) {
         this.orderMapper = orderMapper;
         this.userService = userService;
         this.ticketService = ticketService;
+        this.attractionService = attractionService;
     }
 
     private static MPJLambdaWrapper<Order> getOrderMPJLambdaWrapper() {
@@ -95,6 +103,29 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order>
     @Override
     public Page<OrderDTO> getAllOrders(Long current, Long size) {
         return processOrderDTOPage(getOrderDTOPage(current, size), null, null);
+    }
+
+    @Override
+    public String useTicket(Long attractionId, Long orderId, String username) {
+        MPJLambdaWrapper<Order> wrapper = getOrderMPJLambdaWrapper()
+                .eq(User::getUsername, username);
+        Map<Long, AttractionDTO> map = attractionService.getAttractionsMapByUsername(username);
+        if (!map.containsKey(attractionId)) {
+            throw new BizException("景点不存在");
+        }
+        return Optional.ofNullable(orderMapper.selectJoinList(OrderDTO.class, wrapper))
+                .map(orderTO -> {
+                            int rows = orderMapper.update(new LambdaUpdateWrapper<>(Order.class)
+                                    .set(Order::getStatus, 3)
+                                    .eq(Order::getId, orderId));
+                            if (rows > 0) {
+                                return "门票使用成功";
+                            } else {
+                                throw new BizException("门票使用失败");
+                            }
+                        }
+                )
+                .orElseThrow(() -> new BizException("订单不存在"));
     }
 
     private Page<OrderDTO> getOrderDTOPage(Long current, Long size) {

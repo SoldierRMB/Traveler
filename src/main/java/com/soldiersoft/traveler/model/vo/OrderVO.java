@@ -1,6 +1,5 @@
 package com.soldiersoft.traveler.model.vo;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,7 +13,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderVO {
-    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long id;
     private Long userId;
     private Long ticketId;
