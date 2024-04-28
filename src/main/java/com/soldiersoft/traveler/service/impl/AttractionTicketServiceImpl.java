@@ -40,7 +40,6 @@ public class AttractionTicketServiceImpl extends ServiceImpl<AttractionTicketMap
                 .eq(AttractionTicket::getAttractionId, attractionId);
         return attractionTicketMapper.selectJoinList(AttractionTicketDTO.class, wrapper);
     }
-
 }
 
 
