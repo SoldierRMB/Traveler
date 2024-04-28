@@ -42,7 +42,7 @@ public class Order implements Serializable {
      */
     private Long ticketId;
     /**
-     * 订单状态 1.待支付 2.已支付 3.已完成 4.已取消
+     * 订单状态 1.待支付 2.已支付 3.已完成 4.已取消 5.已删除
      */
     private Integer status;
     /**
