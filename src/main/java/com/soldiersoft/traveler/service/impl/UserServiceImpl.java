@@ -21,12 +21,12 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -67,8 +67,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
             UsernamePasswordAuthenticationToken authenticationToken = UsernamePasswordAuthenticationToken.unauthenticated(loginVO.getUsername(), loginVO.getPassword());
             authentication = authenticationManager.authenticate(authenticationToken);
             SecurityContextHolder.getContext().setAuthentication(authentication);
+        } catch (DisabledException e) {
+            throw new BizException("账号已禁用");
         } catch (AuthenticationException e) {
-            throw new UsernameNotFoundException("用户名或密码错误");
+            throw new BizException("用户名或密码错误");
         }
         UserDetailsVO userDetailsVO = (UserDetailsVO) authentication.getPrincipal();
         return createToken(userDetailsVO);
