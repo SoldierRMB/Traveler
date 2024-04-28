@@ -115,8 +115,6 @@ public class AttractionImageServiceImpl extends ServiceImpl<AttractionImageMappe
 
     @Override
     public ResponseEntity<Resource> getAttractionImageByAttractionId(Long attractionId) {
-        Optional.ofNullable(attractionService.getAttractionById(attractionId))
-                .orElseThrow(() -> new BizException("景点不存在"));
         Long imageId = lambdaQuery().eq(AttractionImage::getAttractionId, attractionId).one().getImageId();
         String imagePath = imageService.lambdaQuery().eq(Image::getId, imageId).one().getImagePath();
         if (FileUtil.exist(imagePath)) {
