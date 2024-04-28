@@ -147,7 +147,6 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order>
                     user.setIsDisable(null);
                 }).toList();
         orderDTOPage.setRecords(list);
-        orderDTOPage.setTotal(list.size());
         return orderDTOPage;
     }
 
