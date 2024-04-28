@@ -42,7 +42,7 @@ public class AdminController {
 
     @Operation(description = "获取所有用户景点")
     @GetMapping("/getUserAttractions")
-    public ResultVO<List<UserAttractionVO>> getAllUserAttractions() {
+    public ResultVO<List<UserAttractionVO>> getUserAttractions() {
         return ResultVO.ok(userAttractionService.getUserAttractions(true));
     }
 
