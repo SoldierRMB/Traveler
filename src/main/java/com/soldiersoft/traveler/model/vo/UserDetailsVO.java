@@ -62,6 +62,6 @@ public class UserDetailsVO implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return userRoleDTO.getUser().getIsDisable() == 0;
     }
 }
