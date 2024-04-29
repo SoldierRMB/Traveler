@@ -23,7 +23,7 @@ public class AttractionVO {
     @NotBlank
     private String location;
     @Digits(integer = 5, fraction = 2)
-    private BigDecimal score;
+    private BigDecimal rate;
     @NotBlank
     private Long provinceCode;
     @NotBlank
