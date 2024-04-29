@@ -17,7 +17,7 @@ public class AttractionDTO {
     private String attractionName;
     private String description;
     private String location;
-    private BigDecimal rate;
+    private BigDecimal rating;
     private Long provinceCode;
     private Long cityCode;
     private Long areaCode;

@@ -48,7 +48,7 @@ public class Attraction implements Serializable {
     /**
      * 景点评分
      */
-    private BigDecimal rate;
+    private BigDecimal rating;
     /**
      * 省级编号
      */
