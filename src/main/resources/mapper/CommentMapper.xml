@@ -6,11 +6,9 @@
 
     <resultMap id="BaseResultMap" type="com.soldiersoft.traveler.entity.Comment">
         <id property="id" column="id" jdbcType="BIGINT"/>
-        <result property="commentType" column="comment_type" jdbcType="TINYINT"/>
         <result property="content" column="content" jdbcType="VARCHAR"/>
-        <result property="fromUserId" column="from_user_id" jdbcType="BIGINT"/>
-        <result property="topicId" column="topic_id" jdbcType="BIGINT"/>
-        <result property="attractionId" column="attraction_id" jdbcType="BIGINT"/>
+        <result property="userId" column="user_id" jdbcType="BIGINT"/>
+        <result property="postId" column="post_id" jdbcType="BIGINT"/>
         <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
         <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
     </resultMap>

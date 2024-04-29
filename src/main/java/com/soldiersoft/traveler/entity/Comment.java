@@ -33,25 +33,17 @@ public class Comment implements Serializable {
     @TableId(type = IdType.AUTO)
     private Long id;
     /**
-     * 评论类型 1.动态评论 2.景点评论
-     */
-    private Integer commentType;
-    /**
      * 评论内容
      */
     private String content;
     /**
      * 评论用户编号
      */
-    private Long fromUserId;
+    private Long userId;
     /**
-     * 动态编号 0.非动态评论
+     * 动态编号
      */
-    private Long topicId;
-    /**
-     * 景点评论 0.非景点评论
-     */
-    private Long attractionId;
+    private Long postId;
     /**
      * 创建时间
      */
