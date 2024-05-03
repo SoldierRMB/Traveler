@@ -16,4 +16,6 @@ public interface PostService extends IService<Post> {
     Page<PostDTO> getPosts(Long current, Long size);
 
     String publishPost(PostVO postVO, String username);
+
+    String completeDeletePost(Long postId);
 }

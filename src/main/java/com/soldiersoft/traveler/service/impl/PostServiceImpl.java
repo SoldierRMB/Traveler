@@ -43,13 +43,13 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post>
                 .leftJoin(User.class, User::getId, Post::getUserId)
                 .orderByDesc(Post::getCreateTime);
         Page<PostDTO> postDTOPage = postMapper.selectJoinPage(new Page<>(current, size), PostDTO.class, wrapper);
-        List<PostDTO> list = postDTOPage.getRecords().stream().peek(postDTO -> {
+        List<PostDTO> records = postDTOPage.getRecords().stream().peek(postDTO -> {
             User user = postDTO.getUser();
             user.setPassword(null);
             user.setIsDisable(null);
             postDTO.setUser(user);
         }).toList();
-        postDTOPage.setRecords(list);
+        postDTOPage.setRecords(records);
         return postDTOPage;
     }
 
@@ -65,6 +65,11 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post>
         } catch (Exception e) {
             throw new BizException("旅游动态发布失败");
         }
+    }
+
+    @Override
+    public String completeDeletePost(Long postId) {
+        return postMapper.deleteById(postId) > 0 ? "旅游动态删除成功" : "旅游动态删除失败";
     }
 }
 
