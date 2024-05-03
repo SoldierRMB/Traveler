@@ -55,7 +55,7 @@ public class AttractionAnnouncementServiceImpl extends ServiceImpl<AttractionAnn
     public Page<AttractionAnnouncementDTO> getAttractionAnnouncementsByAttractionId(Long attractionId, Long current, Long size) {
         MPJLambdaWrapper<AttractionAnnouncement> wrapper = getAttractionAnnouncementMPJLambdaWrapper()
                 .eq(AttractionAnnouncement::getAttractionId, attractionId);
-        return null;
+        return attractionAnnouncementMapper.selectJoinPage(new Page<>(current, size), AttractionAnnouncementDTO.class, wrapper);
     }
 
     private static MPJLambdaWrapper<AttractionAnnouncement> getAttractionAnnouncementMPJLambdaWrapper() {
