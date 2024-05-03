@@ -5,7 +5,7 @@
 <mapper namespace="com.soldiersoft.traveler.mapper.ImageMapper">
 
     <resultMap id="BaseResultMap" type="com.soldiersoft.traveler.entity.Image">
-            <id property="id" column="id" jdbcType="BIGINT"/>
-            <result property="imagePath" column="image_path" jdbcType="VARCHAR"/>
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="imagePath" column="image_path" jdbcType="VARCHAR"/>
     </resultMap>
 </mapper>

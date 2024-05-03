@@ -5,8 +5,8 @@
 <mapper namespace="com.soldiersoft.traveler.mapper.AttractionTicketMapper">
 
     <resultMap id="BaseResultMap" type="com.soldiersoft.traveler.entity.AttractionTicket">
-            <id property="id" column="id" jdbcType="BIGINT"/>
-            <result property="attractionId" column="attraction_id" jdbcType="BIGINT"/>
-            <result property="ticketId" column="ticket_id" jdbcType="BIGINT"/>
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="attractionId" column="attraction_id" jdbcType="BIGINT"/>
+        <result property="ticketId" column="ticket_id" jdbcType="BIGINT"/>
     </resultMap>
 </mapper>

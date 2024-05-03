@@ -5,12 +5,12 @@
 <mapper namespace="com.soldiersoft.traveler.mapper.OrderMapper">
 
     <resultMap id="BaseResultMap" type="com.soldiersoft.traveler.entity.Order">
-            <id property="id" column="id" jdbcType="BIGINT"/>
-            <result property="userId" column="user_id" jdbcType="BIGINT"/>
-            <result property="ticketId" column="ticket_id" jdbcType="BIGINT"/>
-            <result property="status" column="status" jdbcType="TINYINT"/>
-            <result property="quantity" column="quantity" jdbcType="INTEGER"/>
-            <result property="amount" column="amount" jdbcType="DECIMAL"/>
-            <result property="orderTime" column="order_time" jdbcType="TIMESTAMP"/>
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="userId" column="user_id" jdbcType="BIGINT"/>
+        <result property="ticketId" column="ticket_id" jdbcType="BIGINT"/>
+        <result property="status" column="status" jdbcType="TINYINT"/>
+        <result property="quantity" column="quantity" jdbcType="INTEGER"/>
+        <result property="amount" column="amount" jdbcType="DECIMAL"/>
+        <result property="orderTime" column="order_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 </mapper>

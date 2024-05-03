@@ -15,11 +15,6 @@ import java.util.concurrent.TimeUnit;
 public class RedisUtil {
     private static StringRedisTemplate stringRedisTemplate;
 
-    @Autowired
-    public void setStringRedisTemplate(StringRedisTemplate stringRedisTemplate) {
-        RedisUtil.stringRedisTemplate = stringRedisTemplate;
-    }
-
     public static String getString(String key) {
         return stringRedisTemplate.opsForValue().get(key);
     }
@@ -34,6 +29,11 @@ public class RedisUtil {
 
     public static Set<ZSetOperations.TypedTuple<String>> getZSet(String key, double min, double max, long offset, long count) {
         return stringRedisTemplate.opsForZSet().rangeByScoreWithScores(key, min, max, offset, count);
+    }
+
+    @Autowired
+    public void setStringRedisTemplate(StringRedisTemplate stringRedisTemplate) {
+        RedisUtil.stringRedisTemplate = stringRedisTemplate;
     }
 
     public void setStringWithLogicalTime(String key, Object value, Long timeout, TimeUnit unit) {

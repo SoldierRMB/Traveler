@@ -5,8 +5,8 @@
 <mapper namespace="com.soldiersoft.traveler.mapper.AttractionImageMapper">
 
     <resultMap id="BaseResultMap" type="com.soldiersoft.traveler.entity.AttractionImage">
-            <id property="id" column="id" jdbcType="BIGINT"/>
-            <result property="attractionId" column="attraction_id" jdbcType="BIGINT"/>
-            <result property="imageId" column="image_id" jdbcType="BIGINT"/>
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="attractionId" column="attraction_id" jdbcType="BIGINT"/>
+        <result property="imageId" column="image_id" jdbcType="BIGINT"/>
     </resultMap>
 </mapper>
