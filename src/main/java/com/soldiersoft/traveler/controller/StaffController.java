@@ -2,6 +2,7 @@ package com.soldiersoft.traveler.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.soldiersoft.traveler.entity.Attraction;
+import com.soldiersoft.traveler.model.dto.AttractionAnnouncementDTO;
 import com.soldiersoft.traveler.model.dto.OrderDTO;
 import com.soldiersoft.traveler.model.vo.*;
 import com.soldiersoft.traveler.service.*;
@@ -24,14 +25,16 @@ public class StaffController {
     private final TicketService ticketService;
     private final OrderService orderService;
     private final AttractionImageService attractionImageService;
+    private final AttractionAnnouncementService attractionAnnouncementService;
 
     @Autowired
-    public StaffController(AttractionService attractionService, UserAttractionService userAttractionService, TicketService ticketService, OrderService orderService, AttractionImageService attractionImageService) {
+    public StaffController(AttractionService attractionService, UserAttractionService userAttractionService, TicketService ticketService, OrderService orderService, AttractionImageService attractionImageService, AttractionAnnouncementService attractionAnnouncementService) {
         this.attractionService = attractionService;
         this.userAttractionService = userAttractionService;
         this.ticketService = ticketService;
         this.orderService = orderService;
         this.attractionImageService = attractionImageService;
+        this.attractionAnnouncementService = attractionAnnouncementService;
     }
 
     @Operation(description = "发布景点信息")
@@ -123,5 +126,33 @@ public class StaffController {
     @PreAuthorize("authentication.principal.equals(#username)")
     public ResultVO<String> updateAttractionImage(@RequestParam("file") MultipartFile file, @RequestParam Long attractionId, @RequestParam String username) {
         return ResultVO.ok(attractionImageService.updateAttractionImage(file, attractionId, username));
+    }
+
+    @Operation(description = "发布景点公告信息")
+    @PostMapping("/publishAttractionAnnouncement")
+    @PreAuthorize("authentication.principal.equals(#username)")
+    public ResultVO<String> publishAttractionAnnouncement(@RequestBody AttractionAnnouncementVO attractionAnnouncementVO, @RequestParam String username) {
+        return ResultVO.ok(attractionAnnouncementService.publishAttractionAnnouncement(attractionAnnouncementVO, username));
+    }
+
+    @Operation(description = "更新景点公告信息")
+    @PutMapping("/updateAttractionAnnouncement")
+    @PreAuthorize("authentication.principal.equals(#username)")
+    public ResultVO<String> updateAttractionAnnouncement(@RequestBody AttractionAnnouncementVO attractionAnnouncementVO, @RequestParam String username) {
+        return ResultVO.ok(attractionAnnouncementService.updateAttractionAnnouncement(attractionAnnouncementVO, username));
+    }
+
+    @Operation(description = "删除景点公告信息")
+    @DeleteMapping("/completeDeleteAttractionAnnouncement")
+    @PreAuthorize("authentication.principal.equals(#username)")
+    public ResultVO<String> completeDeleteAttractionAnnouncement(@RequestParam Long attractionAnnouncementId, @RequestParam Long attractionId, @RequestParam String username) {
+        return ResultVO.ok(attractionAnnouncementService.completeDeleteAttractionAnnouncement(attractionAnnouncementId, attractionId, username));
+    }
+
+    @Operation(description = "通过用户名获取所有景点公告信息")
+    @GetMapping("/getAttractionAnnouncementsByUsername")
+    @PreAuthorize("authentication.principal.equals(#username)")
+    public ResultVO<Page<AttractionAnnouncementDTO>> getAttractionAnnouncementsByUsername(@RequestParam Long current, @RequestParam Long size, @RequestParam String username) {
+        return ResultVO.ok(attractionAnnouncementService.getAttractionAnnouncementsByUsername(current, size, username));
     }
 }
