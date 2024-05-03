@@ -132,7 +132,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order>
     }
 
     private Page<OrderDTO> processOrderDTOPage(Page<OrderDTO> orderDTOPage, Long attractionId, String username) {
-        List<OrderDTO> list = orderDTOPage.getRecords().stream()
+        List<OrderDTO> records = orderDTOPage.getRecords().stream()
                 .filter(orderDTO -> {
                     if (attractionId != null && username != null) {
                         return ticketService.getTicketsByAttractionId(attractionId, username).stream()
@@ -146,7 +146,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order>
                     user.setPassword(null);
                     user.setIsDisable(null);
                 }).toList();
-        orderDTOPage.setRecords(list);
+        orderDTOPage.setRecords(records);
         return orderDTOPage;
     }
 
