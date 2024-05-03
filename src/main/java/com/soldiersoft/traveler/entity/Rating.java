@@ -45,9 +45,9 @@ public class Rating implements Serializable {
      */
     private Long userId;
     /**
-     * 景点编号
+     * 订单编号
      */
-    private Long attractionId;
+    private Long orderId;
     /**
      * 创建时间
      */
