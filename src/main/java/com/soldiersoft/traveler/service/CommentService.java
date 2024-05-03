@@ -1,7 +1,9 @@
 package com.soldiersoft.traveler.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.soldiersoft.traveler.entity.Comment;
+import com.soldiersoft.traveler.model.dto.CommentDTO;
 
 /**
  * @author Soldier_RMB
@@ -10,4 +12,9 @@ import com.soldiersoft.traveler.entity.Comment;
  */
 public interface CommentService extends IService<Comment> {
 
+    Page<CommentDTO> getComments(Long current, Long size);
+
+    Page<CommentDTO> getCommentsByPostId(Long postId, Long current, Long size);
+
+    String completeDeleteComment(Long commentId);
 }
