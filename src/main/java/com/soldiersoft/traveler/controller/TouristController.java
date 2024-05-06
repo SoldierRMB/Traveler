@@ -3,12 +3,10 @@ package com.soldiersoft.traveler.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.soldiersoft.traveler.model.dto.OrderDTO;
 import com.soldiersoft.traveler.model.vo.*;
-import com.soldiersoft.traveler.service.AttractionService;
-import com.soldiersoft.traveler.service.OrderService;
-import com.soldiersoft.traveler.service.PostService;
-import com.soldiersoft.traveler.service.TicketService;
+import com.soldiersoft.traveler.service.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -23,13 +21,17 @@ public class TouristController {
     private final TicketService ticketService;
     private final OrderService orderService;
     private final PostService postService;
+    private final RatingService ratingService;
+    private final CommentService commentService;
 
     @Autowired
-    public TouristController(AttractionService attractionService, TicketService ticketService, OrderService orderService, PostService postService) {
+    public TouristController(AttractionService attractionService, TicketService ticketService, OrderService orderService, PostService postService, RatingService ratingService, CommentService commentService) {
         this.attractionService = attractionService;
         this.ticketService = ticketService;
         this.orderService = orderService;
         this.postService = postService;
+        this.ratingService = ratingService;
+        this.commentService = commentService;
     }
 
     @Operation(description = "通过景点编号获取审核通过景点信息")
@@ -60,7 +62,7 @@ public class TouristController {
     @Operation(description = "完成支付")
     @PutMapping("/completePayment")
     @PreAuthorize("authentication.principal.equals(#username)")
-    public ResultVO<OrderVO> completePayment(@RequestParam Long orderId, String username) {
+    public ResultVO<String> completePayment(@RequestParam Long orderId, String username) {
         return ResultVO.ok(orderService.completePayment(orderId, username));
     }
 
@@ -74,7 +76,7 @@ public class TouristController {
     @Operation(description = "取消订单")
     @PutMapping("/cancelOrder")
     @PreAuthorize("authentication.principal.equals(#username)")
-    public ResultVO<OrderVO> cancelOrder(@RequestParam Long orderId, String username) {
+    public ResultVO<String> cancelOrder(@RequestParam Long orderId, String username) {
         return ResultVO.ok(orderService.cancelOrder(orderId, username));
     }
 
@@ -83,5 +85,26 @@ public class TouristController {
     @PreAuthorize("authentication.principal.equals(#username)")
     public ResultVO<String> publishPost(@RequestBody PostVO postVO, String username) {
         return ResultVO.ok(postService.publishPost(postVO, username));
+    }
+
+    @Operation(description = "评价已完成订单")
+    @PostMapping("/rateCompleteOrder")
+    @PreAuthorize("authentication.principal.equals(#username)")
+    public ResultVO<String> rateCompleteOrder(@Valid @RequestBody RatingVO ratingVO, String username) {
+        return ResultVO.ok(ratingService.rateCompleteOrder(ratingVO, username));
+    }
+
+    @Operation(description = "删除订单")
+    @PutMapping("/deleteOrder")
+    @PreAuthorize("authentication.principal.equals(#username)")
+    public ResultVO<String> deleteOrder(@RequestParam Long orderId, String username) {
+        return ResultVO.ok(orderService.deleteOrder(orderId, username));
+    }
+
+    @Operation(description = "评论动态")
+    @PostMapping("/publishComment")
+    @PreAuthorize("authentication.principal.equals(#username)")
+    public ResultVO<String> publishComment(@RequestBody CommentVO commentVO, String username) {
+        return ResultVO.ok(commentService.publishComment(commentVO, username));
     }
 }
