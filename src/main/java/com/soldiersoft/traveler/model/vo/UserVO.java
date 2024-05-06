@@ -16,6 +16,7 @@ public class UserVO {
     private String password;
     @Email
     private String email;
+    private String nickname;
     // 2.Staff 3.Tourist
     private Integer userType;
     private String code;
