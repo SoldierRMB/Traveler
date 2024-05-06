@@ -1,5 +1,6 @@
 package com.soldiersoft.traveler.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.soldiersoft.traveler.entity.Attraction;
 import com.soldiersoft.traveler.model.dto.AttractionDTO;
@@ -31,9 +32,13 @@ public interface AttractionService extends IService<Attraction> {
 
     List<AttractionVO> getAttractionsByCityCode(Long cityCode);
 
-    List<AttractionVO> getAttractions();
+    Page<AttractionDTO> getAttractions(Long current, Long size);
 
     String restoreAttraction(Long attractionId, String username);
 
     String completeDeleteUserAttraction(Long attractionId);
+
+    AttractionDTO getAttractionByOrderId(Long orderId);
+
+    Page<AttractionDTO> getAttractionsByKeyword(String attractionName, Long cityCode, Long current, Long size);
 }

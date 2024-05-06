@@ -3,6 +3,7 @@ package com.soldiersoft.traveler.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.soldiersoft.traveler.entity.Announcement;
 import com.soldiersoft.traveler.model.dto.AttractionAnnouncementDTO;
+import com.soldiersoft.traveler.model.dto.AttractionDTO;
 import com.soldiersoft.traveler.model.dto.CommentDTO;
 import com.soldiersoft.traveler.model.dto.PostDTO;
 import com.soldiersoft.traveler.model.vo.*;
@@ -77,8 +78,8 @@ public class CommonController {
 
     @Operation(description = "获取所有审核通过景点信息")
     @GetMapping("/getAttractions")
-    public ResultVO<List<AttractionVO>> getAttractions() {
-        return ResultVO.ok(attractionService.getAttractions());
+    public ResultVO<Page<AttractionDTO>> getAttractions(@RequestParam Long current, Long size) {
+        return ResultVO.ok(attractionService.getAttractions(current, size));
     }
 
     @Operation(description = "通过图片名称获取图片")
@@ -115,5 +116,11 @@ public class CommonController {
     @GetMapping("/getAttractionAnnouncementsByAttractionId")
     public ResultVO<Page<AttractionAnnouncementDTO>> getAttractionAnnouncementsByAttractionId(@RequestParam Long attractionId, @RequestParam Long current, @RequestParam Long size) {
         return ResultVO.ok(attractionAnnouncementService.getAttractionAnnouncementsByAttractionId(attractionId, current, size));
+    }
+
+    @Operation(description = "通过景点名称关键词获取景点信息")
+    @GetMapping("/getAttractionsByKeyword")
+    public ResultVO<Page<AttractionDTO>> getAttractionsByKeyword(@RequestParam(required = false) String attractionName, @RequestParam(required = false) Long cityCode, @RequestParam Long current, @RequestParam Long size) {
+        return ResultVO.ok(attractionService.getAttractionsByKeyword(attractionName, cityCode, current, size));
     }
 }

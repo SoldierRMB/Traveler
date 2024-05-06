@@ -1,5 +1,9 @@
 package com.soldiersoft.traveler.model.dto;
 
+import com.soldiersoft.traveler.entity.Area;
+import com.soldiersoft.traveler.entity.City;
+import com.soldiersoft.traveler.entity.Province;
+import com.soldiersoft.traveler.entity.Street;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,10 +22,10 @@ public class AttractionDTO {
     private String description;
     private String location;
     private BigDecimal rating;
-    private Long provinceCode;
-    private Long cityCode;
-    private Long areaCode;
-    private Long streetCode;
+    private Province province;
+    private City city;
+    private Area area;
+    private Street street;
     private Integer reviewed;
     private Integer isDeleted;
     private LocalDateTime createTime;

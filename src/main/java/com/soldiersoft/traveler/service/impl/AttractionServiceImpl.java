@@ -2,19 +2,19 @@ package com.soldiersoft.traveler.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.soldiersoft.traveler.entity.Attraction;
-import com.soldiersoft.traveler.entity.UserAttraction;
+import com.github.yulichang.wrapper.MPJLambdaWrapper;
+import com.soldiersoft.traveler.entity.*;
 import com.soldiersoft.traveler.exception.BizException;
 import com.soldiersoft.traveler.mapper.AttractionMapper;
 import com.soldiersoft.traveler.model.dto.AttractionDTO;
 import com.soldiersoft.traveler.model.dto.UserDTO;
 import com.soldiersoft.traveler.model.vo.AttractionVO;
-import com.soldiersoft.traveler.service.AttractionService;
-import com.soldiersoft.traveler.service.UserAttractionService;
-import com.soldiersoft.traveler.service.UserService;
+import com.soldiersoft.traveler.service.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,12 +32,17 @@ public class AttractionServiceImpl extends ServiceImpl<AttractionMapper, Attract
     private final UserService userService;
     private final UserAttractionService userAttractionService;
     private final AttractionMapper attractionMapper;
+    private final OrderService orderService;
+    private final AttractionTicketService attractionTicketService;
 
+    @Lazy
     @Autowired
-    public AttractionServiceImpl(UserService userService, UserAttractionService userAttractionService, AttractionMapper attractionMapper) {
+    public AttractionServiceImpl(UserService userService, UserAttractionService userAttractionService, AttractionMapper attractionMapper, OrderService orderService, AttractionTicketService attractionTicketService) {
         this.userService = userService;
         this.userAttractionService = userAttractionService;
         this.attractionMapper = attractionMapper;
+        this.orderService = orderService;
+        this.attractionTicketService = attractionTicketService;
     }
 
     @Override
@@ -156,17 +161,11 @@ public class AttractionServiceImpl extends ServiceImpl<AttractionMapper, Attract
     }
 
     @Override
-    public List<AttractionVO> getAttractions() {
-        return Optional.ofNullable(lambdaQuery()
-                        .eq(Attraction::getReviewed, 1)
-                        .eq(Attraction::getIsDeleted, 0)
-                        .list())
-                .map(attractions -> attractions.stream().map(attraction -> {
-                    AttractionVO attractionVO = new AttractionVO();
-                    BeanUtils.copyProperties(attraction, attractionVO);
-                    return attractionVO;
-                }).toList())
-                .orElse(null);
+    public Page<AttractionDTO> getAttractions(Long current, Long size) {
+        MPJLambdaWrapper<Attraction> wrapper = getAttractionMPJLambdaWrapper()
+                .eq(Attraction::getReviewed, 1)
+                .eq(Attraction::getIsDeleted, 0);
+        return attractionMapper.selectJoinPage(new Page<>(current, size), AttractionDTO.class, wrapper);
     }
 
     @Override
@@ -186,6 +185,41 @@ public class AttractionServiceImpl extends ServiceImpl<AttractionMapper, Attract
     @Transactional
     public String completeDeleteUserAttraction(Long attractionId) {
         return attractionMapper.deleteById(attractionId) > 0 ? "删除成功" : "删除失败";
+    }
+
+    @Override
+    public AttractionDTO getAttractionByOrderId(Long orderId) {
+        Long ticketId = orderService.lambdaQuery().eq(Order::getId, orderId).one().getTicketId();
+        Long attractionId = attractionTicketService.lambdaQuery().eq(AttractionTicket::getTicketId, ticketId).one().getAttractionId();
+        Attraction attraction = lambdaQuery().eq(Attraction::getId, attractionId).one();
+        AttractionDTO attractionDTO = new AttractionDTO();
+        BeanUtils.copyProperties(attraction, attractionDTO);
+        return attractionDTO;
+    }
+
+    @Override
+    public Page<AttractionDTO> getAttractionsByKeyword(String attractionName, Long cityCode, Long current, Long size) {
+        Map<SFunction<Attraction, ?>, Object> map = new HashMap<>();
+        map.put(Attraction::getCityCode, cityCode);
+        map.put(Attraction::getReviewed, 1);
+        map.put(Attraction::getIsDeleted, 0);
+        MPJLambdaWrapper<Attraction> wrapper = getAttractionMPJLambdaWrapper()
+                .like(Attraction::getAttractionName, attractionName)
+                .allEq(map, false);
+        return attractionMapper.selectJoinPage(new Page<>(current, size), AttractionDTO.class, wrapper);
+    }
+
+    private static MPJLambdaWrapper<Attraction> getAttractionMPJLambdaWrapper() {
+        return new MPJLambdaWrapper<>(Attraction.class)
+                .selectAll(Attraction.class)
+                .selectAssociation(Province.class, AttractionDTO::getProvince)
+                .selectAssociation(City.class, AttractionDTO::getCity)
+                .selectAssociation(Area.class, AttractionDTO::getArea)
+                .selectAssociation(Street.class, AttractionDTO::getStreet)
+                .leftJoin(Province.class, Province::getCode, Attraction::getProvinceCode)
+                .leftJoin(City.class, City::getCode, Attraction::getCityCode)
+                .leftJoin(Area.class, Area::getCode, Attraction::getAreaCode)
+                .leftJoin(Street.class, Street::getCode, Attraction::getStreetCode);
     }
 }
 
