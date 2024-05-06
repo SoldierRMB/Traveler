@@ -6,9 +6,14 @@ import com.github.yulichang.wrapper.MPJLambdaWrapper;
 import com.soldiersoft.traveler.entity.Comment;
 import com.soldiersoft.traveler.entity.Post;
 import com.soldiersoft.traveler.entity.User;
+import com.soldiersoft.traveler.exception.BizException;
 import com.soldiersoft.traveler.mapper.CommentMapper;
 import com.soldiersoft.traveler.model.dto.CommentDTO;
+import com.soldiersoft.traveler.model.dto.UserDTO;
+import com.soldiersoft.traveler.model.vo.CommentVO;
 import com.soldiersoft.traveler.service.CommentService;
+import com.soldiersoft.traveler.service.PostService;
+import com.soldiersoft.traveler.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,10 +27,14 @@ import java.util.List;
 @Service
 public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> implements CommentService {
     private final CommentMapper commentMapper;
+    private final UserService userService;
+    private final PostService postService;
 
     @Autowired
-    public CommentServiceImpl(CommentMapper commentMapper) {
+    public CommentServiceImpl(CommentMapper commentMapper, UserService userService, PostService postService) {
         this.commentMapper = commentMapper;
+        this.userService = userService;
+        this.postService = postService;
     }
 
     private static MPJLambdaWrapper<Comment> getCommentMPJLambdaWrapper() {
@@ -67,6 +76,21 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     @Override
     public String completeDeleteComment(Long commentId) {
         return commentMapper.deleteById(commentId) > 0 ? "删除评论信息成功" : "删除评论信息失败";
+    }
+
+    @Override
+    public String publishComment(CommentVO commentVO, String username) {
+        UserDTO userDTO = userService.getUserByUsername(username);
+        return postService.getOptById(commentVO.getPostId())
+                .map(post -> {
+                    Comment comment = Comment.builder()
+                            .content(commentVO.getContent())
+                            .userId(userDTO.getId())
+                            .postId(post.getId())
+                            .build();
+                    save(comment);
+                    return "评论发布成功";
+                }).orElseThrow(() -> new BizException("旅游动态不存在"));
     }
 }
 
