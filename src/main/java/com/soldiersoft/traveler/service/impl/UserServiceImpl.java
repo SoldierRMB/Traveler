@@ -12,6 +12,7 @@ import com.soldiersoft.traveler.exception.BizException;
 import com.soldiersoft.traveler.mapper.UserMapper;
 import com.soldiersoft.traveler.model.dto.UserDTO;
 import com.soldiersoft.traveler.model.vo.LoginVO;
+import com.soldiersoft.traveler.model.vo.PasswordVO;
 import com.soldiersoft.traveler.model.vo.UserDetailsVO;
 import com.soldiersoft.traveler.model.vo.UserVO;
 import com.soldiersoft.traveler.service.MailService;
@@ -108,48 +109,39 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     }
 
     @Override
-    public String sendCode(UserVO userVO) {
-        return mailService.sendCode(userVO.getEmail()) ? "邮箱验证码发送成功" : "邮箱验证码发送失败";
+    public String sendCode(String email) {
+        return mailService.sendCode(email) ? "邮箱验证码发送成功" : "邮箱验证码发送失败";
     }
 
     @Override
     @Transactional
     public String register(UserVO userVO) {
+        String username = userVO.getUsername();
         String email = userVO.getEmail();
-        if (mailService.verifyCode(email, userVO.getCode())) {
-            UserDTO userDTO = UserDTO.builder()
-                    .username(userVO.getUsername())
-                    .email(email)
-                    .password(userVO.getPassword())
-                    .userType(userVO.getUserType())
-                    .build();
-            return saveUser(userDTO);
-        } else
-            return "验证码错误";
-    }
-
-    @Override
-    @Transactional
-    public String saveUser(UserDTO userDTO) {
+        String password = "{bcrypt}" + passwordEncoder.encode(userVO.getPassword());
+        if (getUserIsPresent(username)) {
+            throw new BizException("用户名已存在");
+        }
+        if (!mailService.verifyCode(email, userVO.getCode())) {
+            throw new BizException("验证码错误");
+        }
         try {
-            String username = userDTO.getUsername();
-            String email = userDTO.getEmail();
-            String password = "{bcrypt}" + passwordEncoder.encode(userDTO.getPassword());
             User user = User.builder()
                     .username(username)
                     .password(password)
                     .email(email)
+                    .nickname(userVO.getNickname())
                     .build();
             save(user);
             UserRole userRole = UserRole.builder()
                     .userId(user.getId())
-                    .roleId(userDTO.getUserType())
+                    .roleId(userVO.getUserType())
                     .build();
             userRoleService.save(userRole);
-            return "注册成功";
         } catch (Exception e) {
-            throw new BizException("注册失败，请联系管理员");
+            throw new BizException("注册失败");
         }
+        return "注册成功";
     }
 
     @Override
@@ -160,6 +152,21 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
                     BeanUtils.copyProperties(user, userDTO);
                     return userDTO;
                 }).orElse(null);
+    }
+
+    @Override
+    public String changePassword(PasswordVO passwordVO, String username) {
+        UserDTO userDTO = getUserByUsername(username);
+        String oldPassword = userDTO.getPassword().replace("{bcrypt}", "");
+        if (!passwordEncoder.matches(passwordVO.getOldPassword(), oldPassword)) {
+            throw new BizException("密码不匹配");
+        }
+        String newPassword = "{bcrypt}" + passwordEncoder.encode(passwordVO.getNewPassword());
+        lambdaUpdate()
+                .set(User::getPassword, newPassword)
+                .eq(User::getUsername, username)
+                .update();
+        return "密码修改成功";
     }
 }
 

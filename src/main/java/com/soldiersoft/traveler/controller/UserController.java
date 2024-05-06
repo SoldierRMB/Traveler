@@ -1,6 +1,7 @@
 package com.soldiersoft.traveler.controller;
 
 import com.soldiersoft.traveler.model.vo.LoginVO;
+import com.soldiersoft.traveler.model.vo.PasswordVO;
 import com.soldiersoft.traveler.model.vo.ResultVO;
 import com.soldiersoft.traveler.model.vo.UserVO;
 import com.soldiersoft.traveler.service.UserService;
@@ -43,7 +44,7 @@ public class UserController {
     @Operation(description = "发送注册验证码")
     @PostMapping("/sendCode")
     public ResultVO<String> sendCode(@Valid @RequestBody UserVO userVO) {
-        return ResultVO.ok(userService.sendCode(userVO));
+        return ResultVO.ok(userService.sendCode(userVO.getEmail()));
     }
 
     @Operation(description = "注册用户")
@@ -56,5 +57,11 @@ public class UserController {
     @GetMapping("/getUserAuthentication")
     public ResultVO<Authentication> getUserAuthentication(Authentication authentication) {
         return ResultVO.ok(authentication);
+    }
+
+    @Operation(description = "修改用户密码")
+    @PutMapping("/changePassword")
+    public ResultVO<String> changePassword(@RequestBody PasswordVO passwordVO, @RequestParam String username) {
+        return ResultVO.ok(userService.changePassword(passwordVO, username));
     }
 }

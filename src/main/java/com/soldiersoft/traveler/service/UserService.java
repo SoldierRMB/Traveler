@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.soldiersoft.traveler.entity.User;
 import com.soldiersoft.traveler.model.dto.UserDTO;
 import com.soldiersoft.traveler.model.vo.LoginVO;
+import com.soldiersoft.traveler.model.vo.PasswordVO;
 import com.soldiersoft.traveler.model.vo.UserDetailsVO;
 import com.soldiersoft.traveler.model.vo.UserVO;
 
@@ -19,11 +20,11 @@ public interface UserService extends IService<User> {
 
     Boolean getUserIsPresent(String username);
 
-    String sendCode(UserVO userVO);
+    String sendCode(String email);
 
     String register(UserVO userVO);
 
-    String saveUser(UserDTO userDTO);
-
     UserDTO getUserByUsername(String username);
+
+    String changePassword(PasswordVO passwordVO, String username);
 }
