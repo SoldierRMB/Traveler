@@ -110,8 +110,8 @@ public class StaffController {
     @Operation(description = "通过订单编号使用门票")
     @PutMapping("/useTicket")
     @PreAuthorize("authentication.principal.equals(#username)")
-    public ResultVO<String> useTicket(@RequestParam Long attractionId, @RequestParam Long orderId, @RequestParam String username) {
-        return ResultVO.ok(orderService.useTicket(attractionId, orderId, username));
+    public ResultVO<String> useTicket(@RequestParam Long orderId, @RequestParam String username) {
+        return ResultVO.ok(orderService.useTicket(orderId, username));
     }
 
     @Operation(description = "上传景点图片")

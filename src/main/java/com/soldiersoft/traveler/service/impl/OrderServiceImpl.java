@@ -1,7 +1,5 @@
 package com.soldiersoft.traveler.service.impl;
 
-import cn.hutool.core.bean.BeanUtil;
-import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.yulichang.wrapper.MPJLambdaWrapper;
@@ -27,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @author Soldier_RMB
@@ -76,14 +75,19 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order>
     }
 
     @Override
-    public OrderVO completePayment(Long orderId, String username) {
-        return updateOrderStatus(orderId, username, 2);
+    public String completePayment(Long orderId, String username) {
+        Map<Long, OrderDTO> map = getOrdersMapByUsername(username);
+        if (!map.containsKey(orderId)) {
+            throw new BizException("订单不存在");
+        }
+        return updateOrderStatus(orderId, 2) > 0 ? "订单支付成功" : "订单支付失败";
     }
 
     @Override
     public Page<OrderDTO> getUserOrders(String username, Long current, Long size) {
         MPJLambdaWrapper<Order> wrapper = getOrderMPJLambdaWrapper()
-                .eq(User::getUsername, username);
+                .eq(User::getUsername, username)
+                .ne(Order::getStatus, 6);
         Page<OrderDTO> orderDTOPage = orderMapper.selectJoinPage(new Page<>(current, size), OrderDTO.class, wrapper);
         return processOrderDTOPage(orderDTOPage, null, username);
     }
@@ -99,23 +103,26 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order>
     }
 
     @Override
-    public OrderVO cancelOrder(Long orderId, String username) {
-        return updateOrderStatus(orderId, username, 4);
+    public String cancelOrder(Long orderId, String username) {
+        Map<Long, OrderDTO> map = getOrdersMapByUsername(username);
+        if (!map.containsKey(orderId)) {
+            throw new BizException("订单不存在");
+        }
+        return updateOrderStatus(orderId, 5) > 0 ? "订单取消成功" : "订单取消失败";
     }
 
     @Override
-    public String useTicket(Long attractionId, Long orderId, String username) {
+    public String useTicket(Long orderId, String username) {
         MPJLambdaWrapper<Order> wrapper = getOrderMPJLambdaWrapper()
                 .eq(User::getUsername, username);
+        AttractionDTO attractionDTO = attractionService.getAttractionByOrderId(orderId);
         Map<Long, AttractionDTO> map = attractionService.getAttractionsMapByUsername(username);
-        if (!map.containsKey(attractionId)) {
+        if (!map.containsKey(attractionDTO.getId())) {
             throw new BizException("景点不存在");
         }
         return Optional.ofNullable(orderMapper.selectJoinList(OrderDTO.class, wrapper))
-                .map(orderTO -> {
-                            int rows = orderMapper.update(new LambdaUpdateWrapper<>(Order.class)
-                                    .set(Order::getStatus, 3)
-                                    .eq(Order::getId, orderId));
+                .map(orderDTO -> {
+                            int rows = updateOrderStatus(orderId, 3);
                             if (rows > 0) {
                                 return "门票使用成功";
                             } else {
@@ -124,6 +131,29 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order>
                         }
                 )
                 .orElseThrow(() -> new BizException("订单不存在"));
+    }
+
+    @Override
+    public Map<Long, OrderDTO> getOrdersMapByUsername(String username) {
+        MPJLambdaWrapper<Order> wrapper = getOrderMPJLambdaWrapper()
+                .eq(User::getUsername, username);
+        return orderMapper.selectJoinList(OrderDTO.class, wrapper).stream()
+                .peek(orderDTO -> {
+                    User user = orderDTO.getUser();
+                    user.setPassword(null);
+                    user.setIsDisable(null);
+                    orderDTO.setUser(user);
+                })
+                .collect(Collectors.toMap(OrderDTO::getId, orderDTO -> orderDTO));
+    }
+
+    @Override
+    public String deleteOrder(Long orderId, String username) {
+        Map<Long, OrderDTO> map = getOrdersMapByUsername(username);
+        if (!map.containsKey(orderId)) {
+            throw new BizException("订单不存在");
+        }
+        return updateOrderStatus(orderId, 6) > 0 ? "删除订单成功" : "删除订单失败";
     }
 
     private Page<OrderDTO> getOrderDTOPage(Long current, Long size) {
@@ -150,14 +180,11 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order>
         return orderDTOPage;
     }
 
-    private OrderVO updateOrderStatus(Long orderId, String username, Integer status) {
-        UserDTO userDTO = userService.getUserByUsername(username);
+    private int updateOrderStatus(Long orderId, Integer status) {
         Order order = lambdaQuery()
                 .eq(Order::getId, orderId)
-                .eq(Order::getUserId, userDTO.getId())
                 .one();
         order.setStatus(status);
-        updateById(order);
-        return BeanUtil.copyProperties(order, OrderVO.class);
+        return orderMapper.updateById(order);
     }
 }
