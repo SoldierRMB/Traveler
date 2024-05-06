@@ -5,6 +5,7 @@ import com.soldiersoft.traveler.model.dto.MailDTO;
 import com.soldiersoft.traveler.service.AttractionTicketService;
 import com.soldiersoft.traveler.service.MailService;
 import com.soldiersoft.traveler.service.StreetService;
+import com.soldiersoft.traveler.util.PosteriorUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -51,5 +52,10 @@ class TravelerApplicationTests {
     @Test
     void testGetAttractionTicketsByAttractionId() {
         System.out.println(attractionTicketService.getAttractionTicketsByAttractionId(1L));
+    }
+
+    @Test
+    void testMean() {
+        System.out.println(PosteriorUtil.calculatePosteriorMean(new double[]{3.23, 1}));
     }
 }
