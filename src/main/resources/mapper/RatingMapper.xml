@@ -6,7 +6,7 @@
 
     <resultMap id="BaseResultMap" type="com.soldiersoft.traveler.entity.Rating">
         <id property="id" column="id" jdbcType="BIGINT"/>
-        <result property="rating" column="rating" jdbcType="OTHER"/>
+        <result property="rating" column="rating" jdbcType="INTEGER"/>
         <result property="content" column="content" jdbcType="VARCHAR"/>
         <result property="userId" column="user_id" jdbcType="BIGINT"/>
         <result property="orderId" column="order_id" jdbcType="BIGINT"/>

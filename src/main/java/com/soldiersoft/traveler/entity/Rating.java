@@ -35,7 +35,7 @@ public class Rating implements Serializable {
     /**
      * 评分
      */
-    private Object rating;
+    private Integer rating;
     /**
      * 评价内容
      */
