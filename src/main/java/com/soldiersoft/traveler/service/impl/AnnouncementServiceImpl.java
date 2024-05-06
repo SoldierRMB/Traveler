@@ -1,5 +1,6 @@
 package com.soldiersoft.traveler.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.soldiersoft.traveler.entity.Announcement;
@@ -28,7 +29,9 @@ public class AnnouncementServiceImpl extends ServiceImpl<AnnouncementMapper, Ann
 
     @Override
     public Page<Announcement> getAnnouncements(Long current, Long size) {
-        return announcementMapper.selectPage(new Page<>(current, size), null);
+        LambdaQueryWrapper<Announcement> wrapper = new LambdaQueryWrapper<Announcement>()
+                .orderByDesc(Announcement::getCreateTime);
+        return announcementMapper.selectPage(new Page<>(current, size), wrapper);
     }
 
     @Override
