@@ -30,7 +30,7 @@ public class UserRole implements Serializable {
      * 用户角色编号
      */
     @TableId(type = IdType.AUTO)
-    private Integer id;
+    private Long id;
     /**
      * 用户编号
      */

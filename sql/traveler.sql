@@ -552,7 +552,7 @@ DROP TABLE IF EXISTS `t_user_role`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `t_user_role` (
-                               `id` int NOT NULL AUTO_INCREMENT COMMENT '用户角色编号',
+                               `id` bigint NOT NULL AUTO_INCREMENT COMMENT '用户角色编号',
                                `user_id` bigint NOT NULL COMMENT '用户编号',
                                `role_id` int NOT NULL COMMENT '角色编号',
                                PRIMARY KEY (`id`),
