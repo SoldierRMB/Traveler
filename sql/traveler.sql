@@ -227,7 +227,7 @@ DROP TABLE IF EXISTS `t_comment`;
 CREATE TABLE `t_comment` (
                              `id` bigint NOT NULL AUTO_INCREMENT COMMENT '评论编号',
                              `content` text NOT NULL COMMENT '评论内容',
-                             `user_id` bigint NOT NULL COMMENT '评论用户编号',
+                             `user_id` bigint NOT NULL COMMENT '用户编号',
                              `post_id` bigint NOT NULL COMMENT '动态编号 0.非动态评论',
                              `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
                              `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
@@ -451,7 +451,7 @@ CREATE TABLE `t_attraction` (
                                 `city_code` bigint NOT NULL COMMENT '地级编号',
                                 `area_code` bigint NOT NULL COMMENT '县级编号',
                                 `street_code` bigint NOT NULL COMMENT '乡级编号',
-                                `reviewed` tinyint NOT NULL DEFAULT '0' COMMENT '是否审核 0.审核中 1.审核通过 2.审核不通过',
+                                `reviewed` tinyint NOT NULL DEFAULT '0' COMMENT '审核状态 0.审核中 1.审核通过 2.审核不通过',
                                 `is_deleted` tinyint NOT NULL DEFAULT '0' COMMENT '是否删除 0.未删除 1.已删除',
                                 `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
                                 `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',

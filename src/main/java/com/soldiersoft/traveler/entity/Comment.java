@@ -37,7 +37,7 @@ public class Comment implements Serializable {
      */
     private String content;
     /**
-     * 评论用户编号
+     * 用户编号
      */
     private Long userId;
     /**

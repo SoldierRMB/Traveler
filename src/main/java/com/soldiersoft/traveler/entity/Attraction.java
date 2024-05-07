@@ -66,7 +66,7 @@ public class Attraction implements Serializable {
      */
     private Long streetCode;
     /**
-     * 是否审核 0.审核中 1.审核通过 2.审核不通过
+     * 审核状态 0.审核中 1.审核通过 2.审核不通过
      */
     private Integer reviewed;
     /**
