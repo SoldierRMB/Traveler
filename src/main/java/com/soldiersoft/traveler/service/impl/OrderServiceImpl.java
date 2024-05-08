@@ -9,14 +9,12 @@ import com.soldiersoft.traveler.entity.User;
 import com.soldiersoft.traveler.exception.BizException;
 import com.soldiersoft.traveler.mapper.OrderMapper;
 import com.soldiersoft.traveler.model.dto.AttractionDTO;
+import com.soldiersoft.traveler.model.dto.AttractionTicketDTO;
 import com.soldiersoft.traveler.model.dto.OrderDTO;
 import com.soldiersoft.traveler.model.dto.UserDTO;
 import com.soldiersoft.traveler.model.vo.OrderVO;
 import com.soldiersoft.traveler.model.vo.TicketVO;
-import com.soldiersoft.traveler.service.AttractionService;
-import com.soldiersoft.traveler.service.OrderService;
-import com.soldiersoft.traveler.service.TicketService;
-import com.soldiersoft.traveler.service.UserService;
+import com.soldiersoft.traveler.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,13 +37,15 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order>
     private final UserService userService;
     private final TicketService ticketService;
     private final AttractionService attractionService;
+    private final AttractionTicketService attractionTicketService;
 
     @Autowired
-    public OrderServiceImpl(OrderMapper orderMapper, UserService userService, TicketService ticketService, AttractionService attractionService) {
+    public OrderServiceImpl(OrderMapper orderMapper, UserService userService, TicketService ticketService, AttractionService attractionService, AttractionTicketService attractionTicketService) {
         this.orderMapper = orderMapper;
         this.userService = userService;
         this.ticketService = ticketService;
         this.attractionService = attractionService;
+        this.attractionTicketService = attractionTicketService;
     }
 
     private static MPJLambdaWrapper<Order> getOrderMPJLambdaWrapper() {
@@ -95,6 +95,11 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order>
     @Override
     public Page<OrderDTO> getOrdersByAttractionId(Long attractionId, String username, Long current, Long size) {
         return processOrderDTOPage(getOrderDTOPage(current, size), attractionId, username);
+    }
+
+    @Override
+    public Page<OrderDTO> getOrdersByAttractionId(Long attractionId, Long current, Long size) {
+        return processOrderDTOPage(getOrderDTOPage(current, size), attractionId, null);
     }
 
     @Override
@@ -164,9 +169,17 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order>
     private Page<OrderDTO> processOrderDTOPage(Page<OrderDTO> orderDTOPage, Long attractionId, String username) {
         List<OrderDTO> records = orderDTOPage.getRecords().stream()
                 .filter(orderDTO -> {
-                    if (attractionId != null && username != null) {
-                        return ticketService.getTicketsByAttractionId(attractionId, username).stream()
-                                .map(TicketVO::getId)
+                    if (attractionId != null) {
+                        if (username != null) {
+                            return ticketService.getTicketsByAttractionId(attractionId, username)
+                                    .stream()
+                                    .map(TicketVO::getId)
+                                    .anyMatch(id -> Objects.equals(id, orderDTO.getTicket().getId()));
+                        }
+                        return attractionTicketService.getAttractionTicketsByAttractionId(attractionId)
+                                .stream()
+                                .map(AttractionTicketDTO::getTicket)
+                                .map(Ticket::getId)
                                 .anyMatch(id -> Objects.equals(id, orderDTO.getTicket().getId()));
                     }
                     return true;

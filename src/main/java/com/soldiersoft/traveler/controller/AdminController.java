@@ -69,6 +69,12 @@ public class AdminController {
         return ResultVO.ok(orderService.getAllOrders(current, size));
     }
 
+    @Operation(description = "通过景点编号获取景点订单信息")
+    @GetMapping("/getOrdersByAttractionId")
+    public ResultVO<Page<OrderDTO>> getOrdersByAttractionId(@RequestParam Long attractionId, @RequestParam Long current, @RequestParam Long size) {
+        return ResultVO.ok(orderService.getOrdersByAttractionId(attractionId, current, size));
+    }
+
     @Operation(description = "获取所有用户角色信息")
     @GetMapping("/getUserRoles")
     public ResultVO<Page<UserRoleDTO>> getUserRoles(@RequestParam Long current, @RequestParam Long size) {
