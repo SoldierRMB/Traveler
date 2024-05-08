@@ -245,9 +245,9 @@ CREATE TABLE `t_comment` (
 
 LOCK TABLES `t_comment` WRITE;
 /*!40000 ALTER TABLE `t_comment` DISABLE KEYS */;
-INSERT INTO `t_comment` VALUES (1,'故宫真的是世界奇迹！',11,5,'2024-05-02 13:57:38','2024-05-02 13:57:38');
-INSERT INTO `t_comment` VALUES (2,'天坛环境真的很不错！',12,5,'2024-05-04 16:54:46','2024-05-04 16:54:46');
-INSERT INTO `t_comment` VALUES (3,'沈阳美食真的很不错！',13,5,'2024-05-04 20:50:08','2024-05-04 20:50:08');
+INSERT INTO `t_comment` VALUES (1,'故宫真的是世界奇迹！',11,1,'2024-05-02 13:57:38','2024-05-02 13:57:38');
+INSERT INTO `t_comment` VALUES (2,'天坛环境真的很不错！',12,2,'2024-05-04 16:54:46','2024-05-04 16:54:46');
+INSERT INTO `t_comment` VALUES (3,'沈阳美食真的很不错！',13,3,'2024-05-04 20:50:08','2024-05-04 20:50:08');
 /*!40000 ALTER TABLE `t_comment` ENABLE KEYS */;
 UNLOCK TABLES;
 
