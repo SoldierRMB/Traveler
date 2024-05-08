@@ -1,5 +1,6 @@
 package com.soldiersoft.traveler.service.impl;
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -204,7 +205,11 @@ public class AttractionServiceImpl extends ServiceImpl<AttractionMapper, Attract
         map.put(Attraction::getReviewed, 1);
         map.put(Attraction::getIsDeleted, 0);
         MPJLambdaWrapper<Attraction> wrapper = getAttractionMPJLambdaWrapper()
-                .like(Attraction::getAttractionName, attractionName)
+                .func(attractionMPJLambdaWrapper -> {
+                    if (StrUtil.isNotBlank(attractionName)) {
+                        attractionMPJLambdaWrapper.like(Attraction::getAttractionName, attractionName);
+                    }
+                })
                 .allEq(map, false);
         return attractionMapper.selectJoinPage(new Page<>(current, size), AttractionDTO.class, wrapper);
     }
