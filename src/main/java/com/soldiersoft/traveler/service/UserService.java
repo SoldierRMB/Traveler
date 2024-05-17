@@ -27,4 +27,8 @@ public interface UserService extends IService<User> {
     UserDTO getUserByUsername(String username);
 
     String changePassword(PasswordVO passwordVO, String username);
+
+    String disableUser(Long userId);
+
+    String enableUser(Long userId);
 }

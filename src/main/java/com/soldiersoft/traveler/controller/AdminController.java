@@ -27,9 +27,10 @@ public class AdminController {
     private final PostService postService;
     private final CommentService commentService;
     private final AnnouncementService announcementService;
+    private final UserService userService;
 
     @Autowired
-    public AdminController(AttractionService attractionService, UserAttractionService userAttractionService, OrderService orderService, UserRoleService userRoleService, PostService postService, CommentService commentService, AnnouncementService announcementService) {
+    public AdminController(AttractionService attractionService, UserAttractionService userAttractionService, OrderService orderService, UserRoleService userRoleService, PostService postService, CommentService commentService, AnnouncementService announcementService, UserService userService) {
         this.attractionService = attractionService;
         this.userAttractionService = userAttractionService;
         this.orderService = orderService;
@@ -37,6 +38,7 @@ public class AdminController {
         this.postService = postService;
         this.commentService = commentService;
         this.announcementService = announcementService;
+        this.userService = userService;
     }
 
     @Operation(description = "批量审核景点")
@@ -115,5 +117,17 @@ public class AdminController {
     @DeleteMapping("/completeDeleteAnnouncement")
     public ResultVO<String> completeDeleteAnnouncement(@RequestParam Long announcementId) {
         return ResultVO.ok(announcementService.completeDeleteAnnouncement(announcementId));
+    }
+
+    @Operation(description = "禁用用户")
+    @PutMapping("/disableUser")
+    public ResultVO<String> disableUser(@RequestParam Long userId) {
+        return ResultVO.ok(userService.disableUser(userId));
+    }
+
+    @Operation(description = "启用用户")
+    @PutMapping("/enableUser")
+    public ResultVO<String> enableUser(@RequestParam Long userId) {
+        return ResultVO.ok(userService.enableUser(userId));
     }
 }

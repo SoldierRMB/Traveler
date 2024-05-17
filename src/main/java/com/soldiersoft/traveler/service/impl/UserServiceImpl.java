@@ -168,6 +168,24 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
                 .update();
         return "密码修改成功";
     }
+
+    @Override
+    public String disableUser(Long userId) {
+        lambdaUpdate()
+                .eq(User::getId, userId)
+                .set(User::getIsDisable, 1)
+                .update();
+        return "用户禁用成功";
+    }
+
+    @Override
+    public String enableUser(Long userId) {
+        lambdaUpdate()
+                .eq(User::getId, userId)
+                .set(User::getIsDisable, 0)
+                .update();
+        return "用户启用成功";
+    }
 }
 
 
