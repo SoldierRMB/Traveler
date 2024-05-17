@@ -364,12 +364,12 @@ CREATE TABLE `t_image` (
 
 LOCK TABLES `t_image` WRITE;
 /*!40000 ALTER TABLE `t_image` DISABLE KEYS */;
-INSERT INTO `t_image` VALUES (1,'D:\\home\\traveler\\image\\98d647bb-ae6d-45fa-9428-eb2d28a41478.jpg');
-INSERT INTO `t_image` VALUES (2,'D:\\home\\traveler\\image\\68dd8fdb-3a8e-411b-8da6-72b83d86251a.jpg');
-INSERT INTO `t_image` VALUES (3,'D:\\home\\traveler\\image\\c5c543ca-840c-438f-81bb-42db9ea35b2b.jpg');
-INSERT INTO `t_image` VALUES (4,'D:\\home\\traveler\\image\\7b399e69-5c58-458a-824f-fdd0364e9695.jpg');
-INSERT INTO `t_image` VALUES (5,'D:\\home\\traveler\\image\\01701c40-10a9-4c36-b4b9-be677ddc97a1.jpg');
-INSERT INTO `t_image` VALUES (6,'D:\\home\\traveler\\image\\3545b42d-f213-4926-98b5-77336539e333.jpg');
+INSERT INTO `t_image` VALUES (1,'/home/traveler/image/98d647bb-ae6d-45fa-9428-eb2d28a41478.jpg');
+INSERT INTO `t_image` VALUES (2,'/home/traveler/image/68dd8fdb-3a8e-411b-8da6-72b83d86251a.jpg');
+INSERT INTO `t_image` VALUES (3,'/home/traveler/image/c5c543ca-840c-438f-81bb-42db9ea35b2b.jpg');
+INSERT INTO `t_image` VALUES (4,'/home/traveler/image/7b399e69-5c58-458a-824f-fdd0364e9695.jpg');
+INSERT INTO `t_image` VALUES (5,'/home/traveler/image/01701c40-10a9-4c36-b4b9-be677ddc97a1.jpg');
+INSERT INTO `t_image` VALUES (6,'/home/traveler/image/3545b42d-f213-4926-98b5-77336539e333.jpg');
 /*!40000 ALTER TABLE `t_image` ENABLE KEYS */;
 UNLOCK TABLES;
 
